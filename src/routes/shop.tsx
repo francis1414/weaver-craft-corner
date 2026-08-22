@@ -274,7 +274,9 @@ function ShopPage() {
   );
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-12 md:px-8">
+    <div>
+      <FreeShippingNote />
+      <div className="mx-auto max-w-[1400px] px-4 py-12 md:px-8">
       <header className="max-w-2xl">
         <p className="text-xs uppercase tracking-[0.3em] text-gold">The Collection</p>
         <h1 className="mt-3 font-serif text-4xl leading-tight md:text-5xl">
