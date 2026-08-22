@@ -530,20 +530,109 @@ function AdminProducts() {
                   onChange={(e) => setDraft({ ...draft, handle: e.target.value })}
                 />
               </Field>
-              <Field label="Weight (kg)">
-                <Input
-                  type="number"
-                  step="0.1"
-                  value={draft.weightKg}
-                  onChange={(e) => setDraft({ ...draft, weightKg: Number(e.target.value) })}
-                />
+              <Field label="Weight">
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    step="0.1"
+                    value={draft.weightKg}
+                    onChange={(e) => setDraft({ ...draft, weightKg: Number(e.target.value) })}
+                  />
+                  <span className="w-24 text-xs text-muted-foreground">
+                    kg · {(Number(draft.weightKg) * 2.20462).toFixed(1)} lbs
+                  </span>
+                </div>
               </Field>
-              <Field label="Colours (comma separated)">
+
+              <div className="rounded-md border border-border p-4 sm:col-span-2">
+                <Label className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  Measurements
+                </Label>
+                <div className="mt-3 grid gap-3 sm:grid-cols-4">
+                  {(
+                    [
+                      ["lengthCm", "Length"],
+                      ["widthCm", "Width"],
+                      ["heightCm", "Height"],
+                      ["diameterCm", "Diameter"],
+                    ] as const
+                  ).map(([key, label]) => (
+                    <div key={key} className="space-y-1">
+                      <Label className="text-xs">{label} (cm)</Label>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        value={draft[key]}
+                        onChange={(e) => setDraft({ ...draft, [key]: e.target.value })}
+                      />
+                      <p className="text-[11px] text-muted-foreground">
+                        {draft[key] === ""
+                          ? "—"
+                          : `${(Number(draft[key]) / 2.54).toFixed(1)} in`}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-md border border-border p-4 sm:col-span-2">
+                <Label className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  Weave colour &amp; natural dye tones
+                </Label>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {DYE_TONES.map((tone) => {
+                    const on = draft.color.includes(tone);
+                    return (
+                      <button
+                        key={tone}
+                        type="button"
+                        onClick={() =>
+                          setDraft({
+                            ...draft,
+                            color: on
+                              ? draft.color.filter((c) => c !== tone)
+                              : [...draft.color, tone],
+                          })
+                        }
+                        className={`rounded-full border px-3 py-1.5 text-xs transition ${
+                          on
+                            ? "border-transparent bg-[#C29B38] text-[#1F1D1A]"
+                            : "border-border text-muted-foreground hover:border-foreground"
+                        }`}
+                      >
+                        {tone}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="mt-3 space-y-1">
+                  <Label className="text-xs">Colour description</Label>
+                  <Input
+                    value={draft.colorDescription}
+                    onChange={(e) => setDraft({ ...draft, colorDescription: e.target.value })}
+                    placeholder="e.g. Sun-faded ochre with charcoal banding"
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-3 rounded-md border border-border p-4 sm:col-span-2">
+                <Label className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  Product video
+                </Label>
                 <Input
-                  value={draft.color}
-                  onChange={(e) => setDraft({ ...draft, color: e.target.value })}
+                  value={draft.videoUrl}
+                  onChange={(e) => setDraft({ ...draft, videoUrl: e.target.value })}
+                  placeholder="https://… mp4 or hosted video link"
                 />
-              </Field>
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Loop video automatically</Label>
+                  <Switch
+                    checked={draft.videoLoop}
+                    onCheckedChange={(checked) => setDraft({ ...draft, videoLoop: checked })}
+                  />
+                </div>
+              </div>
+
               <Field label="Tags (comma separated)" className="sm:col-span-2">
                 <Input
                   value={draft.tags}
