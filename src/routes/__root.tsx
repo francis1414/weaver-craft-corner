@@ -11,6 +11,16 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Toaster } from "@/components/ui/sonner";
+import { StoreProvider } from "@/context/StoreProvider";
+import { useRealtimeStore } from "@/hooks/use-store-data";
+import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { MobileBottomBar } from "@/components/layout/MobileBottomBar";
+import { CartDrawer } from "@/components/drawers/CartDrawer";
+import { WishlistDrawer } from "@/components/drawers/WishlistDrawer";
+import { CompareModal } from "@/components/drawers/CompareModal";
 
 function NotFoundComponent() {
   return (
