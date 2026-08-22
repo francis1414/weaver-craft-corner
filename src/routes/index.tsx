@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 
+import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { SmartImage } from "@/components/SmartImage";
 import { StarRating } from "@/components/StarRating";
@@ -84,13 +85,7 @@ function HomePage() {
             </Link>
           </div>
         </div>
-        <SmartImage
-          src={hero?.image}
-          alt="Handwoven Bolga basket against a terracotta wall"
-          ratio="4/5"
-          priority
-          className="h-full lg:aspect-auto"
-        />
+        <HeroSlideshow className="min-h-[420px] w-full lg:h-full" />
       </section>
 
       {/* Value pillars */}
