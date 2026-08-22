@@ -329,9 +329,16 @@ function CheckoutPage() {
                   {option.label}
                 </label>
               ))}
-              <p className="pt-2 text-xs text-muted-foreground">
-                Orders are placed as pending and confirmed by the studio before payment is captured.
-              </p>
+              {payment === "card" && paymentsConfigured() ? (
+                <p className="pt-2 text-xs text-muted-foreground">
+                  You will pay securely by card on the next step. Nothing is charged until then.
+                </p>
+              ) : (
+                <p className="pt-2 text-xs text-muted-foreground">
+                  Orders placed with this method stay pending until the studio confirms payment.
+                </p>
+              )}
+
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
