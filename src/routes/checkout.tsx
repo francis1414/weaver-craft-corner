@@ -75,12 +75,16 @@ function CheckoutPage() {
   const totals = useMemo(() => {
     const discount = cartSubtotal * discountRate;
     const discounted = cartSubtotal - discount;
+    const units = cart.reduce((sum, line) => sum + line.quantity, 0);
     const base =
-      discounted >= settings.freeShippingThreshold ? 0 : settings.shippingInternational;
+      discounted >= settings.freeShippingThreshold
+        ? 0
+        : settings.shippingInternational +
+          Math.max(0, units - 1) * settings.shippingAdditionalItem;
     const shipping = base * (SHIPPING.find((s) => s.id === method)?.multiplier ?? 1);
     const tax = discounted * settings.taxRate;
     return { discount, discounted, shipping, tax, total: discounted + shipping + tax };
-  }, [cartSubtotal, discountRate, method, settings]);
+  }, [cart, cartSubtotal, discountRate, method, settings]);
 
   async function placeOrder() {
     const parsed = addressSchema.safeParse(form);
