@@ -189,19 +189,18 @@ function ShopPage() {
         <h3 className="text-xs uppercase tracking-[0.2em] text-foreground">Natural Dye Palette</h3>
         <div className="mt-4 flex flex-wrap gap-3">
           {DYE_COLORS.map((dye) => {
-            const active = colors.includes(dye.value);
+            const value = dye.name.toLowerCase();
+            const active = colors.includes(value);
             return (
               <button
-                key={dye.value}
+                key={value}
                 type="button"
                 onClick={() =>
                   setColors((prev) =>
-                    prev.includes(dye.value)
-                      ? prev.filter((c) => c !== dye.value)
-                      : [...prev, dye.value],
+                    prev.includes(value) ? prev.filter((c) => c !== value) : [...prev, value],
                   )
                 }
-                aria-label={dye.label}
+                aria-label={dye.name}
                 aria-pressed={active}
                 className={cn(
                   "grid h-11 w-11 place-items-center rounded-full border transition-colors",
@@ -210,7 +209,7 @@ function ShopPage() {
               >
                 <span
                   className="h-6 w-6 rounded-full"
-                  style={{ backgroundColor: dye.hex }}
+                  style={{ backgroundColor: dye.swatch }}
                   aria-hidden="true"
                 />
               </button>
