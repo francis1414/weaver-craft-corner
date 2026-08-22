@@ -22,9 +22,10 @@ export async function uploadMedia(file: File, folder = "products"): Promise<stri
 
   const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, {
     cacheControl: "31536000",
-    contentType: file.type || undefined,
+    ...(file.type ? { contentType: file.type } : {}),
     upsert: false,
   });
+
   if (error) throw error;
   return mediaUrl(path);
 }
