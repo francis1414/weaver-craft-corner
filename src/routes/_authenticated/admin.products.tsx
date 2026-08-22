@@ -27,6 +27,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAdminCategories, useAdminProducts } from "@/hooks/use-store-data";
 import { deleteRow, updateRow, upsertProduct } from "@/lib/store-api";
 import type { Product } from "@/types";
+import { MediaUploader } from "@/components/admin/MediaUploader";
+import { youtubeId } from "@/lib/media";
 
 export const Route = createFileRoute("/_authenticated/admin/products")({
   component: AdminProducts,
@@ -494,7 +496,7 @@ function AdminProducts() {
                 <MediaUploader
                   label="Photo gallery (first photo is the primary)"
                   value={draft.media}
-                  onChange={(media) => setDraft({ ...draft, media })}
+                  onChange={(media: string[]) => setDraft({ ...draft, media })}
                   accept="image/*"
                   folder="products"
                   max={32}
@@ -622,11 +624,19 @@ function AdminProducts() {
                 <Label className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
                   Product video
                 </Label>
-                <Input
-                  value={draft.videoUrl}
-                  onChange={(e) => setDraft({ ...draft, videoUrl: e.target.value })}
-                  placeholder="https://… mp4 or hosted video link"
+                <MediaUploader
+                  label="Video file or YouTube link"
+                  value={draft.videoUrl ? [draft.videoUrl] : []}
+                  onChange={(next) => setDraft({ ...draft, videoUrl: next[0] ?? "" })}
+                  multiple={false}
+                  accept="video/*"
+                  folder="videos"
+                  max={1}
+                  hint="Upload an MP4 from your device, or paste a YouTube link (watch, share or Shorts)."
                 />
+                {draft.videoUrl && youtubeId(draft.videoUrl) && (
+                  <p className="text-xs text-[#C29B38]">YouTube video detected — it will embed on the product page.</p>
+                )}
                 <div className="flex items-center justify-between">
                   <Label className="text-sm">Loop video automatically</Label>
                   <Switch
