@@ -3,7 +3,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { SmartImage } from "@/components/SmartImage";
 import { useJournal } from "@/hooks/use-store-data";
 
-export const Route = createFileRoute("/journal")({
+export const Route = createFileRoute("/journal/")({
   head: () => ({
     meta: [
       { title: "The Journal — Sustainable Decor & Ghanaian Craft | Vetastudio" },
