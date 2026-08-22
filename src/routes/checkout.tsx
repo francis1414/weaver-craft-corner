@@ -22,6 +22,8 @@ export const Route = createFileRoute("/checkout")({
       },
       { property: "og:title", content: "Secure Checkout — Vetastudio" },
       { property: "og:description", content: "Complete your handwoven basket order." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -117,11 +119,12 @@ function CheckoutPage() {
 
   if (step === 4 && orderNumber) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-24 text-center md:px-8">
+      <div className="mx-auto max-w-xl px-4 py-28 text-center md:px-8">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-sage text-background">
           <Check size={22} />
         </span>
-        <h1 className="mt-6 font-serif text-4xl">Order confirmed</h1>
+        <p className="label-caps mt-6 text-gold">Thank you</p>
+        <h1 className="mt-3 font-serif text-4xl">Order confirmed</h1>
         <p className="mt-3 text-sm text-muted-foreground">
           Your order <strong>{orderNumber}</strong> is with our Bolgatanga studio. We will email
           tracking details as soon as it ships.
@@ -138,8 +141,10 @@ function CheckoutPage() {
 
   if (cart.length === 0) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-24 text-center md:px-8">
-        <h1 className="font-serif text-3xl">Your cart is empty</h1>
+      <div className="mx-auto max-w-xl px-4 py-28 text-center md:px-8">
+        <p className="label-caps text-gold">Your collection</p>
+        <h1 className="mt-4 font-serif text-3xl">Your shopping bag is empty</h1>
+        <p className="mt-4 text-sm text-muted-foreground">Explore our handcrafted collectible baskets before proceeding to checkout.</p>
         <Link
           to="/shop"
           className="mt-6 inline-flex h-12 items-center bg-foreground px-6 text-xs uppercase tracking-[0.2em] text-background"
@@ -151,18 +156,22 @@ function CheckoutPage() {
   }
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-14 md:px-8">
-      <h1 className="font-serif text-4xl">Checkout</h1>
-      <ol className="mt-6 flex flex-wrap gap-6 text-xs uppercase tracking-[0.16em]">
+    <div className="mx-auto max-w-[1280px] px-4 py-16 md:px-8 md:py-24">
+      <header className="border-b border-border pb-10">
+        <p className="label-caps text-gold">Secure checkout</p>
+        <h1 className="mt-4 font-serif text-5xl">Complete your collection</h1>
+        <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">Your details are handled securely. Review each step before placing your order with our Bolgatanga studio.</p>
+      </header>
+      <ol className="mt-8 grid grid-cols-3 gap-3 text-[10px] uppercase tracking-[0.16em] sm:flex sm:gap-8 sm:text-xs">
         {["Address", "Delivery", "Payment"].map((label, i) => (
           <li
             key={label}
             className={cn(
-              "flex items-center gap-2",
+              "min-w-0 items-center gap-2 border-b pb-4 sm:flex",
               step === i + 1 ? "text-gold" : "text-muted-foreground",
             )}
           >
-            <span className="grid h-6 w-6 place-items-center rounded-full border border-current">
+            <span className="mb-2 grid h-6 w-6 place-items-center rounded-full border border-current sm:mb-0">
               {i + 1}
             </span>
             {label}
@@ -170,8 +179,8 @@ function CheckoutPage() {
         ))}
       </ol>
 
-      <div className="mt-10 grid gap-12 lg:grid-cols-[1.3fr_1fr]">
-        <div>
+      <div className="mt-12 grid items-start gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(320px,0.8fr)] lg:gap-16">
+        <div className="min-w-0">
           {step === 1 && (
             <section className="grid gap-4 sm:grid-cols-2">
               {(
@@ -319,8 +328,9 @@ function CheckoutPage() {
           )}
         </div>
 
-        <aside className="border border-border p-5">
-          <h2 className="font-serif text-xl">Order summary</h2>
+        <aside className="border border-border bg-card p-6 shadow-editorial lg:sticky lg:top-28">
+          <p className="label-caps text-gold">Your selection</p>
+          <h2 className="mt-3 font-serif text-2xl">Order summary</h2>
           <ul className="mt-4 divide-y divide-border">
             {cart.map((line) => (
               <li key={line.productId} className="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-3 py-3">
