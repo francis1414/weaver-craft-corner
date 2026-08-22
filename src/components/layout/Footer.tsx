@@ -63,8 +63,14 @@ export function Footer() {
             </p>
             <ul className="mt-7 space-y-3 text-sm text-background/55">
               <li className="flex items-center gap-3"><MapPin size={16} className="shrink-0 text-gold" /> St Louis USA and Bolgatanga Ghana</li>
-              <li className="flex items-center gap-3"><Mail size={16} className="shrink-0 text-gold" /> hello@vetastudio.com</li>
-              <li className="flex items-center gap-3"><Phone size={16} className="shrink-0 text-gold" /> +233 20 008 4444</li>
+              <li className="flex items-center gap-3">
+                <Mail size={16} className="shrink-0 text-gold" />
+                <a href={`mailto:${settings.supportEmail}`} className="hover:text-gold">{settings.supportEmail}</a>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone size={16} className="shrink-0 text-gold" />
+                <a href={`tel:${settings.supportPhone}`} className="hover:text-gold">{settings.supportPhone}</a>
+              </li>
             </ul>
           </div>
 
@@ -72,16 +78,18 @@ export function Footer() {
             title="Shop"
             links={[
               { to: "/shop", label: "All Baskets" },
-              { to: "/shop", label: "New Arrivals" },
-              { to: "/shop", label: "Best Sellers" },
-              { to: "/shop", label: "Custom Orders" },
+              { to: "/shop", search: { sort: "newest" }, label: "New Arrivals" },
+              { to: "/shop", search: { sort: "rating" }, label: "Best Sellers" },
+              { to: "/shop", search: { sale: true }, label: "On Sale" },
+              { to: "/care", hash: "custom-orders", label: "Custom & Wholesale" },
             ]}
           />
           <FooterCol
             title="About"
             links={[
-              { to: "/about", label: "Our Story" },
-              { to: "/about", label: "Our Craft & Weaving" },
+              { to: "/about", hash: "story", label: "Our Story" },
+              { to: "/about", hash: "craft", label: "Our Craft & Weaving" },
+              { to: "/about", hash: "transparency", label: "Fair-Wage Transparency" },
               { to: "/journal", label: "Journal & Stories" },
             ]}
           />
@@ -89,12 +97,14 @@ export function Footer() {
             <h3 className="label-caps text-background">Help & Support</h3>
             <ul className="mt-5 space-y-3 text-sm text-background/60">
               <li><Link to="/care" className="text-gold transition-colors hover:text-background">Help & Support Center</Link></li>
-              <li><Link to="/care" className="transition-colors hover:text-gold">Contact Us</Link></li>
-              <li><Link to="/care" className="transition-colors hover:text-gold">Shipping & Returns</Link></li>
-              <li><Link to="/care" className="transition-colors hover:text-gold">FAQ</Link></li>
+              <li><Link to="/care" hash="contact" className="transition-colors hover:text-gold">Contact Us</Link></li>
+              <li><Link to="/care" hash="shipping" className="transition-colors hover:text-gold">Shipping</Link></li>
+              <li><Link to="/care" hash="returns" className="transition-colors hover:text-gold">Returns & Exchanges</Link></li>
+              <li><Link to="/care" hash="care" className="transition-colors hover:text-gold">Basket Care Guide</Link></li>
+              <li><Link to="/care" hash="faq" className="transition-colors hover:text-gold">FAQ</Link></li>
             </ul>
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/vetastudio"
               target="_blank"
               rel="noreferrer noopener"
               className="mt-5 inline-flex h-11 items-center gap-2 text-sm text-background/60 hover:text-gold"
