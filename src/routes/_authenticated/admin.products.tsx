@@ -135,12 +135,20 @@ function AdminProducts() {
     material: p.material,
     artisanStory: p.artisanStory,
     careInstructions: p.careInstructions,
-    color: p.color.join(", "),
+    color: p.color,
+    colorDescription: p.colorDescription,
     tags: p.tags.join(", "),
     weightKg: p.weightKg,
     capacity: p.capacity,
     handle: p.handle,
+    lengthCm: p.lengthCm == null ? "" : String(p.lengthCm),
+    widthCm: p.widthCm == null ? "" : String(p.widthCm),
+    heightCm: p.heightCm == null ? "" : String(p.heightCm),
+    diameterCm: p.diameterCm == null ? "" : String(p.diameterCm),
+    videoUrl: p.videoUrl,
+    videoLoop: p.videoLoop,
   });
+
 
   async function save() {
     if (!draft) return;
