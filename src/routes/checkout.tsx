@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { SmartImage } from "@/components/SmartImage";
-import { Button } from "@/components/ui/button";
 import { useStore } from "@/context/StoreProvider";
 import { useSettings } from "@/hooks/use-store-data";
 import { usePrice } from "@/hooks/use-price";
