@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { SlidersHorizontal, X } from "lucide-react";
 
+import { FreeShippingNote } from "@/components/FreeShippingNote";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { useCategories, useProducts } from "@/hooks/use-store-data";
 import { DYE_COLORS } from "@/lib/mock-data";
