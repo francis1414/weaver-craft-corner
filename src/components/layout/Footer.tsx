@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { subscribeEmail } from "@/lib/store-api";
+import { useSettings } from "@/hooks/use-store-data";
 import { Button } from "@/components/ui/button";
 
 const emailSchema = z
@@ -14,6 +15,7 @@ const emailSchema = z
   .max(255, { message: "Email must be less than 255 characters" });
 
 export function Footer() {
+  const settings = useSettings();
   const [email, setEmail] = useState("");
   const [pending, setPending] = useState(false);
 
@@ -129,7 +131,7 @@ function FooterCol({
   links,
 }: {
   title: string;
-  links: { to: string; label: string }[];
+  links: { to: string; label: string; hash?: string; search?: Record<string, unknown> }[];
 }) {
   return (
     <div>
@@ -137,7 +139,12 @@ function FooterCol({
       <ul className="mt-5 space-y-3 text-sm text-background/60">
         {links.map((l) => (
           <li key={l.label}>
-            <Link to={l.to} className="transition-colors hover:text-gold">
+            <Link
+              to={l.to}
+              {...(l.hash ? { hash: l.hash } : {})}
+              {...(l.search ? { search: l.search } : {})}
+              className="transition-colors hover:text-gold"
+            >
               {l.label}
             </Link>
           </li>
