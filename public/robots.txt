@@ -12,3 +12,10 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Disallow: /checkout
+Disallow: /admin
+Disallow: /admin-auth
+Disallow: /api/
+
+Sitemap: https://weaver-craft-corner.lovable.app/sitemap.xml

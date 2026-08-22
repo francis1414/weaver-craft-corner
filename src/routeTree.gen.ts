@@ -16,6 +16,7 @@ import { Route as AdminAuthRouteImport } from './routes/admin-auth'
 import { Route as CareRouteImport } from './routes/care'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
@@ -65,6 +66,11 @@ const CheckoutRoute = CheckoutRouteImport.update({
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -164,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRouteWithChildren
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/checkout/return': typeof CheckoutReturnRoute
   '/journal/$slug': typeof JournalSlugRoute
@@ -188,6 +195,7 @@ export interface FileRoutesByTo {
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRouteWithChildren
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/product/$slug': typeof ProductSlugRoute
@@ -213,6 +221,7 @@ export interface FileRoutesById {
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRouteWithChildren
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/checkout/return': typeof CheckoutReturnRoute
   '/journal/$slug': typeof JournalSlugRoute
@@ -239,6 +248,7 @@ export interface FileRouteTypes {
     | '/care'
     | '/checkout'
     | '/shop'
+    | '/sitemap.xml'
     | '/admin'
     | '/checkout/return'
     | '/journal/$slug'
@@ -263,6 +273,7 @@ export interface FileRouteTypes {
     | '/care'
     | '/checkout'
     | '/shop'
+    | '/sitemap.xml'
     | '/checkout/return'
     | '/journal/$slug'
     | '/product/$slug'
@@ -287,6 +298,7 @@ export interface FileRouteTypes {
     | '/care'
     | '/checkout'
     | '/shop'
+    | '/sitemap.xml'
     | '/_authenticated/admin'
     | '/checkout/return'
     | '/journal/$slug'
@@ -313,6 +325,7 @@ export interface RootRouteChildren {
   CareRoute: typeof CareRoute
   CheckoutRoute: typeof CheckoutRouteWithChildren
   ShopRoute: typeof ShopRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   JournalSlugRoute: typeof JournalSlugRoute
   ProductSlugRoute: typeof ProductSlugRoute
   JournalIndexRoute: typeof JournalIndexRoute
@@ -369,6 +382,13 @@ declare module '@tanstack/react-router' {
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -544,6 +564,7 @@ const rootRouteChildren: RootRouteChildren = {
   CareRoute: CareRoute,
   CheckoutRoute: CheckoutRouteWithChildren,
   ShopRoute: ShopRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   JournalSlugRoute: JournalSlugRoute,
   ProductSlugRoute: ProductSlugRoute,
   JournalIndexRoute: JournalIndexRoute,
