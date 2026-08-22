@@ -35,45 +35,23 @@ export const Route = createFileRoute("/admin-auth")({
 function AdminAuthPage() {
   const navigate = useNavigate();
   const claim = useServerFn(claimAdminRole);
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
-
-  async function afterSession() {
-    try {
-      await claim({ data: undefined });
-    } catch {
-      /* role already assigned or not the first account */
-    }
-    await navigate({ to: "/admin" });
-  }
 
   async function onSubmit(event: React.FormEvent) {
     event.preventDefault();
     setBusy(true);
     try {
-      if (mode === "signup") {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: `${window.location.origin}/admin-auth` },
-        });
-        if (error) throw error;
-        if (!data.session) {
-          toast.success("Account created — check your email to confirm, then sign in.");
-          setMode("signin");
-          return;
-        }
-        toast.success("Account created. Welcome to the back-office.");
-        await afterSession();
-        return;
-      }
-
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+      try {
+        await claim({ data: undefined });
+      } catch {
+        /* role already assigned */
+      }
       toast.success("Signed in");
-      await afterSession();
+      await navigate({ to: "/admin" });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Authentication failed");
     } finally {
@@ -90,9 +68,7 @@ function AdminAuthPage() {
           </span>
           <h1 className="mt-4 font-serif text-3xl">Merchant back-office</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            {mode === "signin"
-              ? "Sign in to manage the Vetastudio storefront."
-              : "Create the store administrator account."}
+            Sign in to manage the Vetastudio storefront.
           </p>
         </div>
 
@@ -115,26 +91,20 @@ function AdminAuthPage() {
               type="password"
               required
               minLength={8}
-              autoComplete={mode === "signin" ? "current-password" : "new-password"}
+              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <Button type="submit" className="w-full" disabled={busy}>
             {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {mode === "signin" ? "Sign in" : "Create account"}
+            Sign in
           </Button>
         </form>
 
-        <button
-          type="button"
-          className="mt-6 w-full text-center text-sm text-muted-foreground underline-offset-4 hover:underline"
-          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-        >
-          {mode === "signin"
-            ? "No account yet? Create the administrator account"
-            : "Already have an account? Sign in"}
-        </button>
+        <p className="mt-6 text-center text-xs text-muted-foreground">
+          Access is invitation only. Contact the store administrator if you need an account.
+        </p>
       </div>
     </main>
   );
