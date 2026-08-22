@@ -74,13 +74,17 @@ const PRICE_PRESETS = [
 function ShopPage() {
   const { data: products, isLoading } = useProducts();
   const { data: categories } = useCategories();
+  const search = Route.useSearch();
+  const initialSort = SORTS.some((s) => s.value === search.sort)
+    ? (search.sort as (typeof SORTS)[number]["value"])
+    : "featured";
 
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(search.category ?? null);
   const [range, setRange] = useState<[number, number]>([0, 1000]);
   const [colors, setColors] = useState<string[]>([]);
-  const [inStockOnly, setInStockOnly] = useState(false);
-  const [onSaleOnly, setOnSaleOnly] = useState(false);
-  const [sort, setSort] = useState<(typeof SORTS)[number]["value"]>("featured");
+  const [inStockOnly, setInStockOnly] = useState(Boolean(search.instock));
+  const [onSaleOnly, setOnSaleOnly] = useState(Boolean(search.sale));
+  const [sort, setSort] = useState<(typeof SORTS)[number]["value"]>(initialSort);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const counts = useMemo(() => {
