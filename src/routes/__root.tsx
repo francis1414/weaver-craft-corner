@@ -147,7 +147,15 @@ function RootComponent() {
 }
 
 function StoreShell() {
-  useRealtimeStore(["products", "categories", "reviews", "orders"]);
+  useRealtimeStore([
+    "products",
+    "categories",
+    "reviews",
+    "orders",
+    "store_settings",
+    "cms_homepage",
+    "journal",
+  ]);
   const { pathname } = useLocation();
   const isBackOffice = pathname.startsWith("/admin");
 
