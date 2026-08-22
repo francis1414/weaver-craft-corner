@@ -1,0 +1,142 @@
+import { createServerFn } from "@tanstack/react-start";
+
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import {
+  type StripeEnv,
+  createStripeClient,
+  getStripeErrorMessage,
+} from "@/lib/stripe.server";
+
+const ZERO_DECIMAL = new Set([
+  "bif",
+  "clp",
+  "djf",
+  "gnf",
+  "jpy",
+  "kmf",
+  "krw",
+  "mga",
+  "pyg",
+  "rwf",
+  "ugx",
+  "vnd",
+  "vuv",
+  "xaf",
+  "xof",
+  "xpf",
+]);
+
+function toMinorUnit(amount: number, currency: string): number {
+  return ZERO_DECIMAL.has(currency.toLowerCase())
+    ? Math.round(amount)
+    : Math.round(amount * 100);
+}
+
+type CheckoutResult = { clientSecret: string } | { error: string };
+
+/**
+ * Starts a card payment for an order that already exists in the database.
+ * The amount is read from the stored order, never from the browser.
+ */
+export const createOrderCheckout = createServerFn({ method: "POST" })
+  .inputValidator(
+    (data: { orderNumber: string; returnUrl: string; environment: StripeEnv }) => {
+      if (!/^[A-Za-z0-9-]{4,40}$/.test(data.orderNumber)) {
+        throw new Error("Invalid order reference");
+      }
+      if (!/^https?:\/\//.test(data.returnUrl)) throw new Error("Invalid return URL");
+      return data;
+    },
+  )
+  .handler(async ({ data }): Promise<CheckoutResult> => {
+    try {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const { data: order, error } = await supabaseAdmin
+        .from("orders")
+        .select("order_number, total, currency, customer, payment_status")
+        .eq("order_number", data.orderNumber)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!order) return { error: "Order not found" };
+      if (order.payment_status === "paid") return { error: "This order is already paid" };
+
+      const currency = (order.currency ?? "USD").toLowerCase();
+      const amount = toMinorUnit(Number(order.total) || 0, currency);
+      if (amount < 50) return { error: "Order total is too low to charge" };
+
+      const customer = (order.customer ?? {}) as { email?: string; name?: string };
+      const stripe = createStripeClient(data.environment);
+
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        ui_mode: "embedded_page",
+        return_url: data.returnUrl,
+        line_items: [
+          {
+            price_data: {
+              currency,
+              product_data: { name: `Vetastudio order ${order.order_number}` },
+              unit_amount: amount,
+            },
+            quantity: 1,
+          },
+        ],
+        payment_intent_data: {
+          description: `Vetastudio order ${order.order_number}`,
+        },
+        ...(customer.email ? { customer_email: customer.email } : {}),
+        metadata: { orderNumber: order.order_number },
+      });
+
+      return { clientSecret: session.client_secret ?? "" };
+    } catch (error) {
+      return { error: getStripeErrorMessage(error) };
+    }
+  });
+
+export type PaymentRow = {
+  id: string;
+  amount: number;
+  currency: string;
+  status: string;
+  description: string | null;
+  email: string | null;
+  refunded: boolean;
+  created: string | null;
+};
+
+type PaymentsResult = { payments: PaymentRow[] } | { error: string };
+
+/** Recent card transactions for the back-office payments screen. */
+export const listRecentPayments = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((data: { environment: StripeEnv }) => data)
+  .handler(async ({ data, context }): Promise<PaymentsResult> => {
+    const { data: isAdmin } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "admin",
+    });
+    if (!isAdmin) return { error: "Forbidden" };
+
+    try {
+      const stripe = createStripeClient(data.environment);
+      const charges = await stripe.charges.list({ limit: 25 });
+      return {
+        payments: charges.data.map((charge) => ({
+          id: charge.id,
+          amount: ZERO_DECIMAL.has(charge.currency)
+            ? charge.amount
+            : charge.amount / 100,
+          currency: charge.currency.toUpperCase(),
+          status: charge.status,
+          description: charge.description ?? null,
+          email: charge.billing_details?.email ?? null,
+          refunded: charge.refunded ?? false,
+          created: charge.created ? new Date(charge.created * 1000).toISOString() : null,
+        })),
+      };
+    } catch (error) {
+      return { error: getStripeErrorMessage(error) };
+    }
+  });
