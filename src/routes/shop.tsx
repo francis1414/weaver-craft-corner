@@ -10,16 +10,25 @@ import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
 import { breadcrumbJsonLd, canonical, jsonLdScript } from "@/lib/seo";
 
+type ShopSearch = {
+  category?: string;
+  sort?: string;
+  sale?: boolean;
+  instock?: boolean;
+};
+
 export const Route = createFileRoute("/shop")({
   head: () => ({
     meta: [
-      { title: "Shop Handwoven Bolga Baskets — Vetastudio" },
+      { title: "Shop Handwoven Bolga Baskets from Ghana | Vetastudio" },
       {
         name: "description",
         content:
-          "Browse sculptural Bolga baskets, woven lampshades, fans, planters and totes handmade from Ghanaian elephant grass.",
+          "Shop authentic handwoven Bolga baskets direct from Ghana: sculptural storage, woven lampshades, planters, fans and market totes in natural elephant grass and plant dyes. Filter by craft, price, dye tone and stock; worldwide express shipping.",
       },
-      { property: "og:title", content: "Shop Handwoven Bolga Baskets — Vetastudio" },
+      { property: "og:title", content: "Shop Handwoven Bolga Baskets from Ghana | Vetastudio" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
         content: "Sculptural elephant grass craft from the Bolgatanga cooperatives of Ghana.",
@@ -36,6 +45,14 @@ export const Route = createFileRoute("/shop")({
       ),
     ],
   }),
+  validateSearch: (search: Record<string, unknown>): ShopSearch => {
+    const out: ShopSearch = {};
+    if (typeof search["category"] === "string") out.category = search["category"];
+    if (typeof search["sort"] === "string") out.sort = search["sort"];
+    if (search["sale"] === "1" || search["sale"] === true) out.sale = true;
+    if (search["instock"] === "1" || search["instock"] === true) out.instock = true;
+    return out;
+  },
   component: ShopPage,
 });
 
@@ -59,13 +76,17 @@ const PRICE_PRESETS = [
 function ShopPage() {
   const { data: products, isLoading } = useProducts();
   const { data: categories } = useCategories();
+  const search = Route.useSearch();
+  const initialSort = SORTS.some((s) => s.value === search.sort)
+    ? (search.sort as (typeof SORTS)[number]["value"])
+    : "featured";
 
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(search.category ?? null);
   const [range, setRange] = useState<[number, number]>([0, 1000]);
   const [colors, setColors] = useState<string[]>([]);
-  const [inStockOnly, setInStockOnly] = useState(false);
-  const [onSaleOnly, setOnSaleOnly] = useState(false);
-  const [sort, setSort] = useState<(typeof SORTS)[number]["value"]>("featured");
+  const [inStockOnly, setInStockOnly] = useState(Boolean(search.instock));
+  const [onSaleOnly, setOnSaleOnly] = useState(Boolean(search.sale));
+  const [sort, setSort] = useState<(typeof SORTS)[number]["value"]>(initialSort);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const counts = useMemo(() => {

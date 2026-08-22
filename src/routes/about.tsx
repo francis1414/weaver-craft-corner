@@ -2,18 +2,21 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { SmartImage } from "@/components/SmartImage";
 import { IMAGES } from "@/lib/mock-data";
-import { canonical } from "@/lib/seo";
+import { breadcrumbJsonLd, canonical, jsonLdScript, organizationJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "The Artisan Story — Vetastudio" },
+      { title: "Our Story — Fair-Trade Bolga Basket Weavers in Ghana | Vetastudio" },
       {
         name: "description",
         content:
           "Meet the Bolgatanga weaving cooperatives behind Vetastudio: fair-wage certified artisans working with veta vera elephant grass.",
       },
-      { property: "og:title", content: "The Artisan Story — Vetastudio" },
+      {
+        property: "og:title",
+        content: "Our Story — Fair-Trade Bolga Basket Weavers in Ghana | Vetastudio",
+      },
       {
         property: "og:description",
         content: "Fair-trade transparency and the weavers of Upper East Ghana.",
@@ -23,6 +26,21 @@ export const Route = createFileRoute("/about")({
       ...canonical("/about").meta,
     ],
     links: canonical("/about").links,
+    scripts: [
+      jsonLdScript({
+        "@context": "https://schema.org",
+        "@type": "AboutPage",
+        name: "The Vetastudio Story",
+        url: "https://weaver-craft-corner.lovable.app/about",
+        about: organizationJsonLd,
+      }),
+      jsonLdScript(
+        breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Our Story", path: "/about" },
+        ]),
+      ),
+    ],
   }),
   component: AboutPage,
 });
@@ -30,7 +48,7 @@ export const Route = createFileRoute("/about")({
 function AboutPage() {
   return (
     <div className="mx-auto max-w-[1280px] px-4 py-16 md:px-8 md:py-24">
-      <header className="mx-auto max-w-3xl text-center">
+      <header id="story" className="mx-auto max-w-3xl scroll-mt-24 text-center">
         <p className="label-caps text-gold">Our brand heritage & provenance</p>
         <h1 className="mt-5 font-serif text-5xl leading-tight md:text-7xl">The Vetastudio Story</h1>
         <p className="mt-6 text-base leading-relaxed text-muted-foreground">
@@ -39,7 +57,7 @@ function AboutPage() {
         </p>
       </header>
 
-      <section className="mt-16 grid items-center gap-10 md:grid-cols-2 md:gap-16">
+      <section id="craft" className="mt-16 grid scroll-mt-24 items-center gap-10 md:grid-cols-2 md:gap-16">
         <div className="hover-zoom shadow-editorial">
           <SmartImage src={IMAGES.artisan} alt="Bolgatanga artisans weaving together" ratio="4/3" priority />
         </div>
@@ -58,7 +76,7 @@ function AboutPage() {
         </div>
       </section>
 
-      <div className="mt-24 grid gap-12 border-y border-border py-14 md:grid-cols-3">
+      <div id="transparency" className="mt-24 grid scroll-mt-24 gap-12 border-y border-border py-14 md:grid-cols-3">
         {[
           {
             title: "Fair-wage transparency",

@@ -101,6 +101,12 @@ export function useHomepage(): HomepageContent {
   return data;
 }
 
+/** Database table -> React Query cache key used by the storefront reads. */
+const TABLE_QUERY_KEYS: Record<string, string> = {
+  store_settings: "settings",
+  cms_homepage: "homepage",
+};
+
 /** Live database subscription that refreshes cached reads as merchants edit. */
 export function useRealtimeStore(tables: string[] = ["products", "orders", "reviews"]) {
   const queryClient = useQueryClient();
@@ -110,6 +116,9 @@ export function useRealtimeStore(tables: string[] = ["products", "orders", "revi
     const channel = supabase.channel(`vetastudio-${key}`);
     for (const table of key.split(",")) {
       channel.on("postgres_changes", { event: "*", schema: "public", table }, () => {
+        const alias = TABLE_QUERY_KEYS[table] ?? table;
+        void queryClient.invalidateQueries({ queryKey: [alias] });
+        void queryClient.invalidateQueries({ queryKey: ["admin", alias] });
         void queryClient.invalidateQueries({ queryKey: [table] });
         void queryClient.invalidateQueries({ queryKey: ["admin", table] });
       });

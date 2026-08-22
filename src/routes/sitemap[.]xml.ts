@@ -9,6 +9,7 @@ const STATIC_PATHS: { path: string; priority: string; changefreq: string }[] = [
   { path: "/shop", priority: "0.9", changefreq: "daily" },
   { path: "/journal", priority: "0.7", changefreq: "weekly" },
   { path: "/about", priority: "0.6", changefreq: "monthly" },
+  { path: "/wholesale", priority: "0.8", changefreq: "monthly" },
   { path: "/care", priority: "0.5", changefreq: "monthly" },
 ];
 
