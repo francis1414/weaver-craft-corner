@@ -35,8 +35,16 @@ export interface Product {
   weightKg: number;
   capacity: string;
   handle: string;
+  lengthCm: number | null;
+  widthCm: number | null;
+  heightCm: number | null;
+  diameterCm: number | null;
+  colorDescription: string;
+  videoUrl: string;
+  videoLoop: boolean;
   createdAt: string;
   updatedAt: string;
+
 }
 
 export interface Category {

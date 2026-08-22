@@ -51,8 +51,16 @@ export function mapProduct(row: Row): Product {
     weightKg: num(row["weight_kg"]),
     capacity: str(row["capacity"]),
     handle: str(row["handle"]),
+    lengthCm: row["length_cm"] == null ? null : num(row["length_cm"]),
+    widthCm: row["width_cm"] == null ? null : num(row["width_cm"]),
+    heightCm: row["height_cm"] == null ? null : num(row["height_cm"]),
+    diameterCm: row["diameter_cm"] == null ? null : num(row["diameter_cm"]),
+    colorDescription: str(row["color_description"]),
+    videoUrl: str(row["video_url"]),
+    videoLoop: row["video_loop"] === true,
     createdAt: str(row["created_at"]),
     updatedAt: str(row["updated_at"]),
+
   };
 }
 
