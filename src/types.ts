@@ -140,6 +140,10 @@ export interface StoreSettings {
   taxRate: number;
   shippingDomestic: number;
   shippingInternational: number;
+  shippingLabel: string;
+  shippingAdditionalItem: number;
+  shippingCarrier: string;
+  shippingTransitTime: string;
   freeShippingThreshold: number;
   announcement: string;
   supportEmail: string;
