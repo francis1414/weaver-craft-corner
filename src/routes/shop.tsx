@@ -36,6 +36,12 @@ export const Route = createFileRoute("/shop")({
       ),
     ],
   }),
+  validateSearch: (search: Record<string, unknown>) => ({
+    category: typeof search["category"] === "string" ? search["category"] : undefined,
+    sort: typeof search["sort"] === "string" ? search["sort"] : undefined,
+    sale: search["sale"] === "1" || search["sale"] === true ? true : undefined,
+    instock: search["instock"] === "1" || search["instock"] === true ? true : undefined,
+  }),
   component: ShopPage,
 });
 
