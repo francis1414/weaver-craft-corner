@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import SmartImage from "@/components/SmartImage";
+import { SmartImage } from "@/components/SmartImage";
 import { useAdminCategories } from "@/hooks/use-store-data";
 import { deleteRow, insertRow, updateRow } from "@/lib/store-api";
 import type { Category } from "@/types";
@@ -140,7 +140,7 @@ function AdminCategories() {
               <SmartImage
                 src={category.image}
                 alt={category.name}
-                aspect="4/3"
+                ratio="4/3"
                 className="rounded-md"
               />
               <div className="mt-3 flex items-start justify-between gap-2">
