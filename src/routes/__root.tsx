@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -147,6 +148,17 @@ function RootComponent() {
 
 function StoreShell() {
   useRealtimeStore(["products", "categories", "reviews", "orders"]);
+  const { pathname } = useLocation();
+  const isBackOffice = pathname.startsWith("/admin");
+
+  if (isBackOffice) {
+    return (
+      <>
+        <Outlet />
+        <Toaster position="bottom-right" />
+      </>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -165,3 +177,4 @@ function StoreShell() {
     </div>
   );
 }
+

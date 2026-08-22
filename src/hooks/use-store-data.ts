@@ -120,3 +120,16 @@ export function useRealtimeStore(tables: string[] = ["products", "orders", "revi
     };
   }, [key, queryClient]);
 }
+
+/** Admin reads bypass the demo-content fallback so edits are always truthful. */
+export function useAdminCategories() {
+  return useQuery<Category[]>({ queryKey: ["admin", "categories"], queryFn: fetchCategories });
+}
+
+export function useAdminHomepage() {
+  return useQuery<HomepageContent>({ queryKey: ["admin", "homepage"], queryFn: fetchHomepage });
+}
+
+export function useAdminSettings() {
+  return useQuery<StoreSettings>({ queryKey: ["admin", "settings"], queryFn: fetchSettings });
+}
