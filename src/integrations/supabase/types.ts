@@ -134,6 +134,7 @@ export type Database = {
           items: Json
           order_number: string
           payment_method: string
+          payment_reference: string | null
           payment_status: string
           shipping_cost: number
           subtotal: number
@@ -154,6 +155,7 @@ export type Database = {
           items?: Json
           order_number: string
           payment_method?: string
+          payment_reference?: string | null
           payment_status?: string
           shipping_cost?: number
           subtotal?: number
@@ -174,6 +176,7 @@ export type Database = {
           items?: Json
           order_number?: string
           payment_method?: string
+          payment_reference?: string | null
           payment_status?: string
           shipping_cost?: number
           subtotal?: number
@@ -192,13 +195,17 @@ export type Database = {
           care_instructions: string
           category: string
           color: string[]
+          color_description: string
           created_at: string
           description: string
+          diameter_cm: number | null
           dimensions: string
           featured: boolean
           handle: string
+          height_cm: number | null
           id: string
           images: string[]
+          length_cm: number | null
           low_stock_threshold: number
           material: string
           name: string
@@ -213,7 +220,10 @@ export type Database = {
           stock_quantity: number
           tags: string[]
           updated_at: string
+          video_loop: boolean
+          video_url: string
           weight_kg: number
+          width_cm: number | null
         }
         Insert: {
           artisan_story?: string
@@ -221,13 +231,17 @@ export type Database = {
           care_instructions?: string
           category: string
           color?: string[]
+          color_description?: string
           created_at?: string
           description?: string
+          diameter_cm?: number | null
           dimensions?: string
           featured?: boolean
           handle?: string
+          height_cm?: number | null
           id?: string
           images?: string[]
+          length_cm?: number | null
           low_stock_threshold?: number
           material?: string
           name: string
@@ -242,7 +256,10 @@ export type Database = {
           stock_quantity?: number
           tags?: string[]
           updated_at?: string
+          video_loop?: boolean
+          video_url?: string
           weight_kg?: number
+          width_cm?: number | null
         }
         Update: {
           artisan_story?: string
@@ -250,13 +267,17 @@ export type Database = {
           care_instructions?: string
           category?: string
           color?: string[]
+          color_description?: string
           created_at?: string
           description?: string
+          diameter_cm?: number | null
           dimensions?: string
           featured?: boolean
           handle?: string
+          height_cm?: number | null
           id?: string
           images?: string[]
+          length_cm?: number | null
           low_stock_threshold?: number
           material?: string
           name?: string
@@ -271,7 +292,10 @@ export type Database = {
           stock_quantity?: number
           tags?: string[]
           updated_at?: string
+          video_loop?: boolean
+          video_url?: string
           weight_kg?: number
+          width_cm?: number | null
         }
         Relationships: []
       }

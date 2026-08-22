@@ -4,12 +4,16 @@ import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { SmartImage } from "@/components/SmartImage";
+import { StripeEmbeddedCheckout } from "@/components/StripeEmbeddedCheckout";
 import { useStore } from "@/context/StoreProvider";
 import { useSettings } from "@/hooks/use-store-data";
 import { usePrice } from "@/hooks/use-price";
 import { createOrder } from "@/lib/store-api";
+import { paymentsConfigured } from "@/lib/stripe";
 import { cn } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -109,12 +113,31 @@ function CheckoutPage() {
       });
       setOrderNumber(number);
       clearCart();
-      setStep(4);
+      setStep(payment === "card" && paymentsConfigured() ? 5 : 4);
     } catch {
       toast.error("We could not place your order. Please try again.");
     } finally {
       setPending(false);
     }
+  }
+
+  if (step === 5 && orderNumber) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-16 md:px-8">
+        <PaymentTestModeBanner />
+        <p className="label-caps mt-8 text-gold">Secure payment</p>
+        <h1 className="mt-3 font-serif text-4xl">Pay for order {orderNumber}</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Your order is reserved. Complete payment below to confirm it with our studio.
+        </p>
+        <div className="mt-8">
+          <StripeEmbeddedCheckout
+            orderNumber={orderNumber}
+            returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`}
+          />
+        </div>
+      </div>
+    );
   }
 
   if (step === 4 && orderNumber) {
@@ -138,6 +161,8 @@ function CheckoutPage() {
       </div>
     );
   }
+
+
 
   if (cart.length === 0) {
     return (
@@ -304,9 +329,16 @@ function CheckoutPage() {
                   {option.label}
                 </label>
               ))}
-              <p className="pt-2 text-xs text-muted-foreground">
-                Orders are placed as pending and confirmed by the studio before payment is captured.
-              </p>
+              {payment === "card" && paymentsConfigured() ? (
+                <p className="pt-2 text-xs text-muted-foreground">
+                  You will pay securely by card on the next step. Nothing is charged until then.
+                </p>
+              ) : (
+                <p className="pt-2 text-xs text-muted-foreground">
+                  Orders placed with this method stay pending until the studio confirms payment.
+                </p>
+              )}
+
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"

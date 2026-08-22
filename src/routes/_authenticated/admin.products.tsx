@@ -38,6 +38,19 @@ const slugify = (v: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
+const DYE_TONES = [
+  "Natural Straw",
+  "Charcoal Black",
+  "Savannah Gold",
+  "Indigo Blue",
+  "Terracotta Red",
+  "Sage Green",
+  "Burnt Orange",
+  "Dusty Pink",
+  "Ochre Yellow",
+  "Deep Plum",
+];
+
 const emptyDraft = {
   name: "",
   slug: "",
@@ -56,14 +69,22 @@ const emptyDraft = {
   material: "Veta Vera elephant grass",
   artisanStory: "",
   careInstructions: "",
-  color: "",
+  color: [] as string[],
+  colorDescription: "",
   tags: "",
   weightKg: 1,
   capacity: "",
   handle: "",
+  lengthCm: "",
+  widthCm: "",
+  heightCm: "",
+  diameterCm: "",
+  videoUrl: "",
+  videoLoop: true,
 };
 
 type Draft = typeof emptyDraft & { id?: string };
+
 
 type StatusFilter = "all" | "active" | "draft" | "low" | "archived";
 
@@ -114,12 +135,20 @@ function AdminProducts() {
     material: p.material,
     artisanStory: p.artisanStory,
     careInstructions: p.careInstructions,
-    color: p.color.join(", "),
+    color: p.color,
+    colorDescription: p.colorDescription,
     tags: p.tags.join(", "),
     weightKg: p.weightKg,
     capacity: p.capacity,
     handle: p.handle,
+    lengthCm: p.lengthCm == null ? "" : String(p.lengthCm),
+    widthCm: p.widthCm == null ? "" : String(p.widthCm),
+    heightCm: p.heightCm == null ? "" : String(p.heightCm),
+    diameterCm: p.diameterCm == null ? "" : String(p.diameterCm),
+    videoUrl: p.videoUrl,
+    videoLoop: p.videoLoop,
   });
+
 
   async function save() {
     if (!draft) return;
@@ -149,12 +178,20 @@ function AdminProducts() {
         material: draft.material,
         artisan_story: draft.artisanStory,
         care_instructions: draft.careInstructions,
-        color: list(draft.color, /,/),
+        color: draft.color,
+        color_description: draft.colorDescription,
         tags: list(draft.tags, /,/),
         weight_kg: Number(draft.weightKg) || 1,
         capacity: draft.capacity,
         handle: draft.handle,
+        length_cm: draft.lengthCm === "" ? null : Number(draft.lengthCm),
+        width_cm: draft.widthCm === "" ? null : Number(draft.widthCm),
+        height_cm: draft.heightCm === "" ? null : Number(draft.heightCm),
+        diameter_cm: draft.diameterCm === "" ? null : Number(draft.diameterCm),
+        video_url: draft.videoUrl,
+        video_loop: draft.videoLoop,
       });
+
       toast.success(draft.id ? "Product updated" : "Product created");
       setDraft(null);
       refresh();
@@ -167,8 +204,6 @@ function AdminProducts() {
 
   async function duplicate(product: Product) {
     try {
-      const copy = toDraft(product);
-      delete copy.id;
       await upsertProduct({
         name: `${product.name} (copy)`,
         slug: `${product.slug}-copy-${Date.now().toString(36)}`,
@@ -188,11 +223,19 @@ function AdminProducts() {
         artisan_story: product.artisanStory,
         care_instructions: product.careInstructions,
         color: product.color,
+        color_description: product.colorDescription,
         tags: product.tags,
         weight_kg: product.weightKg,
         capacity: product.capacity,
         handle: product.handle,
+        length_cm: product.lengthCm,
+        width_cm: product.widthCm,
+        height_cm: product.heightCm,
+        diameter_cm: product.diameterCm,
+        video_url: product.videoUrl,
+        video_loop: product.videoLoop,
       });
+
       toast.success("Duplicated as draft");
       refresh();
     } catch (error) {
@@ -493,20 +536,109 @@ function AdminProducts() {
                   onChange={(e) => setDraft({ ...draft, handle: e.target.value })}
                 />
               </Field>
-              <Field label="Weight (kg)">
-                <Input
-                  type="number"
-                  step="0.1"
-                  value={draft.weightKg}
-                  onChange={(e) => setDraft({ ...draft, weightKg: Number(e.target.value) })}
-                />
+              <Field label="Weight">
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="number"
+                    step="0.1"
+                    value={draft.weightKg}
+                    onChange={(e) => setDraft({ ...draft, weightKg: Number(e.target.value) })}
+                  />
+                  <span className="w-24 text-xs text-muted-foreground">
+                    kg · {(Number(draft.weightKg) * 2.20462).toFixed(1)} lbs
+                  </span>
+                </div>
               </Field>
-              <Field label="Colours (comma separated)">
+
+              <div className="rounded-md border border-border p-4 sm:col-span-2">
+                <Label className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  Measurements
+                </Label>
+                <div className="mt-3 grid gap-3 sm:grid-cols-4">
+                  {(
+                    [
+                      ["lengthCm", "Length"],
+                      ["widthCm", "Width"],
+                      ["heightCm", "Height"],
+                      ["diameterCm", "Diameter"],
+                    ] as const
+                  ).map(([key, label]) => (
+                    <div key={key} className="space-y-1">
+                      <Label className="text-xs">{label} (cm)</Label>
+                      <Input
+                        type="number"
+                        step="0.1"
+                        value={draft[key]}
+                        onChange={(e) => setDraft({ ...draft, [key]: e.target.value })}
+                      />
+                      <p className="text-[11px] text-muted-foreground">
+                        {draft[key] === ""
+                          ? "—"
+                          : `${(Number(draft[key]) / 2.54).toFixed(1)} in`}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="rounded-md border border-border p-4 sm:col-span-2">
+                <Label className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  Weave colour &amp; natural dye tones
+                </Label>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {DYE_TONES.map((tone) => {
+                    const on = draft.color.includes(tone);
+                    return (
+                      <button
+                        key={tone}
+                        type="button"
+                        onClick={() =>
+                          setDraft({
+                            ...draft,
+                            color: on
+                              ? draft.color.filter((c) => c !== tone)
+                              : [...draft.color, tone],
+                          })
+                        }
+                        className={`rounded-full border px-3 py-1.5 text-xs transition ${
+                          on
+                            ? "border-transparent bg-[#C29B38] text-[#1F1D1A]"
+                            : "border-border text-muted-foreground hover:border-foreground"
+                        }`}
+                      >
+                        {tone}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="mt-3 space-y-1">
+                  <Label className="text-xs">Colour description</Label>
+                  <Input
+                    value={draft.colorDescription}
+                    onChange={(e) => setDraft({ ...draft, colorDescription: e.target.value })}
+                    placeholder="e.g. Sun-faded ochre with charcoal banding"
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-3 rounded-md border border-border p-4 sm:col-span-2">
+                <Label className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  Product video
+                </Label>
                 <Input
-                  value={draft.color}
-                  onChange={(e) => setDraft({ ...draft, color: e.target.value })}
+                  value={draft.videoUrl}
+                  onChange={(e) => setDraft({ ...draft, videoUrl: e.target.value })}
+                  placeholder="https://… mp4 or hosted video link"
                 />
-              </Field>
+                <div className="flex items-center justify-between">
+                  <Label className="text-sm">Loop video automatically</Label>
+                  <Switch
+                    checked={draft.videoLoop}
+                    onCheckedChange={(checked) => setDraft({ ...draft, videoLoop: checked })}
+                  />
+                </div>
+              </div>
+
               <Field label="Tags (comma separated)" className="sm:col-span-2">
                 <Input
                   value={draft.tags}
