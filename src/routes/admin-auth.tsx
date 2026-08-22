@@ -82,7 +82,7 @@ function AdminAuthPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background px-6 py-20">
+    <main className="flex min-h-[70vh] items-center justify-center bg-background px-6 py-16">
       <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 shadow-sm">
         <div className="mb-8 text-center">
           <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary">
