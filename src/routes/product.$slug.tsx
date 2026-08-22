@@ -390,9 +390,10 @@ function ProductPage() {
           {tab === "Shipping" && (
             <div className="space-y-2">
               <p>
-                Tracked air courier via DHL Express / FedEx — {price(shipBase)} base rate, 7–10
-                business days worldwide.
+                {settings.shippingCarrier} — {price(shipBase)} base rate for the first item,
+                +{price(shipExtra)} per additional item. {settings.shippingTransitTime} worldwide.
               </p>
+
               <p>
                 Complimentary shipping on orders above {price(settings.freeShippingThreshold)}. Each
                 basket travels folded and is reshaped at home.
