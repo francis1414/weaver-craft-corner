@@ -211,7 +211,31 @@ function ProductPage() {
               ))}
             </div>
           )}
+          {product.videoUrl &&
+            (youtubeEmbedUrl(product.videoUrl, product.videoLoop) ? (
+              <div className="mt-4 aspect-video w-full overflow-hidden border border-border">
+                <iframe
+                  src={youtubeEmbedUrl(product.videoUrl, product.videoLoop)!}
+                  title={`${product.name} video`}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
+                  allowFullScreen
+                  className="h-full w-full"
+                />
+              </div>
+            ) : (
+              <video
+                src={product.videoUrl}
+                controls
+                playsInline
+                muted={product.videoLoop}
+                loop={product.videoLoop}
+                autoPlay={product.videoLoop}
+                className="mt-4 w-full border border-border"
+              />
+            ))}
         </div>
+
 
         <div>
           <p className="text-[11px] uppercase tracking-[0.2em] text-gold">
