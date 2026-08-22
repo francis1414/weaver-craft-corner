@@ -17,6 +17,7 @@ import { Route as CareRouteImport } from './routes/care'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as WholesaleRouteImport } from './routes/wholesale'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
@@ -72,6 +73,11 @@ const ShopRoute = ShopRouteImport.update({
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WholesaleRoute = WholesaleRouteImport.update({
+  id: '/wholesale',
+  path: '/wholesale',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRouteWithChildren
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/wholesale': typeof WholesaleRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/checkout/return': typeof CheckoutReturnRoute
   '/journal/$slug': typeof JournalSlugRoute
@@ -203,6 +210,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRouteWithChildren
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/wholesale': typeof WholesaleRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/product/$slug': typeof ProductSlugRoute
@@ -230,6 +238,7 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRouteWithChildren
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/wholesale': typeof WholesaleRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/checkout/return': typeof CheckoutReturnRoute
   '/journal/$slug': typeof JournalSlugRoute
@@ -258,6 +267,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/shop'
     | '/sitemap.xml'
+    | '/wholesale'
     | '/admin'
     | '/checkout/return'
     | '/journal/$slug'
@@ -284,6 +294,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/shop'
     | '/sitemap.xml'
+    | '/wholesale'
     | '/checkout/return'
     | '/journal/$slug'
     | '/product/$slug'
@@ -310,6 +321,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/shop'
     | '/sitemap.xml'
+    | '/wholesale'
     | '/_authenticated/admin'
     | '/checkout/return'
     | '/journal/$slug'
@@ -338,6 +350,7 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRouteWithChildren
   ShopRoute: typeof ShopRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  WholesaleRoute: typeof WholesaleRoute
   JournalSlugRoute: typeof JournalSlugRoute
   ProductSlugRoute: typeof ProductSlugRoute
   JournalIndexRoute: typeof JournalIndexRoute
@@ -401,6 +414,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/wholesale': {
+      id: '/wholesale'
+      path: '/wholesale'
+      fullPath: '/wholesale'
+      preLoaderRoute: typeof WholesaleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -586,6 +606,7 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRouteWithChildren,
   ShopRoute: ShopRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  WholesaleRoute: WholesaleRoute,
   JournalSlugRoute: JournalSlugRoute,
   ProductSlugRoute: ProductSlugRoute,
   JournalIndexRoute: JournalIndexRoute,

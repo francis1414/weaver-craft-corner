@@ -83,7 +83,8 @@ export function Footer() {
               { to: "/shop", search: { sort: "newest" }, label: "New Arrivals" },
               { to: "/shop", search: { sort: "rating" }, label: "Best Sellers" },
               { to: "/shop", search: { sale: true }, label: "On Sale" },
-              { to: "/care", hash: "custom-orders", label: "Custom & Wholesale" },
+              { to: "/wholesale", label: "Wholesale & Trade" },
+              { to: "/care", hash: "custom-orders", label: "Custom Orders" },
             ]}
           />
           <FooterCol
