@@ -490,19 +490,18 @@ function AdminProducts() {
                   }
                 />
               </Field>
-              <Field label="Primary image URL" className="sm:col-span-2">
-                <Input
-                  value={draft.primaryImage}
-                  onChange={(e) => setDraft({ ...draft, primaryImage: e.target.value })}
+              <div className="sm:col-span-2">
+                <MediaUploader
+                  label="Photo gallery (first photo is the primary)"
+                  value={draft.media}
+                  onChange={(media) => setDraft({ ...draft, media })}
+                  accept="image/*"
+                  folder="products"
+                  max={32}
+                  hint="Upload from your computer, phone gallery or camera — or paste a hosted image URL."
                 />
-              </Field>
-              <Field label="Gallery image URLs (one per line)" className="sm:col-span-2">
-                <Textarea
-                  rows={3}
-                  value={draft.images}
-                  onChange={(e) => setDraft({ ...draft, images: e.target.value })}
-                />
-              </Field>
+              </div>
+
               <Field label="Description" className="sm:col-span-2">
                 <Textarea
                   rows={3}
