@@ -24,35 +24,54 @@ export const Route = createFileRoute("/journal/")({
 
 function JournalPage() {
   const { data: entries } = useJournal();
+  const [featured, ...archive] = entries;
 
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-16 md:px-8">
-      <header className="max-w-2xl">
-        <p className="text-xs uppercase tracking-[0.3em] text-gold">Journal</p>
-        <h1 className="mt-3 font-serif text-4xl leading-tight md:text-5xl">
-          Notes from the weaving villages
-        </h1>
+    <div className="mx-auto max-w-[1280px] px-4 py-16 md:px-8 md:py-24">
+      <header className="grid items-end gap-8 border-b border-border pb-10 md:grid-cols-[minmax(0,1fr)_auto]">
+        <div className="max-w-3xl">
+          <p className="label-caps text-gold">Stories, provenance & interior styling</p>
+          <h1 className="mt-5 font-serif text-5xl leading-tight md:text-7xl">The Vetastudio Journal</h1>
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
+            Exploring the intersection of ancestral Ghanaian craftsmanship and contemporary design.
+            Our stories are woven from the hands of the masters.
+          </p>
+        </div>
+        <span className="label-caps border-b border-foreground pb-1">All stories</span>
       </header>
 
-      <div className="mt-14 grid gap-x-8 gap-y-14 md:grid-cols-2 lg:grid-cols-3">
-        {entries.map((entry) => (
-          <article key={entry.id}>
-            <Link to="/journal/$slug" params={{ slug: entry.slug }} className="group block">
-              <SmartImage
-                src={entry.coverImage}
-                alt={entry.title}
-                ratio="4/3"
-                className="transition-transform duration-700 group-hover:scale-[1.04]"
-              />
-              <p className="mt-4 text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
-                {new Date(entry.publishedAt).toLocaleDateString()} · {entry.readTime} min read
-              </p>
-              <h2 className="mt-2 font-serif text-2xl leading-snug">{entry.title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{entry.excerpt}</p>
+      {featured && (
+        <section className="mt-14 grid items-start gap-10 md:grid-cols-12">
+          <article className="md:col-span-8">
+            <Link to="/journal/$slug" params={{ slug: featured.slug }} className="group block">
+              <div className="hover-zoom">
+                <SmartImage src={featured.coverImage} alt={featured.title} ratio="16/9" priority />
+              </div>
+              <div className="mt-7 max-w-2xl">
+                <p className="label-caps text-gold">Featured essay · {featured.readTime} min read</p>
+                <h2 className="mt-3 font-serif text-3xl leading-snug md:text-4xl">{featured.title}</h2>
+                <p className="mt-4 text-base leading-relaxed text-muted-foreground">{featured.excerpt}</p>
+                <span className="mt-6 inline-block border-b border-border pb-1 font-serif italic transition-colors group-hover:border-foreground">
+                  Read the narrative
+                </span>
+              </div>
             </Link>
           </article>
-        ))}
-      </div>
+
+          <aside className="border border-border bg-card p-7 shadow-editorial md:col-span-4 md:mt-24 md:p-9">
+            <h2 className="font-serif text-xl italic">From the archives</h2>
+            <div className="mt-8 divide-y divide-border">
+              {archive.map((entry) => (
+                <Link key={entry.id} to="/journal/$slug" params={{ slug: entry.slug }} className="group block py-6 first:pt-0 last:pb-0">
+                  <p className="label-caps text-muted-foreground">{new Date(entry.publishedAt).toLocaleDateString()} · {entry.readTime} min</p>
+                  <h3 className="mt-2 font-serif text-lg leading-snug transition-colors group-hover:text-gold">{entry.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{entry.excerpt}</p>
+                </Link>
+              ))}
+            </div>
+          </aside>
+        </section>
+      )}
     </div>
   );
 }

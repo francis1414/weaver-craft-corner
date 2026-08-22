@@ -24,28 +24,36 @@ export const Route = createFileRoute("/about")({
 
 function AboutPage() {
   return (
-    <div className="mx-auto max-w-[1200px] px-4 py-16 md:px-8">
-      <header className="max-w-3xl">
-        <p className="text-xs uppercase tracking-[0.3em] text-gold">Our Mission</p>
-        <h1 className="mt-3 font-serif text-4xl leading-tight md:text-6xl">
-          Craft that pays the weaver first
-        </h1>
+    <div className="mx-auto max-w-[1280px] px-4 py-16 md:px-8 md:py-24">
+      <header className="mx-auto max-w-3xl text-center">
+        <p className="label-caps text-gold">Our brand heritage & provenance</p>
+        <h1 className="mt-5 font-serif text-5xl leading-tight md:text-7xl">The Vetastudio Story</h1>
         <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-          Vetastudio works directly with weaving cooperatives in Bolgatanga, Upper East Ghana. Every
-          basket is made from veta vera elephant grass harvested in the dry season, split by hand,
-          dyed with plant pigments, and woven over two to five days by a single artisan.
+          Authentic handmade craftsmanship from Ghana, presented as contemporary, globally desirable
+          fibre art for modern living.
         </p>
       </header>
 
-      <SmartImage
-        src={IMAGES.artisan}
-        alt="A weaver working elephant grass into a Bolga basket"
-        ratio="16/9"
-        priority
-        className="mt-12"
-      />
+      <section className="mt-16 grid items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div className="hover-zoom shadow-editorial">
+          <SmartImage src={IMAGES.artisan} alt="Bolgatanga artisans weaving together" ratio="4/3" priority />
+        </div>
+        <div>
+          <p className="label-caps text-gold">Rooted in Bolgatanga</p>
+          <h2 className="mt-4 font-serif text-3xl leading-tight md:text-4xl">Rooted in Northern Ghana, designed for modern living</h2>
+          <p className="mt-6 text-sm leading-relaxed text-muted-foreground">
+            Vetastudio works directly with weaving cooperatives in Bolgatanga, Upper East Ghana. Every
+            basket is made from veta vera elephant grass harvested in the dry season, split by hand,
+            dyed with plant pigments, and woven over two to five days by a single artisan.
+          </p>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            We bridge generations of technique with a thoughtful contemporary point of view, honouring
+            every maker and the landscape that supplies the fibre.
+          </p>
+        </div>
+      </section>
 
-      <div className="mt-16 grid gap-12 md:grid-cols-3">
+      <div className="mt-24 grid gap-12 border-y border-border py-14 md:grid-cols-3">
         {[
           {
             title: "Fair-wage transparency",
@@ -67,8 +75,9 @@ function AboutPage() {
         ))}
       </div>
 
-      <section className="mt-20 border-t border-border pt-12">
-        <h2 className="font-serif text-3xl">Where your money goes</h2>
+      <section className="mt-20">
+        <p className="label-caps text-gold">Complete transparency</p>
+        <h2 className="mt-3 font-serif text-3xl">Where your money goes</h2>
         <ul className="mt-8 grid gap-6 sm:grid-cols-4">
           {[
             { label: "Artisan payment", value: "46%" },
