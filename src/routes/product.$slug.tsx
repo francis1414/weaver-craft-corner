@@ -1,7 +1,20 @@
 import { useMemo, useState } from "react";
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import { motion } from "motion/react";
-import { Heart, Minus, Plus, Scale, Truck } from "lucide-react";
+import {
+  Globe,
+  Heart,
+  MessageSquare,
+  Minus,
+  Plane,
+  Plus,
+  RotateCcw,
+  Scale,
+  ShieldCheck,
+  Sparkles,
+  Truck,
+  ZoomIn,
+} from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -9,7 +22,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { SmartImage } from "@/components/SmartImage";
 import { StarPicker, StarRating } from "@/components/StarRating";
 import { useStore } from "@/context/StoreProvider";
-import { useProducts, useReviews } from "@/hooks/use-store-data";
+import { useProducts, useReviews, useSettings } from "@/hooks/use-store-data";
 import { usePrice } from "@/hooks/use-price";
 import { submitReview } from "@/lib/store-api";
 import { cn } from "@/lib/utils";
@@ -45,11 +58,29 @@ const reviewSchema = z.object({
   rating: z.number().min(1).max(5),
 });
 
+const RATING_LABEL: Record<number, string> = {
+  5: "5 Stars — Outstanding & Authentic",
+  4: "4 Stars — Excellent Craft",
+  3: "3 Stars — Good",
+  2: "2 Stars — Below Expectations",
+  1: "1 Star — Disappointed",
+};
+
+const TABS = [
+  "Description",
+  "Dimensions & Weight",
+  "Materials",
+  "Craftsmanship",
+  "Shipping",
+  "Care Instructions",
+] as const;
+
 function ProductPage() {
   const { slug } = Route.useParams();
   const navigate = useNavigate();
   const { data: products } = useProducts();
   const { data: reviews } = useReviews();
+  const settings = useSettings();
   const price = usePrice();
   const { addToCart, toggleWishlist, isWishlisted, toggleCompare, isCompared, openDrawer } =
     useStore();
@@ -57,8 +88,10 @@ function ProductPage() {
   const product = products.find((p) => p.slug === slug);
   const [activeImage, setActiveImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [tab, setTab] = useState<(typeof TABS)[number]>("Description");
+  const [zoom, setZoom] = useState<{ x: number; y: number } | null>(null);
   const [rating, setRating] = useState(5);
-  const [form, setForm] = useState({ customerName: "", title: "", comment: "" });
+  const [form, setForm] = useState({ customerName: "", email: "", title: "", comment: "" });
   const [pending, setPending] = useState(false);
 
   const productReviews = useMemo(
@@ -74,9 +107,7 @@ function ProductPage() {
 
   const related = useMemo(
     () =>
-      products
-        .filter((p) => p.id !== product?.id && p.category === product?.category)
-        .slice(0, 4),
+      products.filter((p) => p.id !== product?.id && p.category === product?.category).slice(0, 4),
     [products, product],
   );
 
@@ -97,10 +128,19 @@ function ProductPage() {
   const gallery = [product.primaryImage, ...product.images].filter(Boolean);
   const onSale = product.salePrice != null && product.salePrice < product.price;
   const lowStock = product.stockQuantity > 0 && product.stockQuantity <= product.lowStockThreshold;
+  const shipBase = settings.shippingInternational;
+  const averageRating = productReviews.length
+    ? productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length
+    : product.rating;
 
   async function handleReview(e: React.FormEvent) {
     e.preventDefault();
-    const parsed = reviewSchema.safeParse({ ...form, rating });
+    const parsed = reviewSchema.safeParse({
+      customerName: form.customerName,
+      title: form.title,
+      comment: form.comment,
+      rating,
+    });
     if (!parsed.success) {
       toast.error(parsed.error.issues[0]?.message ?? "Check your review");
       return;
@@ -109,7 +149,7 @@ function ProductPage() {
     try {
       await submitReview({ productId: product!.id, ...parsed.data });
       toast.success("Thank you — your review is awaiting approval");
-      setForm({ customerName: "", title: "", comment: "" });
+      setForm({ customerName: "", email: "", title: "", comment: "" });
       setRating(5);
     } catch {
       toast.error("Could not submit your review right now");
@@ -128,19 +168,32 @@ function ProductPage() {
         <span className="capitalize">{product.category}</span>
       </nav>
 
-      <div className="mt-8 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
-        <div>
-          <div className="group overflow-hidden">
-            <SmartImage
-              src={gallery[activeImage]}
-              alt={product.name}
-              ratio="4/5"
-              priority
-              className="transition-transform duration-700 group-hover:scale-[1.12]"
-            />
+      {/* Gallery + purchase panel */}
+      <div className="mt-6 grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-14">
+        <div className="lg:sticky lg:top-24 lg:self-start">
+          <div
+            className="relative overflow-hidden border border-border"
+            onMouseMove={(e) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              setZoom({
+                x: ((e.clientX - rect.left) / rect.width) * 100,
+                y: ((e.clientY - rect.top) / rect.height) * 100,
+              });
+            }}
+            onMouseLeave={() => setZoom(null)}
+          >
+            <div
+              className={cn("transition-transform duration-500", zoom ? "scale-[1.7]" : "scale-100")}
+              style={{ transformOrigin: zoom ? `${zoom.x}% ${zoom.y}%` : "center" }}
+            >
+              <SmartImage src={gallery[activeImage]} alt={product.name} ratio="1/1" priority />
+            </div>
+            <span className="pointer-events-none absolute bottom-3 left-3 flex items-center gap-1.5 bg-foreground/85 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-background">
+              <ZoomIn size={12} /> Hover to zoom weave
+            </span>
           </div>
           {gallery.length > 1 && (
-            <div className="mt-4 flex gap-3">
+            <div className="mt-4 flex flex-wrap gap-3">
               {gallery.map((img, i) => (
                 <button
                   key={`${img}-${i}`}
@@ -148,8 +201,8 @@ function ProductPage() {
                   onClick={() => setActiveImage(i)}
                   aria-label={`View image ${i + 1}`}
                   className={cn(
-                    "w-20 border transition-colors",
-                    i === activeImage ? "border-gold" : "border-transparent",
+                    "w-[68px] border p-0.5 transition-colors",
+                    i === activeImage ? "border-gold" : "border-border hover:border-foreground/40",
                   )}
                 >
                   <SmartImage src={img} alt="" ratio="1/1" />
@@ -160,17 +213,22 @@ function ProductPage() {
         </div>
 
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-gold">{product.category}</p>
-          <h1 className="mt-3 font-serif text-4xl leading-tight">{product.name}</h1>
-          <div className="mt-3 flex items-center gap-3">
-            <StarRating value={product.rating} />
+          <p className="text-[11px] uppercase tracking-[0.2em] text-gold">
+            {product.material || "100% Elephant grass (veta vera)"}
+            <span className="mx-2 text-muted-foreground">•</span>
+            <span className="text-muted-foreground">SKU: {product.sku}</span>
+          </p>
+          <h1 className="mt-3 font-serif text-4xl leading-tight md:text-5xl">{product.name}</h1>
+          <div className="mt-3 flex items-center gap-2.5">
+            <StarRating value={averageRating} />
+            <span className="text-sm">{averageRating.toFixed(1)}</span>
             <span className="text-xs text-muted-foreground">
-              {product.reviewCount} collector reviews
+              ({productReviews.length} customer reviews)
             </span>
           </div>
 
           <div className="mt-6 flex items-baseline gap-3">
-            <span className="font-serif text-3xl">{price(product.salePrice ?? product.price)}</span>
+            <span className="font-serif text-4xl">{price(product.salePrice ?? product.price)}</span>
             {onSale && (
               <>
                 <span className="text-sm text-muted-foreground line-through">
@@ -185,13 +243,36 @@ function ProductPage() {
 
           <p className="mt-6 text-sm leading-relaxed text-muted-foreground">{product.description}</p>
 
+          {/* Shipping box */}
+          <div className="mt-7 border border-border">
+            <div className="flex items-center justify-between gap-4 border-b border-border px-4 py-3">
+              <span className="flex items-center gap-2 text-sm">
+                <Globe size={15} className="text-gold" /> Worldwide Express Shipping
+              </span>
+              <span className="bg-stone px-3 py-1 font-mono text-xs">{price(shipBase)}</span>
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 text-xs text-muted-foreground">
+              <span>
+                • Base rate: <strong className="text-foreground">{price(shipBase)}</strong> for 1st
+                item
+              </span>
+              <span>(+{price(Math.round(shipBase * 0.6))} for each additional item)</span>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 px-4 pb-3 text-xs text-muted-foreground">
+              <Plane size={13} className="text-gold" /> Tracked air courier via DHL Express / FedEx
+              <span className="mx-1">•</span>
+              <strong className="text-foreground">7–10 Business Days</strong> delivery
+            </div>
+          </div>
+
           {lowStock && (
             <p className="mt-5 text-xs uppercase tracking-[0.16em] text-destructive">
               Only {product.stockQuantity} left in stock
             </p>
           )}
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+          {/* Purchase actions */}
+          <div className="mt-7 flex flex-wrap items-center gap-3">
             <div className="inline-flex items-center border border-border">
               <button
                 type="button"
@@ -218,171 +299,267 @@ function ProductPage() {
               disabled={product.stockQuantity <= 0}
               onClick={() => {
                 addToCart(product, quantity);
-                toast.success("Added to cart");
+                toast.success("Added to your bag");
                 openDrawer("cart");
               }}
-              className="h-12 flex-1 bg-foreground px-6 text-xs uppercase tracking-[0.2em] text-background disabled:opacity-40"
+              className="flex h-12 flex-1 items-center justify-center gap-2 bg-foreground px-6 text-xs uppercase tracking-[0.2em] text-background disabled:opacity-40"
             >
-              Add to cart
+              Add to shopping bag
             </motion.button>
 
             <button
               type="button"
-              disabled={product.stockQuantity <= 0}
-              onClick={() => {
-                addToCart(product, quantity);
-                void navigate({ to: "/checkout" });
-              }}
-              className="h-12 border border-foreground px-6 text-xs uppercase tracking-[0.2em] disabled:opacity-40"
-            >
-              Buy now
-            </button>
-          </div>
-
-          <div className="mt-4 flex flex-wrap gap-4 text-xs uppercase tracking-[0.14em] text-muted-foreground">
-            <button
-              type="button"
               onClick={() => toggleWishlist(product)}
-              className="flex h-11 items-center gap-2 hover:text-gold"
+              aria-label="Add to wishlist"
+              className="grid h-12 w-12 place-items-center border border-border transition-colors hover:border-gold"
             >
-              <Heart size={14} className={cn(isWishlisted(product.id) && "fill-gold text-gold")} />
-              {isWishlisted(product.id) ? "Saved" : "Add to wishlist"}
+              <Heart size={16} className={cn(isWishlisted(product.id) && "fill-gold text-gold")} />
             </button>
-            <button
-              type="button"
-              onClick={() => toggleCompare(product)}
-              className="flex h-11 items-center gap-2 hover:text-gold"
-            >
-              <Scale size={14} className={cn(isCompared(product.id) && "text-gold")} />
-              {isCompared(product.id) ? "In compare" : "Compare"}
-            </button>
-            <span className="flex h-11 items-center gap-2">
-              <Truck size={14} /> Carbon-neutral delivery
-            </span>
           </div>
 
-          <div className="mt-10 divide-y divide-border border-y border-border">
-            <Accordion title="Dimensions & weight">
-              <p>{product.dimensions || "Dimensions vary slightly by weave."}</p>
-              <p className="mt-1">Weight: {product.weightKg || 1.2} kg</p>
-              {product.capacity && <p className="mt-1">Capacity: {product.capacity}</p>}
-              {product.handle && <p className="mt-1">Handle: {product.handle}</p>}
-            </Accordion>
-            <Accordion title="Weaving technique & dye origin">
-              <p>{product.artisanStory || "Woven in Bolgatanga from sun-dried veta vera grass."}</p>
-              <p className="mt-2">Material: {product.material || "Elephant grass, leather trim"}</p>
-              {product.color.length > 0 && (
-                <p className="mt-1 capitalize">Natural dyes: {product.color.join(", ")}</p>
+          <button
+            type="button"
+            disabled={product.stockQuantity <= 0}
+            onClick={() => {
+              addToCart(product, quantity);
+              void navigate({ to: "/checkout" });
+            }}
+            className="mt-3 h-12 w-full bg-gold text-xs uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-90 disabled:opacity-40"
+          >
+            Buy now (fast checkout)
+          </button>
+
+          {/* Trust badges */}
+          <div className="mt-6 grid gap-3 border border-border p-4 sm:grid-cols-2">
+            <Badge icon={<Truck size={15} />} label="Worldwide Express Air Delivery" />
+            <Badge icon={<ShieldCheck size={15} />} label="100% Authentic Ghanaian Handwoven" />
+            <Badge icon={<RotateCcw size={15} />} label="Easy Reshaping & Care Guarantee" />
+            <Badge icon={<Sparkles size={15} />} label="Secure Card & Encrypted Checkout" />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => toggleCompare(product)}
+            className="mt-4 flex h-11 items-center gap-2 text-xs uppercase tracking-[0.14em] text-muted-foreground hover:text-gold"
+          >
+            <Scale size={14} className={cn(isCompared(product.id) && "text-gold")} />
+            {isCompared(product.id) ? "In comparison tray" : "Add to comparison"}
+          </button>
+        </div>
+      </div>
+
+      {/* Detail tabs */}
+      <section className="mt-16 border border-border">
+        <div className="flex flex-wrap gap-x-8 gap-y-2 border-b border-border px-6 pt-5">
+          {TABS.map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => setTab(t)}
+              className={cn(
+                "border-b-2 pb-3 text-[11px] uppercase tracking-[0.16em] transition-colors",
+                tab === t ? "border-gold text-gold" : "border-transparent text-muted-foreground",
               )}
-            </Accordion>
-            <Accordion title="Care & reshaping">
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+        <div className="max-w-3xl px-6 py-8 text-sm leading-relaxed text-muted-foreground">
+          {tab === "Description" && <p>{product.description}</p>}
+          {tab === "Dimensions & Weight" && (
+            <ul className="space-y-1.5">
+              <li>Dimensions: {product.dimensions || "Varies slightly by weave."}</li>
+              <li>Weight: {product.weightKg || 1.2} kg</li>
+              {product.capacity && <li>Capacity: {product.capacity}</li>}
+              {product.handle && <li>Handle: {product.handle}</li>}
+            </ul>
+          )}
+          {tab === "Materials" && (
+            <div className="space-y-2">
+              <p>{product.material || "100% elephant grass (veta vera) with leather trim."}</p>
+              {product.color.length > 0 && (
+                <p className="capitalize">Natural dyes: {product.color.join(", ")}</p>
+              )}
+            </div>
+          )}
+          {tab === "Craftsmanship" && (
+            <p>{product.artisanStory || "Woven in Bolgatanga from sun-dried veta vera grass."}</p>
+          )}
+          {tab === "Shipping" && (
+            <div className="space-y-2">
+              <p>
+                Tracked air courier via DHL Express / FedEx — {price(shipBase)} base rate, 7–10
+                business days worldwide.
+              </p>
+              <p>
+                Complimentary shipping on orders above {price(settings.freeShippingThreshold)}. Each
+                basket travels folded and is reshaped at home.
+              </p>
+            </div>
+          )}
+          {tab === "Care Instructions" && (
+            <div className="space-y-3">
               <p>
                 {product.careInstructions ||
                   "Mist the weave with warm water, reshape gently by hand and dry away from direct sunlight."}
               </p>
-              <Link to="/care" className="mt-3 inline-block text-gold underline">
+              <Link to="/care" className="inline-block text-gold underline">
                 Read the full reshaping guide
               </Link>
-            </Accordion>
-          </div>
+            </div>
+          )}
         </div>
-      </div>
+      </section>
 
-      <section className="mt-24 grid gap-12 lg:grid-cols-[1fr_1.2fr]">
-        <div>
-          <h2 className="font-serif text-3xl">Collector reviews</h2>
-          <div className="mt-6 flex items-center gap-4">
-            <span className="font-serif text-5xl">{product.rating.toFixed(1)}</span>
-            <div>
-              <StarRating value={product.rating} size={16} />
-              <p className="mt-1 text-xs text-muted-foreground">
-                {productReviews.length} verified reviews
+      {/* Reviews */}
+      <section className="mt-14 border border-border px-6 py-10 md:px-10">
+        <div className="grid gap-10 lg:grid-cols-[1.15fr_1fr]">
+          <div>
+            <p className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-gold">
+              <MessageSquare size={14} /> Artisan quality reviews
+            </p>
+            <h2 className="mt-3 font-serif text-3xl">
+              Customer Feedback ({productReviews.length})
+            </h2>
+            <p className="mt-2 max-w-md text-sm text-muted-foreground">
+              Real experiences from worldwide collectors celebrating authentic Ghanaian weave,
+              texture and longevity.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-8 bg-stone/50 p-6">
+            <div className="text-center">
+              <p className="font-serif text-4xl">{averageRating.toFixed(1)}</p>
+              <StarRating value={averageRating} size={14} />
+              <p className="mt-2 text-[11px] text-muted-foreground">
+                Based on {productReviews.length} reviews
               </p>
             </div>
+            <ul className="space-y-1.5 border-l border-border pl-6">
+              {[5, 4, 3, 2, 1].map((stars) => {
+                const count = breakdown[stars - 1] ?? 0;
+                const pct = productReviews.length ? (count / productReviews.length) * 100 : 0;
+                return (
+                  <li key={stars} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
+                    <span className="w-6 text-xs text-muted-foreground">{stars}★</span>
+                    <span className="h-1.5 w-full bg-background">
+                      <span className="block h-full bg-gold" style={{ width: `${pct}%` }} />
+                    </span>
+                    <span className="w-5 text-right text-xs text-muted-foreground">{count}</span>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-          <ul className="mt-6 space-y-2">
-            {[5, 4, 3, 2, 1].map((stars) => {
-              const count = breakdown[stars - 1] ?? 0;
-              const pct = productReviews.length ? (count / productReviews.length) * 100 : 0;
-              return (
-                <li key={stars} className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3">
-                  <span className="w-8 text-xs text-muted-foreground">{stars}★</span>
-                  <span className="h-1.5 w-full bg-stone">
-                    <span className="block h-full bg-gold" style={{ width: `${pct}%` }} />
-                  </span>
-                  <span className="w-6 text-right text-xs text-muted-foreground">{count}</span>
-                </li>
-              );
-            })}
-          </ul>
+        </div>
 
-          <form onSubmit={handleReview} className="mt-10 border border-border p-5">
-            <h3 className="font-serif text-xl">Write a review</h3>
-            <StarPicker value={rating} onChange={setRating} />
+        <div className="mt-10 grid gap-10 border-t border-border pt-10 lg:grid-cols-[1.15fr_1fr]">
+          <div>
+            <h3 className="flex items-center gap-3 font-serif text-xl">
+              Verified Customer Reviews
+              <span className="bg-stone px-2 py-0.5 text-xs">{productReviews.length}</span>
+            </h3>
+            {productReviews.length === 0 ? (
+              <div className="mt-6 border border-border bg-stone/30 px-6 py-12 text-center">
+                <Sparkles size={20} className="mx-auto text-gold" />
+                <p className="mt-4 font-serif text-lg">No reviews yet for {product.name}</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Be the first to share your impressions of the elephant grass weave, colours and
+                  craftsmanship using the form.
+                </p>
+              </div>
+            ) : (
+              <ul className="mt-6 space-y-8">
+                {productReviews.map((review) => (
+                  <li key={review.id} className="border-b border-border pb-6">
+                    <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
+                      <div className="min-w-0">
+                        <StarRating value={review.rating} />
+                        <h4 className="mt-2 font-serif text-lg">{review.title}</h4>
+                      </div>
+                      <time className="shrink-0 text-xs text-muted-foreground">
+                        {new Date(review.createdAt).toLocaleDateString()}
+                      </time>
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      {review.comment}
+                    </p>
+                    <p className="mt-3 text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                      {review.customerName}
+                      {review.isVerifiedPurchase && (
+                        <span className="ml-2 text-sage">Verified buyer</span>
+                      )}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <form onSubmit={handleReview} className="border border-border bg-stone/30 p-6">
+            <p className="text-[11px] uppercase tracking-[0.2em] text-gold">Leave feedback</p>
+            <h3 className="mt-2 font-serif text-2xl">Rate & review this basket</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Share your star rating and feedback. Reviews are published after a quick check and help
+              fellow collectors worldwide.
+            </p>
+
+            <div className="mt-6 flex items-center justify-between gap-3">
+              <label className="text-xs uppercase tracking-[0.14em]">Your overall rating *</label>
+              <span className="text-[11px] text-muted-foreground">{RATING_LABEL[rating]}</span>
+            </div>
+            <div className="mt-2 border border-border bg-background px-3 py-2">
+              <StarPicker value={rating} onChange={setRating} />
+            </div>
+
             <input
               value={form.customerName}
               onChange={(e) => setForm({ ...form, customerName: e.target.value })}
-              placeholder="Your name"
+              placeholder="Your full name *"
               maxLength={80}
-              aria-label="Your name"
-              className="mt-3 h-11 w-full border border-border bg-transparent px-3 text-sm outline-none focus:border-gold"
+              aria-label="Your full name"
+              className="mt-3 h-11 w-full border border-border bg-background px-3 text-sm outline-none focus:border-gold"
+            />
+            <input
+              type="email"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              placeholder="Your email (for verification)"
+              maxLength={160}
+              aria-label="Your email"
+              className="mt-3 h-11 w-full border border-border bg-background px-3 text-sm outline-none focus:border-gold"
             />
             <input
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
-              placeholder="Headline"
+              placeholder="Review headline / title *"
               maxLength={120}
               aria-label="Review headline"
-              className="mt-3 h-11 w-full border border-border bg-transparent px-3 text-sm outline-none focus:border-gold"
+              className="mt-3 h-11 w-full border border-border bg-background px-3 text-sm outline-none focus:border-gold"
             />
             <textarea
               value={form.comment}
               onChange={(e) => setForm({ ...form, comment: e.target.value })}
-              placeholder="What did you think of the weave?"
+              placeholder="Your text review feedback *"
               maxLength={1000}
               rows={4}
               aria-label="Review comment"
-              className="mt-3 w-full border border-border bg-transparent p-3 text-sm outline-none focus:border-gold"
+              className="mt-3 w-full border border-border bg-background p-3 text-sm outline-none focus:border-gold"
             />
             <button
               type="submit"
               disabled={pending}
               className="mt-4 h-12 w-full bg-foreground text-xs uppercase tracking-[0.2em] text-background disabled:opacity-50"
             >
-              {pending ? "Sending…" : "Submit review"}
+              {pending ? "Sending…" : "Submit verified review"}
             </button>
           </form>
         </div>
-
-        <ul className="space-y-8">
-          {productReviews.length === 0 && (
-            <li className="text-sm text-muted-foreground">
-              No reviews yet — be the first collector to write one.
-            </li>
-          )}
-          {productReviews.map((review) => (
-            <li key={review.id} className="border-b border-border pb-6">
-              <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3">
-                <div className="min-w-0">
-                  <StarRating value={review.rating} />
-                  <h3 className="mt-2 font-serif text-lg">{review.title}</h3>
-                </div>
-                <time className="shrink-0 text-xs text-muted-foreground">
-                  {new Date(review.createdAt).toLocaleDateString()}
-                </time>
-              </div>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{review.comment}</p>
-              <p className="mt-3 text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                {review.customerName}
-                {review.isVerifiedPurchase && <span className="ml-2 text-sage">Verified buyer</span>}
-              </p>
-            </li>
-          ))}
-        </ul>
       </section>
 
       {related.length > 0 && (
-        <section className="mt-24">
+        <section className="mt-20">
           <h2 className="font-serif text-3xl">You may also love</h2>
           <div className="mt-8 grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
             {related.map((p, i) => (
@@ -395,25 +572,11 @@ function ProductPage() {
   );
 }
 
-function Accordion({ title, children }: { title: string; children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
+function Badge({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
-    <div>
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        className="flex h-14 w-full items-center justify-between text-left text-xs uppercase tracking-[0.16em]"
-      >
-        {title}
-        <Plus
-          size={14}
-          className={cn("transition-transform duration-300", open && "rotate-45")}
-        />
-      </button>
-      {open && (
-        <div className="pb-5 text-sm leading-relaxed text-muted-foreground">{children}</div>
-      )}
-    </div>
+    <span className="flex items-center gap-2 text-xs text-muted-foreground">
+      <span className="text-gold">{icon}</span>
+      {label}
+    </span>
   );
 }
