@@ -3,6 +3,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { Link } from "@tanstack/react-router";
+import { CreditCard } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAdminSettings } from "@/hooks/use-store-data";
 import { MOCK_SETTINGS } from "@/lib/mock-data";
 import { upsertSingleton } from "@/lib/store-api";
+import { getStripeEnvironment, paymentsConfigured } from "@/lib/stripe";
 import type { CurrencyCode, StoreSettings } from "@/types";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({
@@ -194,6 +198,47 @@ function AdminSettings() {
             />
           </div>
         </div>
+      </section>
+
+      <section className="rounded-lg border border-border bg-card p-5">
+        <h2 className="flex items-center gap-2 font-serif text-xl">
+          <CreditCard className="h-5 w-5 text-primary" /> Card payments (Stripe)
+        </h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Card checkout is handled by the built-in Stripe integration, so there are no keys to paste
+          here. Amounts are always recalculated on the server from the prices, tax rate and shipping
+          rates saved on this page.
+        </p>
+        <dl className="mt-4 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-md border border-border p-4">
+            <dt className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Status</dt>
+            <dd className="mt-1 text-sm font-medium">
+              {paymentsConfigured() ? "Connected" : "Not configured"}
+            </dd>
+          </div>
+          <div className="rounded-md border border-border p-4">
+            <dt className="text-xs uppercase tracking-[0.16em] text-muted-foreground">Mode</dt>
+            <dd className="mt-1 text-sm font-medium">
+              {paymentsConfigured() ? getStripeEnvironment() : "—"}
+            </dd>
+          </div>
+          <div className="rounded-md border border-border p-4">
+            <dt className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+              Transactions
+            </dt>
+            <dd className="mt-1 text-sm font-medium">
+              <Link to="/admin/payments" className="text-primary underline-offset-4 hover:underline">
+                Open payments
+              </Link>
+            </dd>
+          </div>
+        </dl>
+        {!paymentsConfigured() && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            Complete payment go-live in your project settings to accept live cards. Until then
+            checkout runs in test mode.
+          </p>
+        )}
       </section>
 
       <section className="rounded-lg border border-border bg-card p-5">
