@@ -309,9 +309,9 @@ export const MOCK_SETTINGS: StoreSettings = {
   shippingAdditionalItem: 40,
   shippingCarrier: "Tracked air courier via DHL Express / FedEx",
   shippingTransitTime: "7 - 10 Business Days",
-  freeShippingThreshold: 150,
+  freeShippingThreshold: 700,
   announcement:
-    "Free worldwide shipping on orders over $150 — every basket woven by hand in Bolgatanga",
+    "Free worldwide shipping on orders over $700 — every basket woven by us",
   supportEmail: "care@vetastudio.com",
   supportPhone: "+233 20 411 8802",
 };

@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 import { SlidersHorizontal, X } from "lucide-react";
 
+import { FreeShippingNote } from "@/components/FreeShippingNote";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { useCategories, useProducts } from "@/hooks/use-store-data";
 import { DYE_COLORS } from "@/lib/mock-data";
@@ -274,7 +275,9 @@ function ShopPage() {
   );
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 py-12 md:px-8">
+    <div>
+      <FreeShippingNote />
+      <div className="mx-auto max-w-[1400px] px-4 py-12 md:px-8">
       <header className="max-w-2xl">
         <p className="text-xs uppercase tracking-[0.3em] text-gold">The Collection</p>
         <h1 className="mt-3 font-serif text-4xl leading-tight md:text-5xl">
@@ -397,6 +400,7 @@ function ShopPage() {
           </motion.div>
         </div>
       )}
+      </div>
     </div>
   );
 }

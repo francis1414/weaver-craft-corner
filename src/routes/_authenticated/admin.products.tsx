@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { Copy, Plus, Trash2 } from "lucide-react";
+import { deriveProductKeywords, mergeKeywords } from "@/lib/seo-keywords";
 import { toast } from "sonner";
 
 import { Badge } from "@/components/ui/badge";
@@ -180,7 +181,16 @@ function AdminProducts() {
         care_instructions: draft.careInstructions,
         color: draft.color,
         color_description: draft.colorDescription,
-        tags: list(draft.tags, /,/),
+        tags: mergeKeywords(
+          list(draft.tags, /,/),
+          deriveProductKeywords({
+            name: draft.name,
+            description: draft.description,
+            category: draft.category,
+            material: draft.material,
+            colors: draft.color,
+          }),
+        ),
         weight_kg: Number(draft.weightKg) || 1,
         capacity: draft.capacity,
         handle: draft.handle,
@@ -651,6 +661,27 @@ function AdminProducts() {
                   value={draft.tags}
                   onChange={(e) => setDraft({ ...draft, tags: e.target.value })}
                 />
+                <div className="mt-3">
+                  <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                    Auto SEO keywords (saved automatically from title & description)
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {deriveProductKeywords({
+                      name: draft.name,
+                      description: draft.description,
+                      category: draft.category,
+                      material: draft.material,
+                      colors: draft.color,
+                    }).map((keyword) => (
+                      <span
+                        key={keyword}
+                        className="border border-border px-2 py-1 text-[11px] text-muted-foreground"
+                      >
+                        {keyword}
+                      </span>
+                    ))}
+                  </div>
+                </div>
               </Field>
               <Field label="Artisan story" className="sm:col-span-2">
                 <Textarea

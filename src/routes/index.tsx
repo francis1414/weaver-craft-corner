@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 
+import { FreeShippingNote } from "@/components/FreeShippingNote";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { SmartImage } from "@/components/SmartImage";
@@ -61,6 +62,7 @@ function HomePage() {
 
   return (
     <div>
+      <FreeShippingNote />
       {/* Hero */}
       <section className="grid items-stretch gap-0 lg:grid-cols-2">
         <div className="flex flex-col justify-center px-4 py-16 md:px-8 lg:py-28">

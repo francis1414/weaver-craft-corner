@@ -158,7 +158,7 @@ export function mapSettings(row: Row): StoreSettings {
       "Tracked air courier via DHL Express / FedEx",
     ),
     shippingTransitTime: str(row["shipping_transit_time"], "7 - 10 Business Days"),
-    freeShippingThreshold: num(row["free_shipping_threshold"], 150),
+    freeShippingThreshold: num(row["free_shipping_threshold"], 700),
     announcement: str(row["announcement"]),
     supportEmail: str(row["support_email"]),
     supportPhone: str(row["support_phone"]),
