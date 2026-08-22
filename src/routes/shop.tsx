@@ -8,6 +8,7 @@ import { useCategories, useProducts } from "@/hooks/use-store-data";
 import { DYE_COLORS } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
+import { breadcrumbJsonLd, canonical, jsonLdScript } from "@/lib/seo";
 
 export const Route = createFileRoute("/shop")({
   head: () => ({
@@ -23,6 +24,16 @@ export const Route = createFileRoute("/shop")({
         property: "og:description",
         content: "Sculptural elephant grass craft from the Bolgatanga cooperatives of Ghana.",
       },
+      ...canonical("/shop").meta,
+    ],
+    links: canonical("/shop").links,
+    scripts: [
+      jsonLdScript(
+        breadcrumbJsonLd([
+          { name: "Home", path: "/" },
+          { name: "Shop", path: "/shop" },
+        ]),
+      ),
     ],
   }),
   component: ShopPage,
