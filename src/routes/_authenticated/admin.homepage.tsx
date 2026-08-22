@@ -13,12 +13,13 @@ import { useAdminHomepage } from "@/hooks/use-store-data";
 import { MOCK_HOMEPAGE } from "@/lib/mock-data";
 import { upsertSingleton } from "@/lib/store-api";
 import type { HomepageContent } from "@/types";
+import { MediaUploader } from "@/components/admin/MediaUploader";
 
 export const Route = createFileRoute("/_authenticated/admin/homepage")({
   component: AdminHomepage,
 });
 
-type FieldKind = "text" | "textarea" | "number";
+type FieldKind = "text" | "textarea" | "number" | "image";
 interface FieldDef {
   key: string;
   label: string;
@@ -37,7 +38,7 @@ const SECTIONS: {
       { key: "badge", label: "Badge" },
       { key: "title", label: "Title" },
       { key: "subtitle", label: "Subtitle", kind: "textarea" },
-      { key: "image", label: "Image URL" },
+      { key: "image", label: "Slide image", kind: "image" },
       { key: "ctaLabel", label: "CTA label" },
       { key: "ctaHref", label: "CTA link" },
     ],
@@ -58,7 +59,7 @@ const SECTIONS: {
       { key: "village", label: "Village" },
       { key: "years", label: "Years weaving", kind: "number" },
       { key: "quote", label: "Quote", kind: "textarea" },
-      { key: "image", label: "Portrait URL" },
+      { key: "image", label: "Portrait", kind: "image" },
     ],
   },
   {
@@ -76,7 +77,7 @@ const SECTIONS: {
       { key: "title", label: "Title" },
       { key: "body", label: "Body", kind: "textarea" },
       { key: "href", label: "Link" },
-      { key: "image", label: "Image URL" },
+      { key: "image", label: "Card image", kind: "image" },
     ],
   },
 ];
@@ -191,10 +192,20 @@ function AdminHomepage() {
                       return (
                         <div
                           key={field.key}
-                          className={`space-y-2 ${field.kind === "textarea" ? "sm:col-span-2" : ""}`}
+                          className={`space-y-2 ${field.kind === "textarea" || field.kind === "image" ? "sm:col-span-2" : ""}`}
                         >
-                          <Label>{field.label}</Label>
-                          {field.kind === "textarea" ? (
+                          {field.kind !== "image" && <Label>{field.label}</Label>}
+                          {field.kind === "image" ? (
+                            <MediaUploader
+                              label={field.label}
+                              value={value ? [String(value)] : []}
+                              onChange={(next: string[]) => set(next[0] ?? "")}
+                              multiple={false}
+                              accept="image/*"
+                              folder="homepage"
+                              max={1}
+                            />
+                          ) : field.kind === "textarea" ? (
                             <Textarea
                               rows={3}
                               value={String(value ?? "")}
