@@ -26,6 +26,7 @@ import { useProducts, useReviews, useSettings } from "@/hooks/use-store-data";
 import { usePrice } from "@/hooks/use-price";
 import { submitReview } from "@/lib/store-api";
 import { cn } from "@/lib/utils";
+import { youtubeEmbedUrl } from "@/lib/media";
 
 export const Route = createFileRoute("/product/$slug")({
   head: ({ params }) => {
