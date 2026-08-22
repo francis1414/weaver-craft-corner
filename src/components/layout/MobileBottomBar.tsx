@@ -16,7 +16,6 @@ export function MobileBottomBar() {
       </Link>
       <Link
         to="/shop"
-        search={{ focus: "search" }}
         className="flex h-14 flex-col items-center justify-center gap-1 text-[10px] uppercase tracking-[0.12em]"
       >
         <Search size={17} /> Search
