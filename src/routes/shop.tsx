@@ -399,6 +399,7 @@ function ShopPage() {
           </motion.div>
         </div>
       )}
+      </div>
     </div>
   );
 }
