@@ -204,8 +204,6 @@ function AdminProducts() {
 
   async function duplicate(product: Product) {
     try {
-      const copy = toDraft(product);
-      delete copy.id;
       await upsertProduct({
         name: `${product.name} (copy)`,
         slug: `${product.slug}-copy-${Date.now().toString(36)}`,
@@ -225,11 +223,19 @@ function AdminProducts() {
         artisan_story: product.artisanStory,
         care_instructions: product.careInstructions,
         color: product.color,
+        color_description: product.colorDescription,
         tags: product.tags,
         weight_kg: product.weightKg,
         capacity: product.capacity,
         handle: product.handle,
+        length_cm: product.lengthCm,
+        width_cm: product.widthCm,
+        height_cm: product.heightCm,
+        diameter_cm: product.diameterCm,
+        video_url: product.videoUrl,
+        video_loop: product.videoLoop,
       });
+
       toast.success("Duplicated as draft");
       refresh();
     } catch (error) {
