@@ -10,10 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdminAuthRouteImport } from './routes/admin-auth'
 import { Route as CareRouteImport } from './routes/care'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
 import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
@@ -23,9 +26,18 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAuthRoute = AdminAuthRouteImport.update({
+  id: '/admin-auth',
+  path: '/admin-auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CareRoute = CareRouteImport.update({
@@ -42,6 +54,11 @@ const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const JournalIndexRoute = JournalIndexRouteImport.update({
   id: '/journal/',
@@ -62,9 +79,11 @@ const ProductSlugRoute = ProductSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin-auth': typeof AdminAuthRoute
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRoute
   '/shop': typeof ShopRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/product/$slug': typeof ProductSlugRoute
   '/journal/': typeof JournalIndexRoute
@@ -72,9 +91,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin-auth': typeof AdminAuthRoute
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRoute
   '/shop': typeof ShopRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/product/$slug': typeof ProductSlugRoute
   '/journal': typeof JournalIndexRoute
@@ -82,10 +103,13 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
+  '/admin-auth': typeof AdminAuthRoute
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRoute
   '/shop': typeof ShopRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/product/$slug': typeof ProductSlugRoute
   '/journal/': typeof JournalIndexRoute
@@ -95,9 +119,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin-auth'
     | '/care'
     | '/checkout'
     | '/shop'
+    | '/admin'
     | '/journal/$slug'
     | '/product/$slug'
     | '/journal/'
@@ -105,19 +131,24 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/admin-auth'
     | '/care'
     | '/checkout'
     | '/shop'
+    | '/admin'
     | '/journal/$slug'
     | '/product/$slug'
     | '/journal'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/about'
+    | '/admin-auth'
     | '/care'
     | '/checkout'
     | '/shop'
+    | '/_authenticated/admin'
     | '/journal/$slug'
     | '/product/$slug'
     | '/journal/'
@@ -125,7 +156,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
+  AdminAuthRoute: typeof AdminAuthRoute
   CareRoute: typeof CareRoute
   CheckoutRoute: typeof CheckoutRoute
   ShopRoute: typeof ShopRoute
@@ -143,11 +176,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin-auth': {
+      id: '/admin-auth'
+      path: '/admin-auth'
+      fullPath: '/admin-auth'
+      preLoaderRoute: typeof AdminAuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/care': {
@@ -170,6 +217,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/journal/': {
       id: '/journal/'
@@ -195,9 +249,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
+  AdminAuthRoute: AdminAuthRoute,
   CareRoute: CareRoute,
   CheckoutRoute: CheckoutRoute,
   ShopRoute: ShopRoute,
