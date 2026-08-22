@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 
+import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { SmartImage } from "@/components/SmartImage";
 import { StarRating } from "@/components/StarRating";
