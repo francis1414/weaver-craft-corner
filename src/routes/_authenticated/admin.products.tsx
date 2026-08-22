@@ -38,6 +38,19 @@ const slugify = (v: string) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
+const DYE_TONES = [
+  "Natural Straw",
+  "Charcoal Black",
+  "Savannah Gold",
+  "Indigo Blue",
+  "Terracotta Red",
+  "Sage Green",
+  "Burnt Orange",
+  "Dusty Pink",
+  "Ochre Yellow",
+  "Deep Plum",
+];
+
 const emptyDraft = {
   name: "",
   slug: "",
@@ -56,14 +69,22 @@ const emptyDraft = {
   material: "Veta Vera elephant grass",
   artisanStory: "",
   careInstructions: "",
-  color: "",
+  color: [] as string[],
+  colorDescription: "",
   tags: "",
   weightKg: 1,
   capacity: "",
   handle: "",
+  lengthCm: "",
+  widthCm: "",
+  heightCm: "",
+  diameterCm: "",
+  videoUrl: "",
+  videoLoop: true,
 };
 
 type Draft = typeof emptyDraft & { id?: string };
+
 
 type StatusFilter = "all" | "active" | "draft" | "low" | "archived";
 
