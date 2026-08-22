@@ -9,6 +9,7 @@ import {
   LogOut,
   Mail,
   Package,
+  Search,
   Settings,
   ShieldCheck,
   ShoppingBag,
@@ -41,6 +42,7 @@ const NAV: NavItem[] = [
   { to: "/admin/reviews", label: "Reviews", icon: Star },
   { to: "/admin/subscribers", label: "Subscribers", icon: Mail },
   { to: "/admin/homepage", label: "Homepage CMS", icon: BarChart3 },
+  { to: "/admin/seo", label: "SEO audit", icon: Search },
   { to: "/admin/settings", label: "Store settings", icon: Settings },
 ];
 
