@@ -1,15 +1,19 @@
-import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   BarChart3,
+  ChevronRight,
+  CreditCard,
   FolderTree,
   LayoutDashboard,
   LogOut,
   Mail,
   Package,
   Settings,
+  ShieldCheck,
   ShoppingBag,
   Star,
+  Store,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -32,6 +36,7 @@ const NAV: NavItem[] = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
   { to: "/admin/products", label: "Products", icon: Package },
   { to: "/admin/orders", label: "Orders", icon: ShoppingBag },
+  { to: "/admin/payments", label: "Payments", icon: CreditCard },
   { to: "/admin/categories", label: "Shop by craft", icon: FolderTree },
   { to: "/admin/reviews", label: "Reviews", icon: Star },
   { to: "/admin/subscribers", label: "Subscribers", icon: Mail },
@@ -43,6 +48,7 @@ function AdminLayout() {
   const { data, isLoading } = useAdminSession();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { pathname } = useLocation();
 
   useRealtimeStore([
     "products",
@@ -84,37 +90,112 @@ function AdminLayout() {
     );
   }
 
+  const current = [...NAV]
+    .sort((a, b) => b.to.length - a.to.length)
+    .find((item) => (item.exact ? pathname === item.to : pathname.startsWith(item.to)));
+  const email = data.user?.email ?? "";
+  const initials = email.slice(0, 2).toUpperCase();
+
   return (
-    <div className="min-h-screen bg-background">
-      <div className="mx-auto flex max-w-[1500px] flex-col gap-8 px-4 py-8 lg:flex-row lg:px-8">
-        <aside className="lg:w-60 lg:shrink-0">
-          <Link to="/" className="block font-serif text-2xl">
-            Vetastudio
+    <div className="min-h-screen bg-[#FAF8F5] lg:flex">
+      {/* Dark management rail */}
+      <aside className="bg-[#1F1D1A] text-[#EFEBE4] lg:sticky lg:top-0 lg:flex lg:h-screen lg:w-[268px] lg:shrink-0 lg:flex-col">
+        <div className="flex items-center gap-3 border-b border-white/10 px-6 py-5">
+          <span className="grid h-11 w-11 place-items-center rounded-xl bg-[#FAF8F5] font-serif text-lg text-[#1F1D1A]">
+            V
+          </span>
+          <span className="min-w-0">
+            <Link to="/admin" className="block font-serif text-lg tracking-[0.14em]">
+              VETASTUDIO
+            </Link>
+            <span className="mt-0.5 flex items-center gap-1 text-[10px] uppercase tracking-[0.18em] text-[#C29B38]">
+              <ShieldCheck className="h-3 w-3" /> Admin suite
+            </span>
+          </span>
+        </div>
+
+        <p className="px-6 pt-6 pb-3 text-[10px] uppercase tracking-[0.24em] text-white/40">
+          Management
+        </p>
+        <nav className="flex gap-2 overflow-x-auto px-4 pb-4 lg:flex-1 lg:flex-col lg:overflow-y-auto">
+          {NAV.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to as "/admin"}
+              activeOptions={{ exact: item.exact ?? false }}
+              className="flex shrink-0 items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/70 transition hover:bg-white/5 hover:text-white data-[status=active]:bg-[#C29B38] data-[status=active]:font-medium data-[status=active]:text-[#1F1D1A]"
+            >
+              <item.icon className="h-[18px] w-[18px]" />
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="hidden gap-2 border-t border-white/10 px-4 py-4 lg:grid">
+          <Link
+            to="/"
+            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-white/70 transition hover:bg-white/5 hover:text-white"
+          >
+            <Store className="h-[18px] w-[18px]" /> View live store
           </Link>
-          <p className="mt-1 text-xs uppercase tracking-[0.2em] text-muted-foreground">
-            Back-office
-          </p>
-          <nav className="mt-6 flex gap-2 overflow-x-auto lg:flex-col lg:overflow-visible">
-            {NAV.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to as "/admin"}
-                activeOptions={{ exact: item.exact ?? false }}
-                className="flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground data-[status=active]:bg-secondary data-[status=active]:font-medium data-[status=active]:text-foreground"
-              >
-                <item.icon className="h-4 w-4" />
-                {item.label}
-              </Link>
-            ))}
-          </nav>
-          <div className="mt-8 hidden border-t border-border pt-4 lg:block">
-            <p className="truncate text-xs text-muted-foreground">{data.user?.email}</p>
-            <Button variant="ghost" size="sm" className="mt-2 px-0" onClick={signOut}>
-              <LogOut className="mr-2 h-4 w-4" /> Sign out
-            </Button>
+          <button
+            type="button"
+            onClick={signOut}
+            className="flex items-center gap-3 rounded-lg border border-destructive/40 px-3 py-2.5 text-sm text-destructive transition hover:bg-destructive/10"
+          >
+            <LogOut className="h-[18px] w-[18px]" /> Log out
+          </button>
+        </div>
+
+        <div className="hidden items-center gap-3 border-t border-white/10 px-6 py-4 lg:flex">
+          <span className="grid h-9 w-9 place-items-center rounded-full bg-[#4A5D4E] text-xs text-white">
+            {initials}
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate text-sm">{email}</span>
+            <span className="text-[10px] uppercase tracking-[0.16em] text-white/40">
+              Super admin
+            </span>
+          </span>
+        </div>
+      </aside>
+
+      <div className="min-w-0 flex-1">
+        {/* Top bar */}
+        <header className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-4 border-b border-[#EFEBE4] bg-[#FAF8F5]/95 px-4 py-4 backdrop-blur lg:px-8">
+          <div className="min-w-0">
+            <p className="flex items-center gap-1 text-xs text-muted-foreground">
+              Admin <ChevronRight className="h-3 w-3" /> {current?.label ?? "Overview"}
+            </p>
+            <h2 className="mt-1 truncate font-serif text-2xl">{current?.label ?? "Overview"}</h2>
           </div>
-        </aside>
-        <main className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="flex items-center gap-2 rounded-full bg-[#1F1D1A] px-4 py-2 text-xs text-[#EFEBE4]">
+              <span className="h-2 w-2 rounded-full bg-[#5FD08A]" /> Live sync on
+            </span>
+            <Link
+              to="/admin/products"
+              className="flex items-center gap-2 rounded-full bg-[#C29B38] px-4 py-2 text-xs font-medium uppercase tracking-[0.14em] text-[#1F1D1A]"
+            >
+              <Package className="h-3.5 w-3.5" /> Products
+            </Link>
+            <Link
+              to="/"
+              className="flex items-center gap-2 rounded-full border border-[#EFEBE4] bg-card px-4 py-2 text-xs"
+            >
+              <Store className="h-3.5 w-3.5" /> Live store
+            </Link>
+            <button
+              type="button"
+              onClick={signOut}
+              className="flex items-center gap-2 rounded-full border border-destructive/40 px-4 py-2 text-xs text-destructive"
+            >
+              <LogOut className="h-3.5 w-3.5" /> Log out
+            </button>
+          </div>
+        </header>
+
+        <main className="min-w-0 px-4 py-8 lg:px-8">
           <Outlet />
         </main>
       </div>
