@@ -17,6 +17,7 @@ import { Route as CareRouteImport } from './routes/care'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
 import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
@@ -68,6 +69,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
+  id: '/return',
+  path: '/return',
+  getParentRoute: () => CheckoutRoute,
 } as any)
 const JournalIndexRoute = JournalIndexRouteImport.update({
   id: '/journal/',
@@ -143,9 +149,10 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin-auth': typeof AdminAuthRoute
   '/care': typeof CareRoute
-  '/checkout': typeof CheckoutRoute
+  '/checkout': typeof CheckoutRouteWithChildren
   '/shop': typeof ShopRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/checkout/return': typeof CheckoutReturnRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/product/$slug': typeof ProductSlugRoute
   '/journal/': typeof JournalIndexRoute
@@ -164,8 +171,9 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/admin-auth': typeof AdminAuthRoute
   '/care': typeof CareRoute
-  '/checkout': typeof CheckoutRoute
+  '/checkout': typeof CheckoutRouteWithChildren
   '/shop': typeof ShopRoute
+  '/checkout/return': typeof CheckoutReturnRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/product/$slug': typeof ProductSlugRoute
   '/journal': typeof JournalIndexRoute
@@ -186,9 +194,10 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin-auth': typeof AdminAuthRoute
   '/care': typeof CareRoute
-  '/checkout': typeof CheckoutRoute
+  '/checkout': typeof CheckoutRouteWithChildren
   '/shop': typeof ShopRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/checkout/return': typeof CheckoutReturnRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/product/$slug': typeof ProductSlugRoute
   '/journal/': typeof JournalIndexRoute
@@ -212,6 +221,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/shop'
     | '/admin'
+    | '/checkout/return'
     | '/journal/$slug'
     | '/product/$slug'
     | '/journal/'
@@ -232,6 +242,7 @@ export interface FileRouteTypes {
     | '/care'
     | '/checkout'
     | '/shop'
+    | '/checkout/return'
     | '/journal/$slug'
     | '/product/$slug'
     | '/journal'
@@ -254,6 +265,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/shop'
     | '/_authenticated/admin'
+    | '/checkout/return'
     | '/journal/$slug'
     | '/product/$slug'
     | '/journal/'
@@ -274,7 +286,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminAuthRoute: typeof AdminAuthRoute
   CareRoute: typeof CareRoute
-  CheckoutRoute: typeof CheckoutRoute
+  CheckoutRoute: typeof CheckoutRouteWithChildren
   ShopRoute: typeof ShopRoute
   JournalSlugRoute: typeof JournalSlugRoute
   ProductSlugRoute: typeof ProductSlugRoute
@@ -339,6 +351,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/checkout/return': {
+      id: '/checkout/return'
+      path: '/return'
+      fullPath: '/checkout/return'
+      preLoaderRoute: typeof CheckoutReturnRouteImport
+      parentRoute: typeof CheckoutRoute
     }
     '/journal/': {
       id: '/journal/'
@@ -463,13 +482,25 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface CheckoutRouteChildren {
+  CheckoutReturnRoute: typeof CheckoutReturnRoute
+}
+
+const CheckoutRouteChildren: CheckoutRouteChildren = {
+  CheckoutReturnRoute: CheckoutReturnRoute,
+}
+
+const CheckoutRouteWithChildren = CheckoutRoute._addFileChildren(
+  CheckoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AdminAuthRoute: AdminAuthRoute,
   CareRoute: CareRoute,
-  CheckoutRoute: CheckoutRoute,
+  CheckoutRoute: CheckoutRouteWithChildren,
   ShopRoute: ShopRoute,
   JournalSlugRoute: JournalSlugRoute,
   ProductSlugRoute: ProductSlugRoute,
