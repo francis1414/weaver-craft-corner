@@ -178,12 +178,20 @@ function AdminProducts() {
         material: draft.material,
         artisan_story: draft.artisanStory,
         care_instructions: draft.careInstructions,
-        color: list(draft.color, /,/),
+        color: draft.color,
+        color_description: draft.colorDescription,
         tags: list(draft.tags, /,/),
         weight_kg: Number(draft.weightKg) || 1,
         capacity: draft.capacity,
         handle: draft.handle,
+        length_cm: draft.lengthCm === "" ? null : Number(draft.lengthCm),
+        width_cm: draft.widthCm === "" ? null : Number(draft.widthCm),
+        height_cm: draft.heightCm === "" ? null : Number(draft.heightCm),
+        diameter_cm: draft.diameterCm === "" ? null : Number(draft.diameterCm),
+        video_url: draft.videoUrl,
+        video_loop: draft.videoLoop,
       });
+
       toast.success(draft.id ? "Product updated" : "Product created");
       setDraft(null);
       refresh();
