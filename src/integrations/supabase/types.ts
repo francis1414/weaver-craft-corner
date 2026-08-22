@@ -352,8 +352,12 @@ export type Database = {
           currency_rates: Json
           free_shipping_threshold: number
           id: string
+          shipping_additional_item: number
+          shipping_carrier: string
           shipping_domestic: number
           shipping_international: number
+          shipping_label: string
+          shipping_transit_time: string
           support_email: string
           support_phone: string
           tax_rate: number
@@ -364,8 +368,12 @@ export type Database = {
           currency_rates?: Json
           free_shipping_threshold?: number
           id?: string
+          shipping_additional_item?: number
+          shipping_carrier?: string
           shipping_domestic?: number
           shipping_international?: number
+          shipping_label?: string
+          shipping_transit_time?: string
           support_email?: string
           support_phone?: string
           tax_rate?: number
@@ -376,8 +384,12 @@ export type Database = {
           currency_rates?: Json
           free_shipping_threshold?: number
           id?: string
+          shipping_additional_item?: number
+          shipping_carrier?: string
           shipping_domestic?: number
           shipping_international?: number
+          shipping_label?: string
+          shipping_transit_time?: string
           support_email?: string
           support_phone?: string
           tax_rate?: number
