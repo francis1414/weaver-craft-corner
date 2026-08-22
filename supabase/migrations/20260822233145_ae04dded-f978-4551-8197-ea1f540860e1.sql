@@ -1,0 +1,1 @@
+UPDATE public.store_settings SET free_shipping_threshold = 700, announcement = 'Free worldwide shipping on orders over $700 — every basket woven by us';
