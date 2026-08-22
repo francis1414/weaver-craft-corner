@@ -28,8 +28,8 @@ export function HeroSlideshow({ className }: { className?: string }) {
       <AnimatePresence initial={false}>
         <motion.img
           key={index}
-          src={SLIDES[index].src}
-          alt={SLIDES[index].alt}
+          src={SLIDES[index]!.src}
+          alt={SLIDES[index]!.alt}
           initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
