@@ -304,7 +304,11 @@ export const MOCK_SETTINGS: StoreSettings = {
   currencyRates: { USD: 1, EUR: 0.92, GBP: 0.79, GHS: 15.4, CAD: 1.36 },
   taxRate: 0.05,
   shippingDomestic: 12,
-  shippingInternational: 28,
+  shippingInternational: 68,
+  shippingLabel: "Worldwide Express Shipping",
+  shippingAdditionalItem: 40,
+  shippingCarrier: "Tracked air courier via DHL Express / FedEx",
+  shippingTransitTime: "7 - 10 Business Days",
   freeShippingThreshold: 150,
   announcement:
     "Free worldwide shipping on orders over $150 — every basket woven by hand in Bolgatanga",
