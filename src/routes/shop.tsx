@@ -10,6 +10,13 @@ import { cn } from "@/lib/utils";
 import type { Product } from "@/types";
 import { breadcrumbJsonLd, canonical, jsonLdScript } from "@/lib/seo";
 
+type ShopSearch = {
+  category?: string;
+  sort?: string;
+  sale?: boolean;
+  instock?: boolean;
+};
+
 export const Route = createFileRoute("/shop")({
   head: () => ({
     meta: [
