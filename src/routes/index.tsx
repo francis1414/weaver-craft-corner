@@ -84,13 +84,7 @@ function HomePage() {
             </Link>
           </div>
         </div>
-        <SmartImage
-          src={hero?.image}
-          alt="Handwoven Bolga basket against a terracotta wall"
-          ratio="4/5"
-          priority
-          className="h-full lg:aspect-auto"
-        />
+        <HeroSlideshow className="min-h-[420px] w-full lg:h-full" />
       </section>
 
       {/* Value pillars */}
