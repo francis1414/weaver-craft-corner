@@ -4,12 +4,16 @@ import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 
+import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { SmartImage } from "@/components/SmartImage";
+import { StripeEmbeddedCheckout } from "@/components/StripeEmbeddedCheckout";
 import { useStore } from "@/context/StoreProvider";
 import { useSettings } from "@/hooks/use-store-data";
 import { usePrice } from "@/hooks/use-price";
 import { createOrder } from "@/lib/store-api";
+import { paymentsConfigured } from "@/lib/stripe";
 import { cn } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
