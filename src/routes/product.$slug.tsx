@@ -26,6 +26,8 @@ import { useProducts, useReviews, useSettings } from "@/hooks/use-store-data";
 import { usePrice } from "@/hooks/use-price";
 import { submitReview } from "@/lib/store-api";
 import { cn } from "@/lib/utils";
+import { youtubeEmbedUrl } from "@/lib/media";
+import { absoluteUrl, breadcrumbJsonLd, canonical, jsonLdScript } from "@/lib/seo";
 
 export const Route = createFileRoute("/product/$slug")({
   head: ({ params }) => {
@@ -45,6 +47,27 @@ export const Route = createFileRoute("/product/$slug")({
           property: "og:description",
           content: `${name}: handwoven Bolga elephant grass craft from Ghana.`,
         },
+        { property: "og:type", content: "product" },
+        { name: "twitter:card", content: "summary_large_image" },
+        ...canonical(`/product/${params.slug}`).meta,
+      ],
+      links: canonical(`/product/${params.slug}`).links,
+      scripts: [
+        jsonLdScript({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name,
+          url: absoluteUrl(`/product/${params.slug}`),
+          brand: { "@type": "Brand", name: "Vetastudio" },
+          material: "Elephant grass (veta vera)",
+        }),
+        jsonLdScript(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Shop", path: "/shop" },
+            { name, path: `/product/${params.slug}` },
+          ]),
+        ),
       ],
     };
   },
@@ -129,6 +152,7 @@ function ProductPage() {
   const onSale = product.salePrice != null && product.salePrice < product.price;
   const lowStock = product.stockQuantity > 0 && product.stockQuantity <= product.lowStockThreshold;
   const shipBase = settings.shippingInternational;
+  const shipExtra = settings.shippingAdditionalItem;
   const averageRating = productReviews.length
     ? productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length
     : product.rating;
@@ -210,7 +234,31 @@ function ProductPage() {
               ))}
             </div>
           )}
+          {product.videoUrl &&
+            (youtubeEmbedUrl(product.videoUrl, product.videoLoop) ? (
+              <div className="mt-4 aspect-video w-full overflow-hidden border border-border">
+                <iframe
+                  src={youtubeEmbedUrl(product.videoUrl, product.videoLoop)!}
+                  title={`${product.name} video`}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture"
+                  allowFullScreen
+                  className="h-full w-full"
+                />
+              </div>
+            ) : (
+              <video
+                src={product.videoUrl}
+                controls
+                playsInline
+                muted={product.videoLoop}
+                loop={product.videoLoop}
+                autoPlay={product.videoLoop}
+                className="mt-4 w-full border border-border"
+              />
+            ))}
         </div>
+
 
         <div>
           <p className="text-[11px] uppercase tracking-[0.2em] text-gold">
@@ -247,7 +295,7 @@ function ProductPage() {
           <div className="mt-7 border border-border">
             <div className="flex items-center justify-between gap-4 border-b border-border px-4 py-3">
               <span className="flex items-center gap-2 text-sm">
-                <Globe size={15} className="text-gold" /> Worldwide Express Shipping
+                <Globe size={15} className="text-gold" /> {settings.shippingLabel}
               </span>
               <span className="bg-stone px-3 py-1 font-mono text-xs">{price(shipBase)}</span>
             </div>
@@ -256,12 +304,12 @@ function ProductPage() {
                 • Base rate: <strong className="text-foreground">{price(shipBase)}</strong> for 1st
                 item
               </span>
-              <span>(+{price(Math.round(shipBase * 0.6))} for each additional item)</span>
+              <span>(+{price(shipExtra)} for each additional item)</span>
             </div>
             <div className="flex flex-wrap items-center gap-2 px-4 pb-3 text-xs text-muted-foreground">
-              <Plane size={13} className="text-gold" /> Tracked air courier via DHL Express / FedEx
+              <Plane size={13} className="text-gold" /> {settings.shippingCarrier}
               <span className="mx-1">•</span>
-              <strong className="text-foreground">7–10 Business Days</strong> delivery
+              <strong className="text-foreground">{settings.shippingTransitTime}</strong> delivery
             </div>
           </div>
 
@@ -389,9 +437,10 @@ function ProductPage() {
           {tab === "Shipping" && (
             <div className="space-y-2">
               <p>
-                Tracked air courier via DHL Express / FedEx — {price(shipBase)} base rate, 7–10
-                business days worldwide.
+                {settings.shippingCarrier} — {price(shipBase)} base rate for the first item,
+                +{price(shipExtra)} per additional item. {settings.shippingTransitTime} worldwide.
               </p>
+
               <p>
                 Complimentary shipping on orders above {price(settings.freeShippingThreshold)}. Each
                 basket travels folded and is reshaped at home.

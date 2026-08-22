@@ -2,6 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { SmartImage } from "@/components/SmartImage";
 import { useJournal } from "@/hooks/use-store-data";
+import { canonical } from "@/lib/seo";
 
 export const Route = createFileRoute("/journal/")({
   head: () => ({
@@ -19,7 +20,9 @@ export const Route = createFileRoute("/journal/")({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      ...canonical("/journal").meta,
     ],
+    links: canonical("/journal").links,
   }),
   component: JournalPage,
 });

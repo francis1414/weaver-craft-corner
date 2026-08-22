@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { SmartImage } from "@/components/SmartImage";
 import { IMAGES } from "@/lib/mock-data";
+import { canonical } from "@/lib/seo";
 
 export const Route = createFileRoute("/care")({
   head: () => ({
@@ -17,7 +18,9 @@ export const Route = createFileRoute("/care")({
         property: "og:description",
         content: "Step-by-step reshaping and care for handwoven elephant grass baskets.",
       },
+      ...canonical("/care").meta,
     ],
+    links: canonical("/care").links,
   }),
   component: CarePage,
 });

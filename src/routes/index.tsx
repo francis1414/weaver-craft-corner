@@ -8,6 +8,7 @@ import { SmartImage } from "@/components/SmartImage";
 import { StarRating } from "@/components/StarRating";
 import { useCategories, useHomepage, useProducts, useReviews } from "@/hooks/use-store-data";
 import { cn } from "@/lib/utils";
+import { canonical, jsonLdScript, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -23,7 +24,10 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Sculptural elephant grass craft, woven by name-known artisans in Bolgatanga.",
       },
+      ...canonical("/").meta,
     ],
+    links: canonical("/").links,
+    scripts: [jsonLdScript(organizationJsonLd), jsonLdScript(websiteJsonLd)],
   }),
   component: HomePage,
 });

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { MediaUploader } from "@/components/admin/MediaUploader";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { SmartImage } from "@/components/SmartImage";
@@ -228,10 +229,15 @@ function AdminCategories() {
                 />
               </div>
               <div className="space-y-2">
-                <Label>Banner image URL</Label>
-                <Input
-                  value={draft.image}
-                  onChange={(e) => setDraft({ ...draft, image: e.target.value })}
+                <Label className="sr-only">Banner image</Label>
+                <MediaUploader
+                  label="Banner image"
+                  value={draft.image ? [draft.image] : []}
+                  onChange={(next: string[]) => setDraft({ ...draft, image: next[0] ?? "" })}
+                  multiple={false}
+                  accept="image/*"
+                  folder="categories"
+                  max={1}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
