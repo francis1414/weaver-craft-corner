@@ -182,19 +182,12 @@ function ProductPage() {
             }}
             onMouseLeave={() => setZoom(null)}
           >
-            <SmartImage
-              src={gallery[activeImage]}
-              alt={product.name}
-              ratio="1/1"
-              priority
-              className={cn(
-                "transition-transform duration-500",
-                zoom ? "scale-[1.75]" : "scale-100",
-              )}
-            />
-            {zoom && (
-              <style>{`.zoom-origin{transform-origin:${zoom.x}% ${zoom.y}%}`}</style>
-            )}
+            <div
+              className={cn("transition-transform duration-500", zoom ? "scale-[1.7]" : "scale-100")}
+              style={{ transformOrigin: zoom ? `${zoom.x}% ${zoom.y}%` : "center" }}
+            >
+              <SmartImage src={gallery[activeImage]} alt={product.name} ratio="1/1" priority />
+            </div>
             <span className="pointer-events-none absolute bottom-3 left-3 flex items-center gap-1.5 bg-foreground/85 px-3 py-1.5 text-[10px] uppercase tracking-[0.14em] text-background">
               <ZoomIn size={12} /> Hover to zoom weave
             </span>
