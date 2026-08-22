@@ -113,12 +113,31 @@ function CheckoutPage() {
       });
       setOrderNumber(number);
       clearCart();
-      setStep(4);
+      setStep(payment === "card" && paymentsConfigured() ? 5 : 4);
     } catch {
       toast.error("We could not place your order. Please try again.");
     } finally {
       setPending(false);
     }
+  }
+
+  if (step === 5 && orderNumber) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-16 md:px-8">
+        <PaymentTestModeBanner />
+        <p className="label-caps mt-8 text-gold">Secure payment</p>
+        <h1 className="mt-3 font-serif text-4xl">Pay for order {orderNumber}</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Your order is reserved. Complete payment below to confirm it with our studio.
+        </p>
+        <div className="mt-8">
+          <StripeEmbeddedCheckout
+            orderNumber={orderNumber}
+            returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`}
+          />
+        </div>
+      </div>
+    );
   }
 
   if (step === 4 && orderNumber) {
@@ -142,6 +161,8 @@ function CheckoutPage() {
       </div>
     );
   }
+
+
 
   if (cart.length === 0) {
     return (
