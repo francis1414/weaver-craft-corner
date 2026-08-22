@@ -27,6 +27,7 @@ import { usePrice } from "@/hooks/use-price";
 import { submitReview } from "@/lib/store-api";
 import { cn } from "@/lib/utils";
 import { youtubeEmbedUrl } from "@/lib/media";
+import { absoluteUrl, breadcrumbJsonLd, canonical, jsonLdScript } from "@/lib/seo";
 
 export const Route = createFileRoute("/product/$slug")({
   head: ({ params }) => {
@@ -46,6 +47,27 @@ export const Route = createFileRoute("/product/$slug")({
           property: "og:description",
           content: `${name}: handwoven Bolga elephant grass craft from Ghana.`,
         },
+        { property: "og:type", content: "product" },
+        { name: "twitter:card", content: "summary_large_image" },
+        ...canonical(`/product/${params.slug}`).meta,
+      ],
+      links: canonical(`/product/${params.slug}`).links,
+      scripts: [
+        jsonLdScript({
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name,
+          url: absoluteUrl(`/product/${params.slug}`),
+          brand: { "@type": "Brand", name: "Vetastudio" },
+          material: "Elephant grass (veta vera)",
+        }),
+        jsonLdScript(
+          breadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Shop", path: "/shop" },
+            { name, path: `/product/${params.slug}` },
+          ]),
+        ),
       ],
     };
   },

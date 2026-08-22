@@ -2,6 +2,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { SmartImage } from "@/components/SmartImage";
 import { useJournal } from "@/hooks/use-store-data";
+import { absoluteUrl, canonical, jsonLdScript } from "@/lib/seo";
 
 export const Route = createFileRoute("/journal/$slug")({
   head: ({ params }) => {
@@ -21,6 +22,20 @@ export const Route = createFileRoute("/journal/$slug")({
           property: "og:description",
           content: `${title}: an essay on Ghanaian craft and sustainable decor.`,
         },
+        { property: "og:type", content: "article" },
+        { name: "twitter:card", content: "summary_large_image" },
+        ...canonical(`/journal/${params.slug}`).meta,
+      ],
+      links: canonical(`/journal/${params.slug}`).links,
+      scripts: [
+        jsonLdScript({
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: title,
+          url: absoluteUrl(`/journal/${params.slug}`),
+          author: { "@type": "Organization", name: "Vetastudio" },
+          publisher: { "@type": "Organization", name: "Vetastudio" },
+        }),
       ],
     };
   },
