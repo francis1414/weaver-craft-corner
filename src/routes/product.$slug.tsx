@@ -129,6 +129,7 @@ function ProductPage() {
   const onSale = product.salePrice != null && product.salePrice < product.price;
   const lowStock = product.stockQuantity > 0 && product.stockQuantity <= product.lowStockThreshold;
   const shipBase = settings.shippingInternational;
+  const shipExtra = settings.shippingAdditionalItem;
   const averageRating = productReviews.length
     ? productReviews.reduce((sum, r) => sum + r.rating, 0) / productReviews.length
     : product.rating;
@@ -247,7 +248,7 @@ function ProductPage() {
           <div className="mt-7 border border-border">
             <div className="flex items-center justify-between gap-4 border-b border-border px-4 py-3">
               <span className="flex items-center gap-2 text-sm">
-                <Globe size={15} className="text-gold" /> Worldwide Express Shipping
+                <Globe size={15} className="text-gold" /> {settings.shippingLabel}
               </span>
               <span className="bg-stone px-3 py-1 font-mono text-xs">{price(shipBase)}</span>
             </div>
@@ -256,12 +257,12 @@ function ProductPage() {
                 • Base rate: <strong className="text-foreground">{price(shipBase)}</strong> for 1st
                 item
               </span>
-              <span>(+{price(Math.round(shipBase * 0.6))} for each additional item)</span>
+              <span>(+{price(shipExtra)} for each additional item)</span>
             </div>
             <div className="flex flex-wrap items-center gap-2 px-4 pb-3 text-xs text-muted-foreground">
-              <Plane size={13} className="text-gold" /> Tracked air courier via DHL Express / FedEx
+              <Plane size={13} className="text-gold" /> {settings.shippingCarrier}
               <span className="mx-1">•</span>
-              <strong className="text-foreground">7–10 Business Days</strong> delivery
+              <strong className="text-foreground">{settings.shippingTransitTime}</strong> delivery
             </div>
           </div>
 
