@@ -57,7 +57,7 @@ export function Footer() {
 
         <div className="mt-16 grid gap-12 lg:grid-cols-[1.65fr_0.8fr_0.8fr_1fr]">
           <div>
-            <h2 className="font-serif text-2xl text-foreground">Vetastudio</h2>
+            <h2 className="font-serif text-2xl text-background">Vetastudio</h2>
             <p className="mt-5 max-w-md text-sm leading-relaxed text-background/55">
               Vetastudio celebrates authentic handmade craftsmanship from Ghana, presenting traditional Bolgatanga basket weaving as contemporary, globally desirable fibre art and luxury home décor.
             </p>

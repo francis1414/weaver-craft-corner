@@ -17,6 +17,8 @@ export const Route = createFileRoute("/about")({
         property: "og:description",
         content: "Fair-trade transparency and the weavers of Upper East Ghana.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: AboutPage,

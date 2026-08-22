@@ -17,6 +17,8 @@ export const Route = createFileRoute("/journal/")({
         property: "og:description",
         content: "Essays on West African weaving, natural dyeing and sustainable decor.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: JournalPage,
