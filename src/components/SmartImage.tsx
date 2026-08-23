@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
-import { FALLBACK_IMAGE } from "@/lib/mock-data";
+import { FALLBACK_IMAGE, assetUrl } from "@/lib/mock-data";
 
 interface SmartImageProps {
   src: string | undefined;
