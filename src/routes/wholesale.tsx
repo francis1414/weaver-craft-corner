@@ -4,6 +4,7 @@ import { SmartImage } from "@/components/SmartImage";
 import { useSettings } from "@/hooks/use-store-data";
 import { IMAGES } from "@/lib/mock-data";
 import { breadcrumbJsonLd, canonical, jsonLdScript, SITE_NAME } from "@/lib/seo";
+import { WHATSAPP_DISPLAY, whatsappLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/wholesale")({
   head: () => ({
@@ -93,10 +94,14 @@ function WholesalePage() {
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a
-            href={`mailto:${settings.supportEmail}?subject=Wholesale%20enquiry`}
+            href={whatsappLink(
+              "Hello Vetastudio, I would like trade pricing for a wholesale order.",
+            )}
+            target="_blank"
+            rel="noreferrer noopener"
             className="border border-gold bg-gold px-7 py-3.5 text-xs uppercase tracking-[0.16em] text-gold-foreground hover:bg-gold-deep"
           >
-            Request trade pricing
+            Request trade pricing on WhatsApp
           </a>
           <Link
             to="/shop"
@@ -147,6 +152,19 @@ function WholesalePage() {
           pricing, lead time and freight options.
         </p>
         <ul className="mt-6 space-y-2 text-sm">
+          <li>
+            WhatsApp:{" "}
+            <a
+              href={whatsappLink(
+                "Hello Vetastudio, I would like trade pricing for a wholesale order.",
+              )}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-gold hover:underline"
+            >
+              {WHATSAPP_DISPLAY}
+            </a>
+          </li>
           <li>
             Email:{" "}
             <a href={`mailto:${settings.supportEmail}`} className="text-gold hover:underline">
