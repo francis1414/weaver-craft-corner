@@ -5,6 +5,7 @@ import { SmartImage } from "@/components/SmartImage";
 import { useSettings } from "@/hooks/use-store-data";
 import { IMAGES } from "@/lib/mock-data";
 import { breadcrumbJsonLd, canonical, jsonLdScript } from "@/lib/seo";
+import { WHATSAPP_DISPLAY, whatsappLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/care")({
   head: () => ({
@@ -214,10 +215,20 @@ function CarePage() {
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <a
-            href={`mailto:${settings.supportEmail}?subject=Custom%20or%20wholesale%20order`}
+            href={whatsappLink(
+              "Hello Vetastudio, I would like a quote for a custom or wholesale basket order.",
+            )}
+            target="_blank"
+            rel="noreferrer noopener"
             className="border border-gold px-6 py-3 text-xs uppercase tracking-[0.16em] text-foreground hover:bg-gold hover:text-gold-foreground"
           >
-            Request a quote
+            Request a quote on WhatsApp
+          </a>
+          <a
+            href={`mailto:${settings.supportEmail}?subject=Custom%20or%20wholesale%20order`}
+            className="border border-border px-6 py-3 text-xs uppercase tracking-[0.16em] text-muted-foreground hover:border-gold hover:text-foreground"
+          >
+            Email instead
           </a>
           <Link
             to="/shop"
