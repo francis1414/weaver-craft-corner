@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 
-import { FreeShippingNote } from "@/components/FreeShippingNote";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
 import { StoryFilm } from "@/components/StoryFilm";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
