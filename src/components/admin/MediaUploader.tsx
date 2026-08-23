@@ -50,11 +50,19 @@ export function MediaUploader({
         return;
       }
       const uploaded: string[] = [];
+      const failures: string[] = [];
       for (const file of picked) {
-        uploaded.push(await uploadMedia(file, folder));
+        try {
+          uploaded.push(await uploadMedia(file, folder));
+        } catch (error) {
+          failures.push(error instanceof Error ? error.message : `${file.name} failed`);
+        }
       }
-      onChange(multiple ? [...value, ...uploaded] : uploaded.slice(0, 1));
-      toast.success(`${uploaded.length} file${uploaded.length > 1 ? "s" : ""} uploaded`);
+      if (uploaded.length > 0) {
+        onChange(multiple ? [...value, ...uploaded] : uploaded.slice(0, 1));
+        toast.success(`${uploaded.length} file${uploaded.length > 1 ? "s" : ""} uploaded`);
+      }
+      for (const message of failures.slice(0, 3)) toast.error(message);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Upload failed");
     } finally {
@@ -142,6 +150,12 @@ export function MediaUploader({
       </div>
 
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+      {!isVideo && (
+        <p className="text-xs text-muted-foreground">
+          Photos are auto-cropped to a 4:5 gallery frame and compressed. Minimum 500px short edge,
+          maximum 25MB per file.
+        </p>
+      )}
 
       {value.length > 0 && (
         <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
