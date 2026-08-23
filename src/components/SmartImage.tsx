@@ -73,9 +73,9 @@ export function MediaFallback({
   message,
   className,
 }: {
-  alt?: string;
-  message?: string;
-  className?: string;
+  alt?: string | undefined;
+  message?: string | undefined;
+  className?: string | undefined;
 }) {
   return (
     <div
