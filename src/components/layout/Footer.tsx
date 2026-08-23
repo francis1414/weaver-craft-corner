@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowUp, Instagram, Mail, MapPin, Phone, Sparkles } from "lucide-react";
+import { ArrowUp, Instagram, Mail, MapPin, MessageCircle, Phone, Sparkles } from "lucide-react";
+
+import { WHATSAPP_DISPLAY, whatsappLink } from "@/lib/whatsapp";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -72,6 +74,17 @@ export function Footer() {
               <li className="flex items-center gap-3">
                 <Phone size={16} className="shrink-0 text-gold" />
                 <a href={`tel:${settings.supportPhone}`} className="hover:text-gold">{settings.supportPhone}</a>
+              </li>
+              <li className="flex items-center gap-3">
+                <MessageCircle size={16} className="shrink-0 text-gold" />
+                <a
+                  href={whatsappLink("Hello Vetastudio, I have an enquiry.")}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="hover:text-gold"
+                >
+                  WhatsApp {WHATSAPP_DISPLAY}
+                </a>
               </li>
             </ul>
           </div>
