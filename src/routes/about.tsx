@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { SmartImage } from "@/components/SmartImage";
+import { MediaDiagnostics } from "@/components/media/MediaDiagnostics";
+import { StoryChapter, StoryVideo } from "@/components/media/StoryMedia";
 import { IMAGES } from "@/lib/mock-data";
 import { breadcrumbJsonLd, canonical, jsonLdScript, organizationJsonLd } from "@/lib/seo";
 
@@ -57,7 +59,7 @@ function AboutPage() {
         </p>
       </header>
 
-      <section id="craft" className="mt-16 grid scroll-mt-24 items-center gap-10 md:grid-cols-2 md:gap-16">
+      <StoryChapter id="craft" prefetch={[IMAGES.artisanBase, IMAGES.artisanCoil]} className="mt-16 grid scroll-mt-24 items-center gap-10 md:grid-cols-2 md:gap-16">
         <div className="hover-zoom shadow-editorial">
           <SmartImage
             src={IMAGES.weavingCircle}
@@ -83,9 +85,9 @@ function AboutPage() {
             season rather than a factory calendar.
           </p>
         </div>
-      </section>
+      </StoryChapter>
 
-      <section className="mt-24 grid items-center gap-10 md:grid-cols-2 md:gap-16">
+      <StoryChapter prefetch={[IMAGES.artisanCoil]} className="mt-24 grid items-center gap-10 md:grid-cols-2 md:gap-16">
         <div className="order-2 md:order-1">
           <p className="label-caps text-gold">Chapter two — the base</p>
           <h2 className="mt-4 font-serif text-3xl leading-tight md:text-4xl">
@@ -109,9 +111,9 @@ function AboutPage() {
             ratio="4/3"
           />
         </div>
-      </section>
+      </StoryChapter>
 
-      <section className="mt-24 grid items-center gap-10 md:grid-cols-2 md:gap-16">
+      <StoryChapter prefetch={[IMAGES.weavingCircle]} className="mt-24 grid items-center gap-10 md:grid-cols-2 md:gap-16">
         <div className="hover-zoom shadow-editorial">
           <SmartImage
             src={IMAGES.artisanCoil}
@@ -134,9 +136,9 @@ function AboutPage() {
             out, and we tell you the dye source for every colourway on the product page.
           </p>
         </div>
-      </section>
+      </StoryChapter>
 
-      <section className="mt-24">
+      <StoryChapter prefetch={[IMAGES.weaverPortrait]} className="mt-24">
         <p className="label-caps text-gold">Chapter four — in motion</p>
         <h2 className="mt-3 font-serif text-3xl leading-tight md:text-4xl">
           How things are done, filmed where it happens
@@ -146,20 +148,15 @@ function AboutPage() {
           single afternoon in the compound, from splitting through to the leather-bound rim.
         </p>
         <div className="mt-8 shadow-editorial">
-          <video
+          <StoryVideo
             src={IMAGES.storyFilm}
             poster={IMAGES.weavingCircle}
-            controls
-            playsInline
-            muted
-            loop
-            preload="metadata"
-            className="aspect-video w-full bg-stone object-cover"
+            label="Vetastudio studio film: weaving inside a Bolgatanga compound"
           />
         </div>
-      </section>
+      </StoryChapter>
 
-      <section className="mt-24 grid items-center gap-10 md:grid-cols-2 md:gap-16">
+      <StoryChapter prefetch={[IMAGES.basketInterior]} className="mt-24 grid items-center gap-10 md:grid-cols-2 md:gap-16">
         <div className="order-2 md:order-1">
           <p className="label-caps text-gold">Chapter five — the maker</p>
           <h2 className="mt-4 font-serif text-3xl leading-tight md:text-4xl">
@@ -182,9 +179,9 @@ function AboutPage() {
             ratio="4/3"
           />
         </div>
-      </section>
+      </StoryChapter>
 
-      <section className="mt-24 grid items-center gap-10 md:grid-cols-2 md:gap-16">
+      <StoryChapter className="mt-24 grid items-center gap-10 md:grid-cols-2 md:gap-16">
         <div className="hover-zoom shadow-editorial">
           <SmartImage
             src={IMAGES.basketInterior}
@@ -207,7 +204,7 @@ function AboutPage() {
             these baskets outlive most of the furniture around them.
           </p>
         </div>
-      </section>
+      </StoryChapter>
 
 
       <div id="transparency" className="mt-24 grid scroll-mt-24 gap-12 border-y border-border py-14 md:grid-cols-3">
@@ -251,6 +248,17 @@ function AboutPage() {
           ))}
         </ul>
       </section>
+
+      <MediaDiagnostics
+        items={[
+          { label: "Weaving circle", url: IMAGES.weavingCircle },
+          { label: "Basket base", url: IMAGES.artisanBase },
+          { label: "Coiling grass", url: IMAGES.artisanCoil },
+          { label: "Weaver portrait", url: IMAGES.weaverPortrait },
+          { label: "Styled interior", url: IMAGES.basketInterior },
+          { label: "Story film", url: IMAGES.storyFilm },
+        ]}
+      />
     </div>
   );
 }
