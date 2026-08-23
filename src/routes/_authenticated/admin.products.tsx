@@ -153,8 +153,25 @@ function AdminProducts() {
 
   async function save() {
     if (!draft) return;
+    if (!draft.name.trim()) {
+      toast.error("Add a product name before saving");
+      return;
+    }
+    if (!draft.category) {
+      toast.error("Pick a category before saving");
+      return;
+    }
+    if (!(Number(draft.price) > 0)) {
+      toast.error("Set a price greater than zero");
+      return;
+    }
+    if (draft.media.length === 0) {
+      toast.error("Add at least one product photo");
+      return;
+    }
     setBusy(true);
     try {
+
       const list = (v: string, sep: RegExp) =>
         v
           .split(sep)
