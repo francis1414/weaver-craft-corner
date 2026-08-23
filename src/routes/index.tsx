@@ -63,7 +63,6 @@ function HomePage() {
 
   return (
     <div>
-      <FreeShippingNote />
       {/* Hero */}
       <section className="grid items-stretch gap-0 lg:grid-cols-2">
         <div className="flex flex-col justify-center px-4 py-16 md:px-8 lg:py-28">
@@ -115,33 +114,41 @@ function HomePage() {
             "mt-10 grid gap-6 sm:grid-cols-2",
             categories.length <= 2
               ? "lg:grid-cols-2"
-              : categories.length === 3
+              : categories.length % 3 === 0
                 ? "lg:grid-cols-3"
                 : "lg:grid-cols-4",
           )}
         >
-          {categories.slice(0, 8).map((category, i) => (
-            <motion.div
-              key={category.id}
-              initial={{ opacity: 0, y: 14 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: i * 0.04 }}
-            >
-              <Link to="/shop" className="group block">
-                <SmartImage
-                  src={category.image}
-                  alt={category.name}
-                  ratio="4/5"
-                  className="transition-transform duration-700 group-hover:scale-[1.05]"
-                />
-                <h3 className="mt-3 font-serif text-lg">{category.name}</h3>
-                <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
-                  {category.productCount} pieces
-                </p>
-              </Link>
-            </motion.div>
-          ))}
+          {categories.slice(0, 8).map((category, i) => {
+            const live = products.filter((p) => p.category === category.slug).length;
+            return (
+              <motion.div
+                key={category.id}
+                initial={{ opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: i * 0.04 }}
+                className="h-full"
+              >
+                <Link
+                  to="/shop"
+                  search={{ category: category.slug }}
+                  className="group flex h-full flex-col"
+                >
+                  <SmartImage
+                    src={category.image}
+                    alt={category.name}
+                    ratio="4/5"
+                    className="transition-transform duration-700 group-hover:scale-[1.05]"
+                  />
+                  <h3 className="mt-3 font-serif text-lg">{category.name}</h3>
+                  <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                    {live || category.productCount} pieces
+                  </p>
+                </Link>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
