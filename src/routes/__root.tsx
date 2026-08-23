@@ -19,6 +19,7 @@ import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileBottomBar } from "@/components/layout/MobileBottomBar";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { CartDrawer } from "@/components/drawers/CartDrawer";
 import { WishlistDrawer } from "@/components/drawers/WishlistDrawer";
 import { CompareModal } from "@/components/drawers/CompareModal";
@@ -105,7 +106,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -178,6 +179,7 @@ function StoreShell() {
       </main>
       <Footer />
       <MobileBottomBar />
+      <WhatsAppButton />
       <CartDrawer />
       <WishlistDrawer />
       <CompareModal />
