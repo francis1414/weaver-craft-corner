@@ -59,7 +59,7 @@ function AboutPage() {
 
       <section id="craft" className="mt-16 grid scroll-mt-24 items-center gap-10 md:grid-cols-2 md:gap-16">
         <div className="hover-zoom shadow-editorial">
-          <SmartImage src={IMAGES.artisan} alt="Bolgatanga artisans weaving together" ratio="4/3" priority />
+          <SmartImage src={IMAGES.weavingCircle} alt="Bolgatanga weavers splitting elephant grass together in the compound" ratio="4/3" priority />
         </div>
         <div>
           <p className="label-caps text-gold">Rooted in Bolgatanga</p>
@@ -73,6 +73,52 @@ function AboutPage() {
             We bridge generations of technique with a thoughtful contemporary point of view, honouring
             every maker and the landscape that supplies the fibre.
           </p>
+        </div>
+      </section>
+
+
+      <section className="mt-24">
+        <p className="label-caps text-gold">In their own hands</p>
+        <h2 className="mt-3 font-serif text-3xl">How things are done</h2>
+        <div className="mt-8 grid gap-6 md:grid-cols-[1.4fr_1fr]">
+          <video
+            src={IMAGES.storyFilm}
+            poster={IMAGES.weavingCircle}
+            controls
+            playsInline
+            muted
+            loop
+            preload="metadata"
+            className="aspect-video w-full bg-stone object-cover"
+          />
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-1">
+            <img
+              src={IMAGES.artisanBase}
+              alt="Weaver closing the base of a Bolga basket"
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
+            <img
+              src={IMAGES.artisanCoil}
+              alt="Artisan coiling elephant grass on a mat"
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </div>
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
+          <img
+            src={IMAGES.weaverPortrait}
+            alt="Vetastudio weaver holding a finished striped Bolga basket"
+            loading="lazy"
+            className="w-full object-cover"
+          />
+          <img
+            src={IMAGES.basketInterior}
+            alt="Large black and natural Bolga floor basket styled in a sunlit terrace"
+            loading="lazy"
+            className="w-full object-cover"
+          />
         </div>
       </section>
 

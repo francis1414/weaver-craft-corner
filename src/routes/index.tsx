@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 
 import { FreeShippingNote } from "@/components/FreeShippingNote";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
+import { StoryFilm } from "@/components/StoryFilm";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { SmartImage } from "@/components/SmartImage";
 import { StarRating } from "@/components/StarRating";
@@ -109,7 +110,16 @@ function HomePage() {
       {/* Categories */}
       <section className="mx-auto max-w-[1400px] px-4 py-20 md:px-8">
         <h2 className="font-serif text-3xl md:text-4xl">Shop by craft</h2>
-        <div className="mt-10 grid grid-cols-2 gap-6 lg:grid-cols-4">
+        <div
+          className={cn(
+            "mt-10 grid gap-6 sm:grid-cols-2",
+            categories.length <= 2
+              ? "lg:grid-cols-2"
+              : categories.length === 3
+                ? "lg:grid-cols-3"
+                : "lg:grid-cols-4",
+          )}
+        >
           {categories.slice(0, 8).map((category, i) => (
             <motion.div
               key={category.id}
@@ -177,6 +187,8 @@ function HomePage() {
           </ol>
         </div>
       </section>
+
+      <StoryFilm />
 
       {/* New arrivals */}
       <section className="mx-auto max-w-[1400px] px-4 py-20 md:px-8">
