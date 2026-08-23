@@ -22,16 +22,9 @@ import type {
   StoreSettings,
 } from "@/types";
 
-/**
- * Media lives on Lovable's asset CDN, which is served from the Lovable origin.
- * When the app is hosted elsewhere (e.g. Vercel) the relative `/__l5e/...`
- * path 404s, so resolve those pointers against the canonical origin.
- */
-const ASSET_ORIGIN = "https://weaver-craft-corner.lovable.app";
+import { assetUrl } from "@/lib/asset-url";
 
-export function assetUrl(url: string): string {
-  return url.startsWith("/__l5e/") ? `${ASSET_ORIGIN}${url}` : url;
-}
+export { assetUrl } from "@/lib/asset-url";
 
 export const IMAGES = {
   hero: assetUrl(heroAsset.url),

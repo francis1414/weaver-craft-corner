@@ -8,6 +8,7 @@ import { useStore } from "@/context/StoreProvider";
 import { useProducts } from "@/hooks/use-store-data";
 import { usePrice } from "@/hooks/use-price";
 import logo from "@/assets/vetastudio-logo.png.asset.json";
+import { assetUrl } from "@/lib/asset-url";
 
 const NAV = [
   { to: "/shop", label: "Shop" },
@@ -50,7 +51,7 @@ export function Header() {
           </button>
           <Link to="/" className="shrink-0" aria-label="Vetastudio home">
             <img
-              src={logo.url}
+              src={assetUrl(logo.url)}
               alt="Vetastudio — handmade in Ghana, made to inspire"
               width={220}
               height={58}

@@ -4,12 +4,13 @@ import { AnimatePresence, motion } from "motion/react";
 import slide1 from "@/assets/hero-slide-1.png.asset.json";
 import slide2 from "@/assets/hero-slide-2.png.asset.json";
 import slide3 from "@/assets/hero-slide-3.webp.asset.json";
+import { assetUrl } from "@/lib/asset-url";
 import { cn } from "@/lib/utils";
 
 const SLIDES = [
-  { src: slide1.url, alt: "Weaver holding a scarlet handwoven elephant grass vase basket" },
-  { src: slide2.url, alt: "Artisan shaping sculptural Bolga baskets in a studio setting" },
-  { src: slide3.url, alt: "Bolgatanga weaver carrying a red art basket beside a village compound" },
+  { src: assetUrl(slide1.url), alt: "Weaver holding a scarlet handwoven elephant grass vase basket" },
+  { src: assetUrl(slide2.url), alt: "Artisan shaping sculptural Bolga baskets in a studio setting" },
+  { src: assetUrl(slide3.url), alt: "Bolgatanga weaver carrying a red art basket beside a village compound" },
 ];
 
 const INTERVAL = 5000;
