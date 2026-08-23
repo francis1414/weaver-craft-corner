@@ -1,5 +1,7 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { Check } from "lucide-react";
+import { Check, MessageCircle } from "lucide-react";
+
+import { whatsappLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/checkout/return")({
   head: () => ({
@@ -38,12 +40,26 @@ function CheckoutReturn() {
         Your order is confirmed with our Bolgatanga studio. A receipt is on its way to your inbox,
         and we will email tracking details as soon as your piece ships.
       </p>
-      <Link
-        to="/shop"
-        className="mt-8 inline-flex h-12 items-center bg-foreground px-6 text-xs uppercase tracking-[0.2em] text-background"
-      >
-        Continue browsing
-      </Link>
+      <div className="mt-8 flex flex-wrap justify-center gap-3">
+        <a
+          href={whatsappLink(
+            `Hello Vetastudio, I have just completed an order${
+              sessionId ? ` (reference ${sessionId})` : ""
+            } and would like updates on WhatsApp.`,
+          )}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="inline-flex h-12 items-center gap-2 bg-sage px-6 text-xs uppercase tracking-[0.2em] text-background hover:bg-gold hover:text-gold-foreground"
+        >
+          <MessageCircle size={16} /> Get order updates on WhatsApp
+        </a>
+        <Link
+          to="/shop"
+          className="inline-flex h-12 items-center bg-foreground px-6 text-xs uppercase tracking-[0.2em] text-background"
+        >
+          Continue browsing
+        </Link>
+      </div>
     </div>
   );
 }

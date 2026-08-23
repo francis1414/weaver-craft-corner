@@ -5,6 +5,7 @@ import { SmartImage } from "@/components/SmartImage";
 import { useSettings } from "@/hooks/use-store-data";
 import { IMAGES } from "@/lib/mock-data";
 import { breadcrumbJsonLd, canonical, jsonLdScript } from "@/lib/seo";
+import { WHATSAPP_DISPLAY, whatsappLink } from "@/lib/whatsapp";
 
 export const Route = createFileRoute("/care")({
   head: () => ({
@@ -214,10 +215,20 @@ function CarePage() {
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <a
-            href={`mailto:${settings.supportEmail}?subject=Custom%20or%20wholesale%20order`}
+            href={whatsappLink(
+              "Hello Vetastudio, I would like a quote for a custom or wholesale basket order.",
+            )}
+            target="_blank"
+            rel="noreferrer noopener"
             className="border border-gold px-6 py-3 text-xs uppercase tracking-[0.16em] text-foreground hover:bg-gold hover:text-gold-foreground"
           >
-            Request a quote
+            Request a quote on WhatsApp
+          </a>
+          <a
+            href={`mailto:${settings.supportEmail}?subject=Custom%20or%20wholesale%20order`}
+            className="border border-border px-6 py-3 text-xs uppercase tracking-[0.16em] text-muted-foreground hover:border-gold hover:text-foreground"
+          >
+            Email instead
           </a>
           <Link
             to="/shop"
@@ -243,9 +254,21 @@ function CarePage() {
       <section id="contact" className="mt-20 scroll-mt-24 bg-stone/60 p-8">
         <h2 className="font-serif text-3xl">Contact us</h2>
         <p className="mt-3 text-sm text-muted-foreground">
-          The studio replies within one business day, Monday to Friday.
+          WhatsApp is the fastest way to reach the studio — messages are usually answered the same
+          day.
         </p>
         <ul className="mt-5 space-y-2 text-sm">
+          <li>
+            WhatsApp:{" "}
+            <a
+              href={whatsappLink("Hello Vetastudio, I have a question.")}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-gold hover:underline"
+            >
+              {WHATSAPP_DISPLAY}
+            </a>
+          </li>
           <li>
             Email:{" "}
             <a href={`mailto:${settings.supportEmail}`} className="text-gold hover:underline">

@@ -7,6 +7,7 @@ import { SmartImage } from "@/components/SmartImage";
 import { useStore } from "@/context/StoreProvider";
 import { useProducts } from "@/hooks/use-store-data";
 import { usePrice } from "@/hooks/use-price";
+import logo from "@/assets/vetastudio-logo.png.asset.json";
 
 const NAV = [
   { to: "/shop", label: "Shop" },
@@ -47,11 +48,14 @@ export function Header() {
           >
             {mobileOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
-          <Link to="/" className="shrink-0">
-            <span className="font-serif text-2xl tracking-tight text-foreground">Vetastudio</span>
-            <span className="hidden text-[10px] uppercase tracking-[0.3em] text-muted-foreground md:block">
-              Bolgatanga Craft
-            </span>
+          <Link to="/" className="shrink-0" aria-label="Vetastudio home">
+            <img
+              src={logo.url}
+              alt="Vetastudio — handmade in Ghana, made to inspire"
+              width={220}
+              height={58}
+              className="h-12 w-auto md:h-16"
+            />
           </Link>
         </div>
 
