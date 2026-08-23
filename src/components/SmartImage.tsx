@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
-import { FALLBACK_IMAGE } from "@/lib/mock-data";
+import { FALLBACK_IMAGE, assetUrl } from "@/lib/mock-data";
 
 interface SmartImageProps {
   src: string | undefined;
@@ -34,7 +34,7 @@ export function SmartImage({
 }: SmartImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
-  const resolved = failed || !src ? FALLBACK_IMAGE : src;
+  const resolved = failed || !src ? FALLBACK_IMAGE : assetUrl(src);
 
   return (
     <div className={cn("relative overflow-hidden bg-stone", RATIO_CLASS[ratio], className)}>

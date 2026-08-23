@@ -22,25 +22,37 @@ import type {
   StoreSettings,
 } from "@/types";
 
+/**
+ * Media lives on Lovable's asset CDN, which is served from the Lovable origin.
+ * When the app is hosted elsewhere (e.g. Vercel) the relative `/__l5e/...`
+ * path 404s, so resolve those pointers against the canonical origin.
+ */
+const ASSET_ORIGIN = "https://weaver-craft-corner.lovable.app";
+
+export function assetUrl(url: string): string {
+  return url.startsWith("/__l5e/") ? `${ASSET_ORIGIN}${url}` : url;
+}
+
 export const IMAGES = {
-  hero: heroAsset.url,
-  sculpture: sculptureAsset.url,
-  lampshade: lampshadeAsset.url,
-  fan: fanAsset.url,
-  storage: storageAsset.url,
-  planter: planterAsset.url,
-  tote: toteAsset.url,
-  petbed: petbedAsset.url,
-  artisan: weavingCircleAsset.url,
-  weavingCircle: weavingCircleAsset.url,
-  artisanBase: artisanBaseAsset.url,
-  artisanCoil: artisanCoilAsset.url,
-  weaverPortrait: weaverPortraitAsset.url,
-  basketInterior: basketInteriorAsset.url,
-  storyFilm: storyFilmAsset.url,
+  hero: assetUrl(heroAsset.url),
+  sculpture: assetUrl(sculptureAsset.url),
+  lampshade: assetUrl(lampshadeAsset.url),
+  fan: assetUrl(fanAsset.url),
+  storage: assetUrl(storageAsset.url),
+  planter: assetUrl(planterAsset.url),
+  tote: assetUrl(toteAsset.url),
+  petbed: assetUrl(petbedAsset.url),
+  artisan: assetUrl(weavingCircleAsset.url),
+  weavingCircle: assetUrl(weavingCircleAsset.url),
+  artisanBase: assetUrl(artisanBaseAsset.url),
+  artisanCoil: assetUrl(artisanCoilAsset.url),
+  weaverPortrait: assetUrl(weaverPortraitAsset.url),
+  basketInterior: assetUrl(basketInteriorAsset.url),
+  storyFilm: assetUrl(storyFilmAsset.url),
 };
 
 export const FALLBACK_IMAGE = IMAGES.hero;
+
 
 const now = new Date().toISOString();
 
