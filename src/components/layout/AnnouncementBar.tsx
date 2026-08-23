@@ -1,4 +1,6 @@
-import { Mail, Phone, Truck } from "lucide-react";
+import { Mail, MessageCircle, Truck } from "lucide-react";
+
+import { WHATSAPP_DISPLAY, whatsappLink } from "@/lib/whatsapp";
 
 import { useStore } from "@/context/StoreProvider";
 import { useSettings } from "@/hooks/use-store-data";
@@ -27,10 +29,12 @@ export function AnnouncementBar() {
             <Mail size={12} /> {settings.supportEmail}
           </a>
           <a
-            href={`tel:${settings.supportPhone}`}
+            href={whatsappLink("Hello Vetastudio, I have an enquiry.")}
+            target="_blank"
+            rel="noreferrer noopener"
             className="hidden items-center gap-1.5 hover:text-gold lg:flex"
           >
-            <Phone size={12} /> {settings.supportPhone}
+            <MessageCircle size={12} /> WhatsApp {WHATSAPP_DISPLAY}
           </a>
           <label className="flex items-center gap-1.5">
             <span className="sr-only">Currency</span>
