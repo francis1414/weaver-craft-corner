@@ -15,13 +15,43 @@ function getSupabase() {
   return _supabase;
 }
 
+type OrderItem = { productId?: string; quantity?: number };
+
+/** Decrements stock for each item in a paid order. Runs once per order. */
+async function reduceStock(items: OrderItem[]) {
+  const supabase = getSupabase();
+  for (const item of items) {
+    const productId = item.productId;
+    const quantity = Math.max(1, Math.round(Number(item.quantity) || 1));
+    if (!productId) continue;
+    const { data: product } = await supabase
+      .from("products")
+      .select("stock_quantity")
+      .eq("id", productId)
+      .maybeSingle();
+    if (!product) continue;
+    await supabase
+      .from("products")
+      .update({
+        stock_quantity: Math.max(0, (product.stock_quantity ?? 0) - quantity),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", productId);
+  }
+}
+
 async function markOrder(
   orderNumber: string | undefined,
   paymentStatus: "paid" | "failed",
   reference: string | null,
 ) {
   if (!orderNumber) return;
-  await getSupabase()
+  const supabase = getSupabase();
+
+  // `.neq` on payment_status makes this idempotent: Stripe can deliver the same
+  // event more than once, but only the first delivery updates rows — so stock
+  // is never decremented twice for one order.
+  const { data: updated } = await supabase
     .from("orders")
     .update({
       payment_status: paymentStatus,
@@ -29,8 +59,15 @@ async function markOrder(
       ...(paymentStatus === "paid" ? { fulfillment_status: "processing" } : {}),
       updated_at: new Date().toISOString(),
     })
-    .eq("order_number", orderNumber);
+    .eq("order_number", orderNumber)
+    .neq("payment_status", paymentStatus)
+    .select("items");
+
+  if (paymentStatus !== "paid" || !updated?.length) return;
+  const items = Array.isArray(updated[0]?.items) ? (updated[0].items as OrderItem[]) : [];
+  await reduceStock(items);
 }
+
 
 async function handleWebhook(req: Request, env: StripeEnv) {
   const event = await verifyWebhook(req, env);
