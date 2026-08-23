@@ -338,11 +338,27 @@ export async function createOrder(draft: OrderDraft): Promise<void> {
 
 export async function upsertProduct(values: Row & { id?: string }): Promise<void> {
   const { id, ...rest } = values;
-  const { error } = id
-    ? await db.from("products").update(rest).eq("id", id)
-    : await db.from("products").insert(rest);
+
+  // Duplicate slug/SKU is the most common upload snag — retry once with a
+  // unique suffix so the admin never loses a filled-in form.
+  const attempt = async (payload: Row) =>
+    id
+      ? await db.from("products").update(payload).eq("id", id)
+      : await db.from("products").insert(payload);
+
+  let { error } = await attempt(rest);
+
+  if (error && /duplicate key|unique/i.test(error.message)) {
+    const suffix = Date.now().toString(36).slice(-4);
+    const retry = { ...rest } as Row;
+    if (typeof retry["slug"] === "string") retry["slug"] = `${retry["slug"]}-${suffix}`;
+    if (typeof retry["sku"] === "string") retry["sku"] = `${retry["sku"]}-${suffix}`;
+    ({ error } = await attempt(retry));
+  }
+
   if (error) throw error;
 }
+
 
 export async function deleteRow(table: string, id: string): Promise<void> {
   const { error } = await db.from(table).delete().eq("id", id);
