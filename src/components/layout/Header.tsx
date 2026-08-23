@@ -54,7 +54,7 @@ export function Header() {
               alt="Vetastudio — handmade in Ghana, made to inspire"
               width={220}
               height={58}
-              className="h-10 w-auto md:h-12"
+              className="h-12 w-auto md:h-16"
             />
           </Link>
         </div>
