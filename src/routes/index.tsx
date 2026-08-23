@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 
 import { FreeShippingNote } from "@/components/FreeShippingNote";
 import { HeroSlideshow } from "@/components/HeroSlideshow";
+import { StoryFilm } from "@/components/StoryFilm";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { SmartImage } from "@/components/SmartImage";
 import { StarRating } from "@/components/StarRating";
@@ -186,6 +187,8 @@ function HomePage() {
           </ol>
         </div>
       </section>
+
+      <StoryFilm />
 
       {/* New arrivals */}
       <section className="mx-auto max-w-[1400px] px-4 py-20 md:px-8">
