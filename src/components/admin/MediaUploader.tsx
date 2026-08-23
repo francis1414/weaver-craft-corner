@@ -150,6 +150,12 @@ export function MediaUploader({
       </div>
 
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+      {!isVideo && (
+        <p className="text-xs text-muted-foreground">
+          Photos are auto-cropped to a 4:5 gallery frame and compressed. Minimum 500px short edge,
+          maximum 25MB per file.
+        </p>
+      )}
 
       {value.length > 0 && (
         <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
