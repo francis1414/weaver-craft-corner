@@ -6,7 +6,12 @@ import storageAsset from "@/assets/product-storage.jpg.asset.json";
 import planterAsset from "@/assets/planter.jpg.asset.json";
 import toteAsset from "@/assets/tote.jpg.asset.json";
 import petbedAsset from "@/assets/petbed.jpg.asset.json";
-import artisanAsset from "@/assets/artisan.jpg.asset.json";
+import weavingCircleAsset from "@/assets/story-weaving-circle.jpg.asset.json";
+import artisanBaseAsset from "@/assets/story-artisan-base.jpg.asset.json";
+import artisanCoilAsset from "@/assets/story-artisan-coil.png.asset.json";
+import weaverPortraitAsset from "@/assets/story-weaver-veta.png.asset.json";
+import basketInteriorAsset from "@/assets/story-basket-interior.png.asset.json";
+import storyFilmAsset from "@/assets/story-film.mp4.asset.json";
 
 import type {
   Category,
@@ -26,7 +31,13 @@ export const IMAGES = {
   planter: planterAsset.url,
   tote: toteAsset.url,
   petbed: petbedAsset.url,
-  artisan: artisanAsset.url,
+  artisan: weavingCircleAsset.url,
+  weavingCircle: weavingCircleAsset.url,
+  artisanBase: artisanBaseAsset.url,
+  artisanCoil: artisanCoilAsset.url,
+  weaverPortrait: weaverPortraitAsset.url,
+  basketInterior: basketInteriorAsset.url,
+  storyFilm: storyFilmAsset.url,
 };
 
 export const FALLBACK_IMAGE = IMAGES.hero;
@@ -340,7 +351,7 @@ export const MOCK_HOMEPAGE: HomepageContent = {
       village: "Sumbrungu",
       years: 22,
       quote: "I leave the ends wild so you can see my hand in it.",
-      image: IMAGES.artisan,
+      image: IMAGES.weaverPortrait,
     },
   ],
   processSteps: [
