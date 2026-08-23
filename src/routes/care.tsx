@@ -254,9 +254,21 @@ function CarePage() {
       <section id="contact" className="mt-20 scroll-mt-24 bg-stone/60 p-8">
         <h2 className="font-serif text-3xl">Contact us</h2>
         <p className="mt-3 text-sm text-muted-foreground">
-          The studio replies within one business day, Monday to Friday.
+          WhatsApp is the fastest way to reach the studio — messages are usually answered the same
+          day.
         </p>
         <ul className="mt-5 space-y-2 text-sm">
+          <li>
+            WhatsApp:{" "}
+            <a
+              href={whatsappLink("Hello Vetastudio, I have a question.")}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="text-gold hover:underline"
+            >
+              {WHATSAPP_DISPLAY}
+            </a>
+          </li>
           <li>
             Email:{" "}
             <a href={`mailto:${settings.supportEmail}`} className="text-gold hover:underline">
