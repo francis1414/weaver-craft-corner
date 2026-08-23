@@ -34,9 +34,13 @@ function toMinorUnit(amount: number, currency: string): number {
 
 type CheckoutResult = { clientSecret: string } | { error: string };
 
+type OrderItem = { name?: string; price?: number; quantity?: number; image?: string };
+
 /**
  * Starts a card payment for an order that already exists in the database.
- * The amount is read from the stored order, never from the browser.
+ * Line items are built on the fly from the stored order, so nothing has to be
+ * registered up front in the payment provider — add or reprice products in the
+ * dashboard and checkout follows automatically.
  */
 export const createOrderCheckout = createServerFn({ method: "POST" })
   .inputValidator(
@@ -53,7 +57,7 @@ export const createOrderCheckout = createServerFn({ method: "POST" })
       const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
       const { data: order, error } = await supabaseAdmin
         .from("orders")
-        .select("order_number, total, currency, customer, payment_status")
+        .select("order_number, total, currency, customer, items, payment_status")
         .eq("order_number", data.orderNumber)
         .maybeSingle();
 
@@ -62,8 +66,62 @@ export const createOrderCheckout = createServerFn({ method: "POST" })
       if (order.payment_status === "paid") return { error: "This order is already paid" };
 
       const currency = (order.currency ?? "USD").toLowerCase();
-      const amount = toMinorUnit(Number(order.total) || 0, currency);
-      if (amount < 50) return { error: "Order total is too low to charge" };
+      const total = toMinorUnit(Number(order.total) || 0, currency);
+      if (total < 50) return { error: "Order total is too low to charge" };
+
+      const items = Array.isArray(order.items) ? (order.items as OrderItem[]) : [];
+      const lineItems: {
+        price_data: {
+          currency: string;
+          product_data: { name: string; images?: string[] };
+          unit_amount: number;
+        };
+        quantity: number;
+      }[] = [];
+
+      let itemsTotal = 0;
+      for (const item of items) {
+        const unit = toMinorUnit(Number(item.price) || 0, currency);
+        const quantity = Math.max(1, Math.round(Number(item.quantity) || 1));
+        if (unit <= 0) continue;
+        itemsTotal += unit * quantity;
+        lineItems.push({
+          price_data: {
+            currency,
+            product_data: {
+              name: item.name?.slice(0, 250) || `Vetastudio order ${order.order_number}`,
+              ...(item.image?.startsWith("https://") ? { images: [item.image] } : {}),
+            },
+            unit_amount: unit,
+          },
+          quantity,
+        });
+      }
+
+      // Shipping and tax as their own line so the charged amount always equals
+      // the order total the customer approved. Discounts make the remainder
+      // negative — in that case charge the order total as one line.
+      const remainder = total - itemsTotal;
+      if (!lineItems.length || remainder < 0) {
+        lineItems.length = 0;
+        lineItems.push({
+          price_data: {
+            currency,
+            product_data: { name: `Vetastudio order ${order.order_number}` },
+            unit_amount: total,
+          },
+          quantity: 1,
+        });
+      } else if (remainder > 0) {
+        lineItems.push({
+          price_data: {
+            currency,
+            product_data: { name: "Shipping & tax" },
+            unit_amount: remainder,
+          },
+          quantity: 1,
+        });
+      }
 
       const customer = (order.customer ?? {}) as { email?: string; name?: string };
       const stripe = createStripeClient(data.environment);
@@ -72,16 +130,7 @@ export const createOrderCheckout = createServerFn({ method: "POST" })
         mode: "payment",
         ui_mode: "embedded_page",
         return_url: data.returnUrl,
-        line_items: [
-          {
-            price_data: {
-              currency,
-              product_data: { name: `Vetastudio order ${order.order_number}` },
-              unit_amount: amount,
-            },
-            quantity: 1,
-          },
-        ],
+        line_items: lineItems,
         payment_intent_data: {
           description: `Vetastudio order ${order.order_number}`,
         },
@@ -94,6 +143,7 @@ export const createOrderCheckout = createServerFn({ method: "POST" })
       return { error: getStripeErrorMessage(error) };
     }
   });
+
 
 export type PaymentRow = {
   id: string;
