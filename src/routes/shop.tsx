@@ -133,7 +133,7 @@ function ShopPage() {
     let list = products.filter((p) => {
       if (category && p.category !== category) return false;
       const value = effective(p);
-      if (value < range[0] || value > range[1]) return false;
+      if (value < activeRange[0] || value > activeRange[1]) return false;
       if (colors.length > 0 && !p.color.some((c) => colors.includes(c.toLowerCase()))) return false;
       if (inStockOnly && p.stockQuantity <= 0) return false;
       if (onSaleOnly && !(p.salePrice != null && p.salePrice < p.price)) return false;
@@ -163,12 +163,12 @@ function ShopPage() {
         list.sort((a, b) => Number(b.featured) - Number(a.featured));
     }
     return list;
-  }, [products, category, range, colors, inStockOnly, onSaleOnly, sort]);
+  }, [products, category, activeRange, colors, inStockOnly, onSaleOnly, sort]);
 
   const chips: { label: string; clear: () => void }[] = [
     ...(category ? [{ label: category, clear: () => setCategory(null) }] : []),
-    ...(range[0] !== 0 || range[1] !== 1000
-      ? [{ label: `$${range[0]}–$${range[1]}`, clear: () => setRange([0, 1000]) }]
+    ...(range
+      ? [{ label: `$${range[0]}–$${range[1]}`, clear: () => setRange(null) }]
       : []),
     ...colors.map((c) => ({
       label: c,
@@ -180,7 +180,7 @@ function ShopPage() {
 
   function resetAll() {
     setCategory(null);
-    setRange([0, 1000]);
+    setRange(null);
     setColors([]);
     setInStockOnly(false);
     setOnSaleOnly(false);
@@ -203,7 +203,7 @@ function ShopPage() {
               All pieces <span className="text-xs">{products.length}</span>
             </button>
           </li>
-          {categories.map((c) => (
+          {filterCategories.map((c) => (
             <li key={c.id}>
               <button
                 type="button"
@@ -226,18 +226,18 @@ function ShopPage() {
         <input
           type="range"
           min={0}
-          max={1000}
+          max={ceiling}
           step={10}
-          value={range[1]}
-          onChange={(e) => setRange([range[0], Number(e.target.value)])}
+          value={activeRange[1]}
+          onChange={(e) => setRange([activeRange[0], Number(e.target.value)])}
           aria-label="Maximum price"
           className="mt-4 w-full accent-[var(--gold)]"
         />
         <p className="mt-1 text-xs text-muted-foreground">
-          ${range[0]} – ${range[1]}
+          ${activeRange[0]} – ${activeRange[1]}
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
-          {PRICE_PRESETS.map((preset) => (
+          {pricePresets.map((preset) => (
             <button
               key={preset.label}
               type="button"
