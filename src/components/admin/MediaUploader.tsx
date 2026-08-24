@@ -1,5 +1,15 @@
 import { useRef, useState } from "react";
-import { Camera, ImagePlus, Link2, Loader2, Trash2, Upload } from "lucide-react";
+import {
+  Camera,
+  ChevronLeft,
+  ChevronRight,
+  GripVertical,
+  ImagePlus,
+  Link2,
+  Loader2,
+  Trash2,
+  Upload,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -7,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SmartImage } from "@/components/SmartImage";
 import { uploadMedia } from "@/lib/media";
+import { cn } from "@/lib/utils";
 
 interface Props {
   label: string;
