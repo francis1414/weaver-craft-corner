@@ -158,30 +158,97 @@ export function MediaUploader({
       )}
 
       {value.length > 0 && (
-        <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-          {value.map((item, index) => (
-            <li key={`${item}-${index}`} className="group relative overflow-hidden rounded border border-border">
-              {isVideo ? (
-                <p className="break-all p-2 text-[10px] text-muted-foreground">{item}</p>
-              ) : (
-                <SmartImage src={item} alt={`${label} ${index + 1}`} ratio="1/1" />
-              )}
-              <button
-                type="button"
-                aria-label="Remove"
-                onClick={() => onChange(value.filter((_, i) => i !== index))}
-                className="absolute right-1 top-1 grid h-6 w-6 place-items-center rounded bg-background/90 text-destructive opacity-0 transition group-hover:opacity-100"
+        <>
+          {multiple && value.length > 1 && (
+            <p className="text-xs text-muted-foreground">
+              Drag a photo to reorder — the first tile is the primary product image.
+            </p>
+          )}
+          <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+            {value.map((item, index) => (
+              <li
+                key={`${item}-${index}`}
+                draggable={multiple && value.length > 1}
+                onDragStart={() => setDragIndex(index)}
+                onDragOver={(e) => {
+                  if (dragIndex === null || dragIndex === index) return;
+                  e.preventDefault();
+                  setOverIndex(index);
+                }}
+                onDragLeave={() => setOverIndex((prev) => (prev === index ? null : prev))}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  move(dragIndex, index);
+                  setDragIndex(null);
+                  setOverIndex(null);
+                }}
+                onDragEnd={() => {
+                  setDragIndex(null);
+                  setOverIndex(null);
+                }}
+                className={cn(
+                  "group relative overflow-hidden rounded border border-border transition",
+                  multiple && value.length > 1 && "cursor-grab active:cursor-grabbing",
+                  dragIndex === index && "opacity-40",
+                  overIndex === index && "border-[#C29B38] ring-2 ring-[#C29B38]/50",
+                )}
               >
-                <Trash2 className="h-3.5 w-3.5" />
-              </button>
-              {!isVideo && index === 0 && multiple && (
-                <span className="absolute bottom-1 left-1 rounded bg-[#C29B38] px-1.5 py-0.5 text-[9px] uppercase tracking-[0.1em] text-[#1F1D1A]">
-                  Primary
+                {isVideo ? (
+                  <p className="break-all p-2 text-[10px] text-muted-foreground">{item}</p>
+                ) : (
+                  <SmartImage src={item} alt={`${label} ${index + 1}`} ratio="1/1" />
+                )}
+                <button
+                  type="button"
+                  aria-label="Remove"
+                  onClick={() => onChange(value.filter((_, i) => i !== index))}
+                  className="absolute right-1 top-1 grid h-6 w-6 place-items-center rounded bg-background/90 text-destructive opacity-0 transition group-hover:opacity-100"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+                {multiple && value.length > 1 && (
+                  <div className="absolute inset-x-1 bottom-1 flex items-center justify-between gap-1 opacity-0 transition group-hover:opacity-100">
+                    <button
+                      type="button"
+                      aria-label="Move earlier"
+                      disabled={index === 0}
+                      onClick={() => move(index, index - 1)}
+                      className="grid h-6 w-6 place-items-center rounded bg-background/90 disabled:opacity-30"
+                    >
+                      <ChevronLeft className="h-3.5 w-3.5" />
+                    </button>
+                    {index !== 0 && !isVideo && (
+                      <button
+                        type="button"
+                        onClick={() => move(index, 0)}
+                        className="rounded bg-background/90 px-1.5 py-0.5 text-[9px] uppercase tracking-[0.1em]"
+                      >
+                        Make primary
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      aria-label="Move later"
+                      disabled={index === value.length - 1}
+                      onClick={() => move(index, index + 1)}
+                      className="grid h-6 w-6 place-items-center rounded bg-background/90 disabled:opacity-30"
+                    >
+                      <ChevronRight className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                )}
+                {!isVideo && index === 0 && multiple && (
+                  <span className="absolute bottom-1 left-1 rounded bg-[#C29B38] px-1.5 py-0.5 text-[9px] uppercase tracking-[0.1em] text-[#1F1D1A] group-hover:opacity-0">
+                    Primary
+                  </span>
+                )}
+                <span className="absolute left-1 top-1 grid h-5 w-5 place-items-center rounded bg-background/80 text-[9px]">
+                  <GripVertical className="h-3 w-3" />
                 </span>
-              )}
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
 
       {value.length === 0 && (
