@@ -49,6 +49,18 @@ export function MediaUploader({
   const cameraRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [url, setUrl] = useState("");
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
+
+  /** Reorder the gallery; index 0 is always the primary product image. */
+  function move(from: number | null, to: number) {
+    if (from === null || from === to || to < 0 || to >= value.length) return;
+    const next = [...value];
+    const [item] = next.splice(from, 1);
+    if (item === undefined) return;
+    next.splice(to, 0, item);
+    onChange(next);
+  }
 
   async function handleFiles(files: FileList | null) {
     if (!files || files.length === 0) return;
