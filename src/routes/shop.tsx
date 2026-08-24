@@ -66,12 +66,12 @@ const SORTS = [
   { value: "za", label: "Alphabetical: Z–A ↓" },
 ] as const;
 
-const PRICE_PRESETS = [
-  { label: "$0–$50", min: 0, max: 50 },
-  { label: "$50–$100", min: 50, max: 100 },
-  { label: "$100–$200", min: 100, max: 200 },
-  { label: "$200+", min: 200, max: 1000 },
-];
+const titleCase = (slug: string) =>
+  slug
+    .split(/[-_]/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
 function ShopPage() {
   const { data: products, isLoading } = useProducts();
@@ -82,7 +82,8 @@ function ShopPage() {
     : "featured";
 
   const [category, setCategory] = useState<string | null>(search.category ?? null);
-  const [range, setRange] = useState<[number, number]>([0, 1000]);
+  /** null = no price cap, so newly added pieces at any price stay visible. */
+  const [range, setRange] = useState<[number, number] | null>(null);
   const [colors, setColors] = useState<string[]>([]);
   const [inStockOnly, setInStockOnly] = useState(Boolean(search.instock));
   const [onSaleOnly, setOnSaleOnly] = useState(Boolean(search.sale));
@@ -94,6 +95,38 @@ function ShopPage() {
     for (const p of products) map.set(p.category, (map.get(p.category) ?? 0) + 1);
     return map;
   }, [products]);
+
+  /** Highest price on the catalogue, rounded up so the slider always reaches it. */
+  const ceiling = useMemo(() => {
+    const highest = products.reduce((max, p) => Math.max(max, p.salePrice ?? p.price, p.price), 0);
+    return Math.max(1000, Math.ceil(highest / 100) * 100);
+  }, [products]);
+
+  const activeRange: [number, number] = range ?? [0, ceiling];
+
+  const pricePresets = useMemo(
+    () => [
+      { label: "$0–$50", min: 0, max: 50 },
+      { label: "$50–$100", min: 50, max: 100 },
+      { label: "$100–$250", min: 100, max: 250 },
+      { label: "$250–$500", min: 250, max: 500 },
+      { label: "$500+", min: 500, max: ceiling },
+    ],
+    [ceiling],
+  );
+
+  /** Category table entries first, then any product category not yet curated. */
+  const filterCategories = useMemo(() => {
+    const known = new Set(categories.map((c) => c.slug));
+    const extra = [...counts.keys()]
+      .filter((slug) => !known.has(slug))
+      .sort()
+      .map((slug) => ({ id: `auto-${slug}`, slug, name: titleCase(slug) }));
+    return [
+      ...categories.map((c) => ({ id: c.id, slug: c.slug, name: c.name })),
+      ...extra,
+    ];
+  }, [categories, counts]);
 
   const filtered = useMemo(() => {
     const effective = (p: Product) => p.salePrice ?? p.price;
