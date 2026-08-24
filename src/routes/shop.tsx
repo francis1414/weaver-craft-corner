@@ -66,12 +66,12 @@ const SORTS = [
   { value: "za", label: "Alphabetical: Z–A ↓" },
 ] as const;
 
-const PRICE_PRESETS = [
-  { label: "$0–$50", min: 0, max: 50 },
-  { label: "$50–$100", min: 50, max: 100 },
-  { label: "$100–$200", min: 100, max: 200 },
-  { label: "$200+", min: 200, max: 1000 },
-];
+const titleCase = (slug: string) =>
+  slug
+    .split(/[-_]/)
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 
 function ShopPage() {
   const { data: products, isLoading } = useProducts();
@@ -82,7 +82,8 @@ function ShopPage() {
     : "featured";
 
   const [category, setCategory] = useState<string | null>(search.category ?? null);
-  const [range, setRange] = useState<[number, number]>([0, 1000]);
+  /** null = no price cap, so newly added pieces at any price stay visible. */
+  const [range, setRange] = useState<[number, number] | null>(null);
   const [colors, setColors] = useState<string[]>([]);
   const [inStockOnly, setInStockOnly] = useState(Boolean(search.instock));
   const [onSaleOnly, setOnSaleOnly] = useState(Boolean(search.sale));
@@ -95,12 +96,44 @@ function ShopPage() {
     return map;
   }, [products]);
 
+  /** Highest price on the catalogue, rounded up so the slider always reaches it. */
+  const ceiling = useMemo(() => {
+    const highest = products.reduce((max, p) => Math.max(max, p.salePrice ?? p.price, p.price), 0);
+    return Math.max(1000, Math.ceil(highest / 100) * 100);
+  }, [products]);
+
+  const activeRange: [number, number] = range ?? [0, ceiling];
+
+  const pricePresets = useMemo(
+    () => [
+      { label: "$0–$50", min: 0, max: 50 },
+      { label: "$50–$100", min: 50, max: 100 },
+      { label: "$100–$250", min: 100, max: 250 },
+      { label: "$250–$500", min: 250, max: 500 },
+      { label: "$500+", min: 500, max: ceiling },
+    ],
+    [ceiling],
+  );
+
+  /** Category table entries first, then any product category not yet curated. */
+  const filterCategories = useMemo(() => {
+    const known = new Set(categories.map((c) => c.slug));
+    const extra = [...counts.keys()]
+      .filter((slug) => !known.has(slug))
+      .sort()
+      .map((slug) => ({ id: `auto-${slug}`, slug, name: titleCase(slug) }));
+    return [
+      ...categories.map((c) => ({ id: c.id, slug: c.slug, name: c.name })),
+      ...extra,
+    ];
+  }, [categories, counts]);
+
   const filtered = useMemo(() => {
     const effective = (p: Product) => p.salePrice ?? p.price;
     let list = products.filter((p) => {
       if (category && p.category !== category) return false;
       const value = effective(p);
-      if (value < range[0] || value > range[1]) return false;
+      if (value < activeRange[0] || value > activeRange[1]) return false;
       if (colors.length > 0 && !p.color.some((c) => colors.includes(c.toLowerCase()))) return false;
       if (inStockOnly && p.stockQuantity <= 0) return false;
       if (onSaleOnly && !(p.salePrice != null && p.salePrice < p.price)) return false;
@@ -130,12 +163,12 @@ function ShopPage() {
         list.sort((a, b) => Number(b.featured) - Number(a.featured));
     }
     return list;
-  }, [products, category, range, colors, inStockOnly, onSaleOnly, sort]);
+  }, [products, category, activeRange, colors, inStockOnly, onSaleOnly, sort]);
 
   const chips: { label: string; clear: () => void }[] = [
     ...(category ? [{ label: category, clear: () => setCategory(null) }] : []),
-    ...(range[0] !== 0 || range[1] !== 1000
-      ? [{ label: `$${range[0]}–$${range[1]}`, clear: () => setRange([0, 1000]) }]
+    ...(range
+      ? [{ label: `$${range[0]}–$${range[1]}`, clear: () => setRange(null) }]
       : []),
     ...colors.map((c) => ({
       label: c,
@@ -147,7 +180,7 @@ function ShopPage() {
 
   function resetAll() {
     setCategory(null);
-    setRange([0, 1000]);
+    setRange(null);
     setColors([]);
     setInStockOnly(false);
     setOnSaleOnly(false);
@@ -170,7 +203,7 @@ function ShopPage() {
               All pieces <span className="text-xs">{products.length}</span>
             </button>
           </li>
-          {categories.map((c) => (
+          {filterCategories.map((c) => (
             <li key={c.id}>
               <button
                 type="button"
@@ -193,18 +226,18 @@ function ShopPage() {
         <input
           type="range"
           min={0}
-          max={1000}
+          max={ceiling}
           step={10}
-          value={range[1]}
-          onChange={(e) => setRange([range[0], Number(e.target.value)])}
+          value={activeRange[1]}
+          onChange={(e) => setRange([activeRange[0], Number(e.target.value)])}
           aria-label="Maximum price"
           className="mt-4 w-full accent-[var(--gold)]"
         />
         <p className="mt-1 text-xs text-muted-foreground">
-          ${range[0]} – ${range[1]}
+          ${activeRange[0]} – ${activeRange[1]}
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
-          {PRICE_PRESETS.map((preset) => (
+          {pricePresets.map((preset) => (
             <button
               key={preset.label}
               type="button"
