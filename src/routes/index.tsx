@@ -110,12 +110,8 @@ function HomePage() {
         <h2 className="font-serif text-3xl md:text-4xl">Shop by craft</h2>
         <div
           className={cn(
-            "mt-10 grid gap-6 sm:grid-cols-2",
-            categories.length <= 2
-              ? "lg:grid-cols-2"
-              : categories.length % 3 === 0
-                ? "lg:grid-cols-3"
-                : "lg:grid-cols-4",
+            "mt-10 grid gap-5 grid-cols-2 sm:grid-cols-3",
+            categories.length <= 2 ? "lg:grid-cols-3" : "lg:grid-cols-5",
           )}
         >
           {categories.slice(0, 8).map((category, i) => {
@@ -137,11 +133,11 @@ function HomePage() {
                   <SmartImage
                     src={category.image}
                     alt={category.name}
-                    ratio="4/5"
+                    ratio="1/1"
                     className="transition-transform duration-700 group-hover:scale-[1.05]"
                   />
-                  <h3 className="mt-3 font-serif text-lg">{category.name}</h3>
-                  <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  <h3 className="mt-3 font-serif text-base leading-snug">{category.name}</h3>
+                  <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                     {live || category.productCount} pieces
                   </p>
                 </Link>
