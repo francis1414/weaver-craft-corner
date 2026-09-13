@@ -133,11 +133,11 @@ function HomePage() {
                   <SmartImage
                     src={category.image}
                     alt={category.name}
-                    ratio="4/5"
+                    ratio="1/1"
                     className="transition-transform duration-700 group-hover:scale-[1.05]"
                   />
-                  <h3 className="mt-3 font-serif text-lg">{category.name}</h3>
-                  <p className="text-xs uppercase tracking-[0.14em] text-muted-foreground">
+                  <h3 className="mt-3 font-serif text-base leading-snug">{category.name}</h3>
+                  <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                     {live || category.productCount} pieces
                   </p>
                 </Link>
