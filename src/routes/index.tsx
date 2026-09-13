@@ -110,12 +110,8 @@ function HomePage() {
         <h2 className="font-serif text-3xl md:text-4xl">Shop by craft</h2>
         <div
           className={cn(
-            "mt-10 grid gap-6 sm:grid-cols-2",
-            categories.length <= 2
-              ? "lg:grid-cols-2"
-              : categories.length % 3 === 0
-                ? "lg:grid-cols-3"
-                : "lg:grid-cols-4",
+            "mt-10 grid gap-5 grid-cols-2 sm:grid-cols-3",
+            categories.length <= 2 ? "lg:grid-cols-3" : "lg:grid-cols-5",
           )}
         >
           {categories.slice(0, 8).map((category, i) => {
