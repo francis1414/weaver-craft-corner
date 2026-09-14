@@ -199,7 +199,7 @@ function HomePage() {
       <StoryFilm />
 
       {/* Fair-wage promise */}
-      <section className="border-y border-border bg-ink py-16 text-primary-foreground">
+      <section className="border-y border-border bg-foreground py-16 text-background">
         <div className="mx-auto max-w-[1400px] px-4 md:px-8">
           <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_2fr]">
             <div>
