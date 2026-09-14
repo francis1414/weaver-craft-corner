@@ -5,23 +5,42 @@ import { useJournal } from "@/hooks/use-store-data";
 import { absoluteUrl, canonical, jsonLdScript } from "@/lib/seo";
 
 export const Route = createFileRoute("/journal/$slug")({
-  head: ({ params }) => {
-    const title = params.slug
-      .split("-")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
+  loader: async ({ params }) => {
+    try {
+      const entries = await fetchJournal();
+      const entry = entries.find((e) => e.slug === params.slug);
+      if (!entry) return { entry: null };
+      return {
+        entry: {
+          title: entry.title,
+          excerpt: entry.excerpt,
+          image: entry.coverImage ? assetUrl(entry.coverImage) : "",
+          publishedAt: entry.publishedAt,
+          author: entry.author,
+        },
+      };
+    } catch {
+      return { entry: null };
+    }
+  },
+  head: ({ params, loaderData }) => {
+    const loaded = loaderData?.entry ?? null;
+    const title =
+      loaded?.title ??
+      params.slug
+        .split("-")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ");
+    const description =
+      loaded?.excerpt && loaded.excerpt.trim().length > 40
+        ? loaded.excerpt.trim().slice(0, 300)
+        : `${title}: an essay from the Vetastudio journal on Ghanaian craft and sustainable decor.`;
     return {
       meta: [
         { title: `${title} — Vetastudio Journal` },
-        {
-          name: "description",
-          content: `${title}: an essay from the Vetastudio journal on Ghanaian craft and sustainable decor.`,
-        },
+        { name: "description", content: description },
         { property: "og:title", content: `${title} — Vetastudio Journal` },
-        {
-          property: "og:description",
-          content: `${title}: an essay on Ghanaian craft and sustainable decor.`,
-        },
+        { property: "og:description", content: description },
         { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
         ...canonical(`/journal/${params.slug}`).meta,
@@ -32,8 +51,17 @@ export const Route = createFileRoute("/journal/$slug")({
           "@context": "https://schema.org",
           "@type": "BlogPosting",
           headline: title,
+          description,
           url: absoluteUrl(`/journal/${params.slug}`),
-          author: { "@type": "Organization", name: "Vetastudio" },
+          mainEntityOfPage: {
+            "@type": "WebPage",
+            "@id": absoluteUrl(`/journal/${params.slug}`),
+          },
+          ...(loaded?.image ? { image: [loaded.image] } : {}),
+          ...(loaded?.publishedAt
+            ? { datePublished: loaded.publishedAt, dateModified: loaded.publishedAt }
+            : {}),
+          author: { "@type": "Organization", name: loaded?.author || "Vetastudio" },
           publisher: { "@type": "Organization", name: "Vetastudio" },
         }),
       ],
