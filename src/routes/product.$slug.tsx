@@ -141,6 +141,24 @@ const RATING_LABEL: Record<number, string> = {
   1: "1 Star — Disappointed",
 };
 
+/** Short excerpt of the description for display below the product title. */
+function productExcerpt(description: string): string {
+  const text = description.trim();
+  if (!text) return "";
+  const firstSentence = text.split(/(?<=[.!?])\s/)[0] ?? text;
+  return firstSentence.length > 160 ? `${firstSentence.slice(0, 157)}…` : firstSentence;
+}
+
+/** Split a description into readable paragraphs. */
+function descriptionParagraphs(description: string): string[] {
+  const text = description.trim();
+  if (!text) return [];
+  return text
+    .split(/\n{2,}|\r\n{2,}/)
+    .map((p) => p.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+}
+
 const TABS = [
   "Description",
   "Dimensions & Weight",
@@ -341,7 +359,35 @@ function ProductPage() {
             )}
           </div>
 
-          <p className="mt-6 text-sm leading-relaxed text-muted-foreground">{product.description}</p>
+          <div className="mt-6">
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {productExcerpt(product.description)}
+            </p>
+            <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1.5 text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+              {product.dimensions && (
+                <div className="flex gap-1.5">
+                  <dt>Size</dt>
+                  <dd className="text-foreground">{product.dimensions}</dd>
+                </div>
+              )}
+              <div className="flex gap-1.5">
+                <dt>Weight</dt>
+                <dd className="text-foreground">{product.weightKg || 1.2} kg</dd>
+              </div>
+              {product.capacity && (
+                <div className="flex gap-1.5">
+                  <dt>Capacity</dt>
+                  <dd className="text-foreground">{product.capacity}</dd>
+                </div>
+              )}
+              {product.handle && (
+                <div className="flex gap-1.5">
+                  <dt>Handle</dt>
+                  <dd className="text-foreground">{product.handle}</dd>
+                </div>
+              )}
+            </dl>
+          </div>
 
           {/* Shipping box */}
           <div className="mt-7 border border-border">
@@ -466,7 +512,19 @@ function ProductPage() {
           ))}
         </div>
         <div className="max-w-3xl px-6 py-8 text-sm leading-relaxed text-muted-foreground">
-          {tab === "Description" && <p>{product.description}</p>}
+          {tab === "Description" && (
+            <div className="space-y-4">
+              {descriptionParagraphs(product.description).length > 0 ? (
+                descriptionParagraphs(product.description).map((para, i) => (
+                  <p key={i} className="text-foreground/90 first-letter:font-serif first-letter:text-2xl first-letter:font-normal first-letter:mr-1 first-letter:text-gold first:mt-0">
+                    {para}
+                  </p>
+                ))
+              ) : (
+                <p>{product.description}</p>
+              )}
+            </div>
+          )}
           {tab === "Dimensions & Weight" && (
             <ul className="space-y-1.5">
               <li>Dimensions: {product.dimensions || "Varies slightly by weave."}</li>
