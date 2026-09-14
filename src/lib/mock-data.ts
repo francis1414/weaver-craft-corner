@@ -374,34 +374,6 @@ export const MOCK_HOMEPAGE: HomepageContent = {
       image: IMAGES.sculpture,
     },
   ],
-  fairWage: {
-    eyebrow: "Fair-wage transparency",
-    heading: "Every basket pays its maker first",
-    ctaLabel: "See where your money goes",
-  },
-  fairWagePillars: [
-    {
-      title: "2.4× fair wages",
-      body: "Per-piece commissions at 2.4× the regional average, paid on collection day — never on sale.",
-    },
-    {
-      title: "Medical care covered",
-      body: "A share of every order funds clinic visits, prescriptions and emergencies for weavers and their children.",
-    },
-    {
-      title: "Community projects",
-      body: "School fees, boreholes and dye gardens funded in the weaving villages of Bolgatanga, Sumbrungu and Zuarungu.",
-    },
-  ],
-  sectionHeadings: {
-    categories: "Shop by craft",
-    featured: "The signature collection",
-    process: "From grass to basket",
-    arrivals: "Newly added",
-    campaigns: "Studio campaigns",
-    spotlight: "Weaver spotlight",
-    testimonials: "Collector notes",
-  },
 };
 
 export const DYE_COLORS = [

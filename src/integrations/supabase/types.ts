@@ -56,36 +56,27 @@ export type Database = {
       cms_homepage: {
         Row: {
           campaign_cards: Json
-          fair_wage: Json
-          fair_wage_pillars: Json
           hero_slides: Json
           id: string
           process_steps: Json
-          section_headings: Json
           updated_at: string
           value_pillars: Json
           weaver_spotlights: Json
         }
         Insert: {
           campaign_cards?: Json
-          fair_wage?: Json
-          fair_wage_pillars?: Json
           hero_slides?: Json
           id?: string
           process_steps?: Json
-          section_headings?: Json
           updated_at?: string
           value_pillars?: Json
           weaver_spotlights?: Json
         }
         Update: {
           campaign_cards?: Json
-          fair_wage?: Json
-          fair_wage_pillars?: Json
           hero_slides?: Json
           id?: string
           process_steps?: Json
-          section_headings?: Json
           updated_at?: string
           value_pillars?: Json
           weaver_spotlights?: Json
