@@ -249,7 +249,7 @@ function HomePage() {
               </Link>
             </div>
             <div className="grid gap-8 sm:grid-cols-3">
-              {homepage.fairWagePillars.slice(0, 3).map((item) => (
+              {(homepage.fairWagePillars ?? []).slice(0, 3).map((item) => (
                 <div key={item.title}>
                   <h3 className="font-serif text-xl text-gold">{item.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-background/80">
