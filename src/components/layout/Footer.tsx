@@ -120,12 +120,12 @@ export function Footer() {
               <li><Link to="/care" hash="faq" className="transition-colors hover:text-gold">FAQ</Link></li>
             </ul>
             <a
-              href="https://www.instagram.com/vetavera"
+              href="https://www.instagram.com/vetaverastudio"
               target="_blank"
               rel="noreferrer noopener"
               className="mt-5 inline-flex h-11 items-center gap-2 text-sm text-background/60 hover:text-gold"
             >
-              <Instagram size={16} /> @vetavera
+              <Instagram size={16} /> @vetaverastudio
             </a>
           </div>
         </div>
