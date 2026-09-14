@@ -96,6 +96,8 @@ export function Footer() {
               { to: "/shop", search: { sort: "newest" }, label: "New Arrivals" },
               { to: "/shop", search: { sort: "rating" }, label: "Best Sellers" },
               { to: "/shop", search: { sale: true }, label: "On Sale" },
+              { to: "/collect", label: "For Collectors & Designers" },
+              { to: "/europe", label: "Delivery to Europe" },
               { to: "/wholesale", label: "Wholesale & Trade" },
               { to: "/care", hash: "custom-orders", label: "Custom Orders" },
             ]}

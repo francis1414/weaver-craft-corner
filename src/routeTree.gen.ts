@@ -15,6 +15,8 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminAuthRouteImport } from './routes/admin-auth'
 import { Route as CareRouteImport } from './routes/care'
 import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CollectRouteImport } from './routes/collect'
+import { Route as EuropeRouteImport } from './routes/europe'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as WholesaleRouteImport } from './routes/wholesale'
@@ -63,6 +65,16 @@ const CareRoute = CareRouteImport.update({
 const CheckoutRoute = CheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CollectRoute = CollectRouteImport.update({
+  id: '/collect',
+  path: '/collect',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EuropeRoute = EuropeRouteImport.update({
+  id: '/europe',
+  path: '/europe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ShopRoute = ShopRouteImport.update({
@@ -181,6 +193,8 @@ export interface FileRoutesByFullPath {
   '/admin-auth': typeof AdminAuthRoute
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRouteWithChildren
+  '/collect': typeof CollectRoute
+  '/europe': typeof EuropeRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/wholesale': typeof WholesaleRoute
@@ -208,6 +222,8 @@ export interface FileRoutesByTo {
   '/admin-auth': typeof AdminAuthRoute
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRouteWithChildren
+  '/collect': typeof CollectRoute
+  '/europe': typeof EuropeRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/wholesale': typeof WholesaleRoute
@@ -236,6 +252,8 @@ export interface FileRoutesById {
   '/admin-auth': typeof AdminAuthRoute
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRouteWithChildren
+  '/collect': typeof CollectRoute
+  '/europe': typeof EuropeRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/wholesale': typeof WholesaleRoute
@@ -265,6 +283,8 @@ export interface FileRouteTypes {
     | '/admin-auth'
     | '/care'
     | '/checkout'
+    | '/collect'
+    | '/europe'
     | '/shop'
     | '/sitemap.xml'
     | '/wholesale'
@@ -292,6 +312,8 @@ export interface FileRouteTypes {
     | '/admin-auth'
     | '/care'
     | '/checkout'
+    | '/collect'
+    | '/europe'
     | '/shop'
     | '/sitemap.xml'
     | '/wholesale'
@@ -319,6 +341,8 @@ export interface FileRouteTypes {
     | '/admin-auth'
     | '/care'
     | '/checkout'
+    | '/collect'
+    | '/europe'
     | '/shop'
     | '/sitemap.xml'
     | '/wholesale'
@@ -348,6 +372,8 @@ export interface RootRouteChildren {
   AdminAuthRoute: typeof AdminAuthRoute
   CareRoute: typeof CareRoute
   CheckoutRoute: typeof CheckoutRouteWithChildren
+  CollectRoute: typeof CollectRoute
+  EuropeRoute: typeof EuropeRoute
   ShopRoute: typeof ShopRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   WholesaleRoute: typeof WholesaleRoute
@@ -400,6 +426,20 @@ declare module '@tanstack/react-router' {
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/collect': {
+      id: '/collect'
+      path: '/collect'
+      fullPath: '/collect'
+      preLoaderRoute: typeof CollectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/europe': {
+      id: '/europe'
+      path: '/europe'
+      fullPath: '/europe'
+      preLoaderRoute: typeof EuropeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/shop': {
@@ -604,6 +644,8 @@ const rootRouteChildren: RootRouteChildren = {
   AdminAuthRoute: AdminAuthRoute,
   CareRoute: CareRoute,
   CheckoutRoute: CheckoutRouteWithChildren,
+  CollectRoute: CollectRoute,
+  EuropeRoute: EuropeRoute,
   ShopRoute: ShopRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   WholesaleRoute: WholesaleRoute,

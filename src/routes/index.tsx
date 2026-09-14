@@ -14,17 +14,23 @@ import { canonical, jsonLdScript, organizationJsonLd, websiteJsonLd } from "@/li
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Vetastudio — Handwoven Bolga Baskets from Ghana" },
+      { title: "Vetastudio — Handwoven Bolga Baskets & Collectible Fibre Art from Ghana" },
       {
         name: "description",
         content:
-          "Fair-wage, handwoven Bolgatanga baskets, lampshades and elephant grass craft from Upper East Ghana. Carbon-neutral shipping worldwide.",
+          "Collectible handwoven Bolga baskets, sculptural fibre art and woven lampshades from Upper East Ghana, bought direct from the artists. Tracked delivery to France, Germany, Switzerland, Monaco, Spain and Greece in 7–10 days.",
       },
-      { property: "og:title", content: "Vetastudio — Handwoven Bolga Baskets from Ghana" },
+      {
+        property: "og:title",
+        content: "Vetastudio — Handwoven Bolga Baskets & Collectible Fibre Art from Ghana",
+      },
       {
         property: "og:description",
-        content: "Sculptural elephant grass craft, woven by name-known artisans in Bolgatanga.",
+        content:
+          "Artist-direct sculptural elephant grass craft from Bolgatanga, shipped to collectors and interior designers across Europe.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       ...canonical("/").meta,
     ],
     links: canonical("/").links,

@@ -20,18 +20,22 @@ type ShopSearch = {
 export const Route = createFileRoute("/shop")({
   head: () => ({
     meta: [
-      { title: "Shop Handwoven Bolga Baskets from Ghana | Vetastudio" },
+      { title: "Shop Handwoven Bolga Baskets & Fibre Art — Ships to Europe | Vetastudio" },
       {
         name: "description",
         content:
-          "Shop authentic handwoven Bolga baskets direct from Ghana: sculptural storage, woven lampshades, planters, fans and market totes in natural elephant grass and plant dyes. Filter by craft, price, dye tone and stock; worldwide express shipping.",
+          "Shop authentic handwoven Bolga baskets and one-of-one fibre art direct from Ghana: sculptural storage, woven lampshades, planters, fans and totes in elephant grass and plant dyes. Euro pricing and tracked delivery to France, Germany, Switzerland, Monaco, Spain and Greece.",
       },
-      { property: "og:title", content: "Shop Handwoven Bolga Baskets from Ghana | Vetastudio" },
+      {
+        property: "og:title",
+        content: "Shop Handwoven Bolga Baskets & Fibre Art — Ships to Europe | Vetastudio",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
-        content: "Sculptural elephant grass craft from the Bolgatanga cooperatives of Ghana.",
+        content:
+          "Artist-direct sculptural elephant grass craft from the Bolgatanga cooperatives, delivered across Europe.",
       },
       ...canonical("/shop").meta,
     ],
