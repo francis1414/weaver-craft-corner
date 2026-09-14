@@ -37,12 +37,18 @@ export const Route = createFileRoute("/checkout")({
 const addressSchema = z.object({
   name: z.string().trim().min(2, "Enter your full name").max(100),
   email: z.string().trim().email("Enter a valid email").max(255),
-  phone: z.string().trim().min(6, "Enter a contact number").max(30),
+  phone: z
+    .string()
+    .trim()
+    .min(7, "Enter your mobile number so we can reach you")
+    .max(30)
+    .regex(/^[0-9+()\s-]{7,30}$/, "Enter a valid mobile number"),
   address: z.string().trim().min(5, "Enter your street address").max(200),
   city: z.string().trim().min(2, "Enter your city").max(80),
   postalCode: z.string().trim().min(3, "Enter a postal code").max(20),
   country: z.string().trim().min(2, "Enter your country").max(80),
 });
+
 
 const SHIPPING = [
   { id: "standard", label: "Standard (7–12 days)", multiplier: 1 },
@@ -145,26 +151,58 @@ function CheckoutPage() {
   }
 
   if (step === 4 && orderNumber) {
+    const contactToPay = payment === "contact-to-pay";
     return (
       <div className="mx-auto max-w-xl px-4 py-28 text-center md:px-8">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-sage text-background">
           <Check size={22} />
         </span>
         <p className="label-caps mt-6 text-gold">Thank you</p>
-        <h1 className="mt-3 font-serif text-4xl">Order confirmed</h1>
+        <h1 className="mt-3 font-serif text-4xl">
+          {contactToPay ? "Order reserved" : "Order confirmed"}
+        </h1>
         <p className="mt-3 text-sm text-muted-foreground">
-          Your order <strong>{orderNumber}</strong> is with our Bolgatanga studio. We will email
-          tracking details as soon as it ships.
+          {contactToPay ? (
+            <>
+              Your order <strong>{orderNumber}</strong> is reserved with our Bolgatanga studio.
+              Message us to arrange payment and we will confirm your basket right away.
+            </>
+          ) : (
+            <>
+              Your order <strong>{orderNumber}</strong> is with our Bolgatanga studio. We will email
+              tracking details as soon as it ships.
+            </>
+          )}
         </p>
-        <Link
-          to="/shop"
-          className="mt-8 inline-flex h-12 items-center bg-foreground px-6 text-xs uppercase tracking-[0.2em] text-background"
-        >
-          Continue browsing
-        </Link>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          {contactToPay && (
+            <a
+              href={whatsappLink(
+                `Hello Vetastudio, I have placed order ${orderNumber} and would like to arrange payment.`,
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-12 items-center bg-foreground px-6 text-xs uppercase tracking-[0.2em] text-background"
+            >
+              Contact us on WhatsApp
+            </a>
+          )}
+          <Link
+            to="/shop"
+            className={cn(
+              "inline-flex h-12 items-center px-6 text-xs uppercase tracking-[0.2em]",
+              contactToPay
+                ? "border border-border"
+                : "bg-foreground text-background",
+            )}
+          >
+            Continue browsing
+          </Link>
+        </div>
       </div>
     );
   }
+
 
 
 
