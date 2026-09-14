@@ -207,46 +207,108 @@ function AboutPage() {
       </StoryChapter>
 
 
-      <div id="transparency" className="mt-24 grid scroll-mt-24 gap-12 border-y border-border py-14 md:grid-cols-3">
-        {[
-          {
-            title: "Fair-wage transparency",
-            body: "Weavers are paid per piece at 2.4× the regional average, agreed with cooperative leaders before each season and paid on collection, not on sale.",
-          },
-          {
-            title: "The cooperative model",
-            body: "We buy from four cooperatives across Bolgatanga, Sumbrungu and Zuarungu. Each holds its own dye stock and rotates orders so no household is over-committed.",
-          },
-          {
-            title: "Carbon-neutral shipping",
-            body: "Baskets travel folded and are reshaped on arrival with a warm water mist. All freight is offset through certified West African reforestation.",
-          },
-        ].map((block) => (
-          <section key={block.title}>
-            <h2 className="font-serif text-2xl">{block.title}</h2>
-            <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{block.body}</p>
-          </section>
-        ))}
+      <div id="transparency" className="mt-24 scroll-mt-24 border-y border-border py-14">
+        <div className="max-w-2xl">
+          <p className="label-caps text-gold">Fair-wage transparency</p>
+          <h2 className="mt-3 font-serif text-3xl leading-tight md:text-4xl">
+            What buying one basket does for a weaving family
+          </h2>
+          <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+            We publish how our weavers are paid, what happens between your order and their hands,
+            and where the studio's social spending goes. Nothing here is a marketing line — every
+            figure below is agreed with cooperative leadership and reviewed each season.
+          </p>
+        </div>
+        <div className="mt-12 grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+          {[
+            {
+              title: "Fair wages, paid on collection",
+              body: "Weavers earn per-piece commissions at 2.4× the regional average, agreed with cooperative leaders before each season. Payment is made on collection day — before a piece is listed, shipped or sold — so a weaver never carries our sales risk.",
+            },
+            {
+              title: "Medical care for weavers & families",
+              body: "A share of every order funds clinic visits, prescriptions and emergency treatment for our weavers and their children. When a weaver falls ill, the studio covers the bills — weaving income is never lost to hospital debt.",
+            },
+            {
+              title: "Community investment (CSR)",
+              body: "Each year a fixed portion of studio revenue goes back into the weaving communities of Bolgatanga, Sumbrungu and Zuarungu: school fees and supplies for weavers' children, well and borehole maintenance, and new dye gardens that keep materials local.",
+            },
+            {
+              title: "The cooperative model",
+              body: "We buy from four cooperatives across Bolgatanga, Sumbrungu and Zuarungu. Each holds its own dye stock and rotates orders so no household is over-committed — and every cooperative sets its own seasonal rates with us.",
+            },
+            {
+              title: "Named, never anonymous",
+              body: "Every finished piece is photographed with the woman who made it and carries her name. Your basket is traceable to a household — never to an anonymous wholesale crate.",
+            },
+            {
+              title: "Carbon-neutral shipping",
+              body: "Baskets travel folded and are reshaped on arrival with a warm water mist. All freight is offset through certified West African reforestation.",
+            },
+          ].map((block) => (
+            <section key={block.title}>
+              <h3 className="font-serif text-2xl">{block.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{block.body}</p>
+            </section>
+          ))}
+        </div>
       </div>
 
       <section className="mt-20">
         <p className="label-caps text-gold">Complete transparency</p>
         <h2 className="mt-3 font-serif text-3xl">Where your money goes</h2>
-        <ul className="mt-8 grid gap-6 sm:grid-cols-4">
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          For every $100 you spend at Vetastudio, this is the audited split. More than half of each
+          purchase reaches the weaving communities directly — through wages, medical care and
+          community projects.
+        </p>
+        <ul className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { label: "Artisan payment", value: "46%" },
-            { label: "Materials & dyes", value: "14%" },
-            { label: "Freight & offsets", value: "18%" },
-            { label: "Studio operations", value: "22%" },
+            {
+              label: "Weaver commissions",
+              value: "46%",
+              note: "Paid per piece, on collection day — never on sale.",
+            },
+            {
+              label: "Medical & welfare fund",
+              value: "8%",
+              note: "Clinic visits, prescriptions and family emergencies.",
+            },
+            {
+              label: "Community projects",
+              value: "6%",
+              note: "School fees, boreholes and dye gardens in weaving villages.",
+            },
+            {
+              label: "Materials & dyes",
+              value: "14%",
+              note: "Veta vera grass, natural dyes and leather handles.",
+            },
+            {
+              label: "Freight & offsets",
+              value: "18%",
+              note: "Folded shipping, fully carbon-offset.",
+            },
+            {
+              label: "Studio operations",
+              value: "8%",
+              note: "Photography, quality control and the team in Bolgatanga.",
+            },
           ].map((stat) => (
             <li key={stat.label} className="border border-border p-5">
               <p className="font-serif text-3xl text-gold">{stat.value}</p>
               <p className="mt-1 text-xs uppercase tracking-[0.16em] text-muted-foreground">
                 {stat.label}
               </p>
+              <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{stat.note}</p>
             </li>
           ))}
         </ul>
+        <p className="mt-6 max-w-2xl text-xs leading-relaxed text-muted-foreground">
+          Figures are reviewed with cooperative leadership each season and published here. Questions
+          about our wage structure or community fund are always welcome — write to us and we will
+          answer with specifics.
+        </p>
       </section>
 
       <MediaDiagnostics

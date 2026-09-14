@@ -198,6 +198,50 @@ function HomePage() {
 
       <StoryFilm />
 
+      {/* Fair-wage promise */}
+      <section className="border-y border-border bg-foreground py-16 text-background">
+        <div className="mx-auto max-w-[1400px] px-4 md:px-8">
+          <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_2fr]">
+            <div>
+              <p className="label-caps text-gold">Fair-wage transparency</p>
+              <h2 className="mt-3 font-serif text-3xl leading-tight md:text-4xl">
+                Every basket pays its maker first
+              </h2>
+              <Link
+                to="/about"
+                hash="transparency"
+                className="mt-6 inline-block border border-gold px-6 py-3 text-xs uppercase tracking-[0.18em] text-gold transition-colors hover:bg-gold hover:text-foreground"
+              >
+                See where your money goes
+              </Link>
+            </div>
+            <div className="grid gap-8 sm:grid-cols-3">
+              {[
+                {
+                  title: "2.4× fair wages",
+                  body: "Per-piece commissions at 2.4× the regional average, paid on collection day — never on sale.",
+                },
+                {
+                  title: "Medical care covered",
+                  body: "A share of every order funds clinic visits, prescriptions and emergencies for weavers and their children.",
+                },
+                {
+                  title: "Community projects",
+                  body: "School fees, boreholes and dye gardens funded in the weaving villages of Bolgatanga, Sumbrungu and Zuarungu.",
+                },
+              ].map((item) => (
+                <div key={item.title}>
+                  <h3 className="font-serif text-xl text-gold">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-background/80">
+                    {item.body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* New arrivals */}
       <section className="mx-auto max-w-[1400px] px-4 py-20 md:px-8">
         <h2 className="font-serif text-3xl md:text-4xl">Newly added</h2>
