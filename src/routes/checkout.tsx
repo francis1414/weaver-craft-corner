@@ -384,11 +384,17 @@ function CheckoutPage() {
                 <p className="pt-2 text-xs text-muted-foreground">
                   You will pay securely by card on the next step. Nothing is charged until then.
                 </p>
+              ) : payment === "contact-to-pay" ? (
+                <p className="pt-2 text-xs text-muted-foreground">
+                  We reserve your baskets and you message our studio on WhatsApp to settle payment
+                  by card, mobile money or transfer.
+                </p>
               ) : (
                 <p className="pt-2 text-xs text-muted-foreground">
                   Orders placed with this method stay pending until the studio confirms payment.
                 </p>
               )}
+
 
               <div className="flex gap-3 pt-4">
                 <button
