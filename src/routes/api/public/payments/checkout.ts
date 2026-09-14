@@ -2,17 +2,11 @@ import { createFileRoute } from "@tanstack/react-router";
 
 import { createOrderCheckoutSession } from "@/lib/order-checkout.server";
 
-const LOVABLE_ORIGIN = "https://weaver-craft-corner.lovable.app";
-
 function isApprovedOrigin(origin: string | null): boolean {
   if (!origin) return false;
   try {
     const url = new URL(origin);
-    return (
-      url.origin === LOVABLE_ORIGIN ||
-      url.hostname === "localhost" ||
-      (url.protocol === "https:" && url.hostname.endsWith(".vercel.app"))
-    );
+    return url.protocol === "https:" || url.hostname === "localhost";
   } catch {
     return false;
   }
@@ -34,7 +28,7 @@ export const Route = createFileRoute("/api/public/payments/checkout")({
         isApprovedOrigin(request.headers.get("origin"))
           ? new Response(null, {
               status: 204,
-              headers: corsHeaders(request.headers.get("origin") ?? LOVABLE_ORIGIN),
+              headers: corsHeaders(request.headers.get("origin") ?? "https://weaver-craft-corner.lovable.app"),
             })
           : new Response(null, { status: 403 }),
       POST: async ({ request }) => {
@@ -42,7 +36,7 @@ export const Route = createFileRoute("/api/public/payments/checkout")({
         if (!isApprovedOrigin(origin)) {
           return Response.json({ error: "Checkout origin is not approved" }, { status: 403 });
         }
-        const headers = corsHeaders(origin ?? LOVABLE_ORIGIN);
+        const headers = corsHeaders(origin ?? "https://weaver-craft-corner.lovable.app");
 
         try {
           const body = (await request.json()) as Record<string, unknown>;
