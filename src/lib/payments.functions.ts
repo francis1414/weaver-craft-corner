@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
+import { createClient } from "@supabase/supabase-js";
 
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Database } from "@/integrations/supabase/types";
 import {
   type StripeEnv,
   createStripeClient,
@@ -36,6 +38,18 @@ type CheckoutResult = { clientSecret: string } | { error: string };
 
 type OrderItem = { name?: string; price?: number; quantity?: number; image?: string };
 
+function createCheckoutDatabaseClient() {
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const publishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !publishableKey) {
+    throw new Error("The secure payment service is temporarily unavailable");
+  }
+
+  return createClient<Database>(url, publishableKey, {
+    auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
+  });
+}
+
 /**
  * Starts a card payment for an order that already exists in the database.
  * Line items are built on the fly from the stored order, so nothing has to be
@@ -44,9 +58,17 @@ type OrderItem = { name?: string; price?: number; quantity?: number; image?: str
  */
 export const createOrderCheckout = createServerFn({ method: "POST" })
   .inputValidator(
-    (data: { orderNumber: string; returnUrl: string; environment: StripeEnv }) => {
+    (data: {
+      orderNumber: string;
+      checkoutToken: string;
+      returnUrl: string;
+      environment: StripeEnv;
+    }) => {
       if (!/^[A-Za-z0-9-]{4,40}$/.test(data.orderNumber)) {
         throw new Error("Invalid order reference");
+      }
+      if (!/^[a-f0-9]{64}$/.test(data.checkoutToken)) {
+        throw new Error("Invalid checkout token");
       }
       if (!/^https?:\/\//.test(data.returnUrl)) throw new Error("Invalid return URL");
       return data;
@@ -54,14 +76,14 @@ export const createOrderCheckout = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }): Promise<CheckoutResult> => {
     try {
-      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-      const { data: order, error } = await supabaseAdmin
-        .from("orders")
-        .select("order_number, total, currency, customer, items, payment_status")
-        .eq("order_number", data.orderNumber)
-        .maybeSingle();
+      const checkoutDb = createCheckoutDatabaseClient();
+      const { data: orders, error } = await checkoutDb.rpc("get_order_for_checkout", {
+        _order_number: data.orderNumber,
+        _checkout_token: data.checkoutToken,
+      });
 
       if (error) throw error;
+      const order = orders?.[0];
       if (!order) return { error: "Order not found" };
       if (order.payment_status === "paid") return { error: "This order is already paid" };
 
