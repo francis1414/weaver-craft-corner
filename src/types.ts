@@ -184,12 +184,33 @@ export interface CampaignCard {
   image: string;
 }
 
+export interface FairWageIntro {
+  eyebrow: string;
+  heading: string;
+  ctaLabel: string;
+}
+
+/** Editable headings for each band of the storefront homepage. */
+export type SectionHeadingKey =
+  | "categories"
+  | "featured"
+  | "process"
+  | "arrivals"
+  | "campaigns"
+  | "spotlight"
+  | "testimonials";
+
+export type SectionHeadings = Partial<Record<SectionHeadingKey, string>>;
+
 export interface HomepageContent {
   heroSlides: HeroSlide[];
   valuePillars: ValuePillar[];
   weaverSpotlights: WeaverSpotlight[];
   processSteps: ProcessStep[];
   campaignCards: CampaignCard[];
+  fairWage: FairWageIntro;
+  fairWagePillars: ValuePillar[];
+  sectionHeadings: SectionHeadings;
 }
 
 export interface CartLine {
