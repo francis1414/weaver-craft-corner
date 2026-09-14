@@ -135,7 +135,7 @@ function HomePage() {
 
       {/* Categories */}
       <section className="mx-auto max-w-[1400px] px-4 py-20 md:px-8">
-        <h2 className="font-serif text-3xl md:text-4xl">Shop by craft</h2>
+        <h2 className="font-serif text-3xl md:text-4xl">{heading("categories")}</h2>
         <div
           className={cn(
             "mt-10 grid gap-5 grid-cols-2 sm:grid-cols-3",
@@ -178,7 +178,7 @@ function HomePage() {
       {/* Featured collection */}
       <section className="mx-auto max-w-[1400px] px-4 pb-20 md:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 className="font-serif text-3xl md:text-4xl">The signature collection</h2>
+          <h2 className="font-serif text-3xl md:text-4xl">{heading("featured")}</h2>
           <div className="flex flex-wrap gap-2">
             {TABS.map((t) => (
               <button
@@ -205,8 +205,17 @@ function HomePage() {
       {/* Process */}
       <section className="border-y border-border bg-stone/40">
         <div className="mx-auto max-w-[1400px] px-4 py-20 md:px-8">
-          <h2 className="font-serif text-3xl md:text-4xl">From grass to basket</h2>
-          <ol className="mt-10 grid gap-8 md:grid-cols-5">
+          <h2 className="font-serif text-3xl md:text-4xl">{heading("process")}</h2>
+          <ol
+            className={cn(
+              "mt-10 grid gap-8",
+              homepage.processSteps.length <= 3
+                ? "md:grid-cols-3"
+                : homepage.processSteps.length === 4
+                  ? "md:grid-cols-4"
+                  : "md:grid-cols-5",
+            )}
+          >
             {homepage.processSteps.map((step, i) => (
               <li key={step.step}>
                 <span className="font-serif text-3xl text-gold">0{i + 1}</span>
@@ -225,33 +234,20 @@ function HomePage() {
         <div className="mx-auto max-w-[1400px] px-4 md:px-8">
           <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_2fr]">
             <div>
-              <p className="label-caps text-gold">Fair-wage transparency</p>
+              <p className="label-caps text-gold">{homepage.fairWage.eyebrow}</p>
               <h2 className="mt-3 font-serif text-3xl leading-tight md:text-4xl">
-                Every basket pays its maker first
+                {homepage.fairWage.heading}
               </h2>
               <Link
                 to="/about"
                 hash="transparency"
                 className="mt-6 inline-block border border-gold px-6 py-3 text-xs uppercase tracking-[0.18em] text-gold transition-colors hover:bg-gold hover:text-foreground"
               >
-                See where your money goes
+                {homepage.fairWage.ctaLabel}
               </Link>
             </div>
             <div className="grid gap-8 sm:grid-cols-3">
-              {[
-                {
-                  title: "2.4× fair wages",
-                  body: "Per-piece commissions at 2.4× the regional average, paid on collection day — never on sale.",
-                },
-                {
-                  title: "Medical care covered",
-                  body: "A share of every order funds clinic visits, prescriptions and emergencies for weavers and their children.",
-                },
-                {
-                  title: "Community projects",
-                  body: "School fees, boreholes and dye gardens funded in the weaving villages of Bolgatanga, Sumbrungu and Zuarungu.",
-                },
-              ].map((item) => (
+              {homepage.fairWagePillars.slice(0, 3).map((item) => (
                 <div key={item.title}>
                   <h3 className="font-serif text-xl text-gold">{item.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-background/80">
