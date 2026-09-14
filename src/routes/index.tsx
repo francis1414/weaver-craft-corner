@@ -100,12 +100,12 @@ function HomePage() {
               "Sculptural baskets, lampshades and fans made by fair-wage artisans in Upper East Ghana."}
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
-            <Link
-              to="/shop"
+            <a
+              href={hero?.ctaHref?.trim() || "/shop"}
               className="flex h-12 items-center bg-foreground px-7 text-xs uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-90"
             >
-              Shop Collection
-            </Link>
+              {hero?.ctaLabel?.trim() || "Shop Collection"}
+            </a>
             <Link
               to="/about"
               className="flex h-12 items-center border border-foreground px-7 text-xs uppercase tracking-[0.2em] transition-colors hover:border-gold hover:text-gold"
@@ -114,7 +114,11 @@ function HomePage() {
             </Link>
           </div>
         </div>
-        <HeroSlideshow className="min-h-[420px] w-full lg:h-full" />
+        <HeroSlideshow
+          className="min-h-[420px] w-full lg:h-full"
+          slides={heroSlideImages}
+          onIndexChange={setSlideIndex}
+        />
       </section>
 
       {/* Value pillars */}
