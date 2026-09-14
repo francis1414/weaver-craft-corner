@@ -256,7 +256,7 @@ function CheckoutPage() {
                 [
                   ["name", "Full name"],
                   ["email", "Email"],
-                  ["phone", "Phone"],
+                  ["phone", "Mobile number (required)"],
                   ["address", "Street address"],
                   ["city", "City"],
                   ["postalCode", "Postal code"],
@@ -269,9 +269,14 @@ function CheckoutPage() {
                   </span>
                   <input
                     value={form[key]}
+                    required={key === "phone"}
+                    {...(key === "phone"
+                      ? { type: "tel", inputMode: "tel" as const, placeholder: "+233 20 000 0000" }
+                      : {})}
                     onChange={(e) => setForm({ ...form, [key]: e.target.value })}
                     className="mt-2 h-11 w-full border border-border bg-transparent px-3 text-sm outline-none focus:border-gold"
                   />
+
                 </label>
               ))}
               <label className="sm:col-span-2">
@@ -353,9 +358,11 @@ function CheckoutPage() {
             <section className="space-y-3">
               {[
                 { id: "card", label: "Credit / debit card" },
+                { id: "contact-to-pay", label: "Contact to pay (reserve now, pay via WhatsApp)" },
                 { id: "mobile-money", label: "Mobile Money (MTN, Telecel)" },
                 { id: "bank-transfer", label: "Bank transfer" },
               ].map((option) => (
+
                 <label
                   key={option.id}
                   className={cn(
