@@ -3,6 +3,8 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { SmartImage } from "@/components/SmartImage";
 import { useJournal } from "@/hooks/use-store-data";
 import { absoluteUrl, canonical, jsonLdScript } from "@/lib/seo";
+import { assetUrl } from "@/lib/asset-url";
+import { fetchJournal } from "@/lib/store-api";
 
 export const Route = createFileRoute("/journal/$slug")({
   loader: async ({ params }) => {
