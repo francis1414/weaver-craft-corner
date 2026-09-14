@@ -68,7 +68,7 @@ function HomePage() {
   const [slideIndex, setSlideIndex] = useState(0);
 
   const heading = (key: keyof typeof FALLBACK_HEADINGS) =>
-    homepage.sectionHeadings[key]?.trim() || FALLBACK_HEADINGS[key];
+    homepage.sectionHeadings?.[key]?.trim() || FALLBACK_HEADINGS[key];
   const heroSlideImages = homepage.heroSlides
     .filter((slide) => Boolean(slide.image))
     .map((slide) => ({ src: slide.image, alt: slide.title || "Vetastudio handwoven basket" }));
@@ -234,20 +234,22 @@ function HomePage() {
         <div className="mx-auto max-w-[1400px] px-4 md:px-8">
           <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_2fr]">
             <div>
-              <p className="label-caps text-gold">{homepage.fairWage.eyebrow}</p>
+              <p className="label-caps text-gold">
+                {homepage.fairWage?.eyebrow || "Fair-wage transparency"}
+              </p>
               <h2 className="mt-3 font-serif text-3xl leading-tight md:text-4xl">
-                {homepage.fairWage.heading}
+                {homepage.fairWage?.heading || "Every basket pays its maker first"}
               </h2>
               <Link
                 to="/about"
                 hash="transparency"
                 className="mt-6 inline-block border border-gold px-6 py-3 text-xs uppercase tracking-[0.18em] text-gold transition-colors hover:bg-gold hover:text-foreground"
               >
-                {homepage.fairWage.ctaLabel}
+                {homepage.fairWage?.ctaLabel || "See where your money goes"}
               </Link>
             </div>
             <div className="grid gap-8 sm:grid-cols-3">
-              {homepage.fairWagePillars.slice(0, 3).map((item) => (
+              {(homepage.fairWagePillars ?? []).slice(0, 3).map((item) => (
                 <div key={item.title}>
                   <h3 className="font-serif text-xl text-gold">{item.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-background/80">
@@ -292,20 +294,20 @@ function HomePage() {
       )}
 
       {/* Campaign cards */}
-      {homepage.campaignCards.length > 0 && (
+      {(homepage.campaignCards ?? []).length > 0 && (
         <section className="mx-auto max-w-[1400px] px-4 pb-20 md:px-8">
           <h2 className="font-serif text-3xl md:text-4xl">{heading("campaigns")}</h2>
           <div
             className={cn(
               "mt-10 grid gap-6",
-              homepage.campaignCards.length === 1
+              (homepage.campaignCards ?? []).length === 1
                 ? "md:grid-cols-1"
-                : homepage.campaignCards.length === 2
+                : (homepage.campaignCards ?? []).length === 2
                   ? "md:grid-cols-2"
                   : "md:grid-cols-3",
             )}
           >
-            {homepage.campaignCards.slice(0, 3).map((card) => (
+            {(homepage.campaignCards ?? []).slice(0, 3).map((card) => (
               <a
                 key={card.title}
                 href={card.href?.trim() || "/shop"}
