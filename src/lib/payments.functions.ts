@@ -39,8 +39,8 @@ type CheckoutResult = { clientSecret: string } | { error: string };
 type OrderItem = { name?: string; price?: number; quantity?: number; image?: string };
 
 function createCheckoutDatabaseClient() {
-  const url = import.meta.env.VITE_SUPABASE_URL;
-  const publishableKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  const url = import.meta.env["VITE_SUPABASE_URL"];
+  const publishableKey = import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
   if (!url || !publishableKey) {
     throw new Error("The secure payment service is temporarily unavailable");
   }
