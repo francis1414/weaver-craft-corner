@@ -53,8 +53,14 @@ function HomePage() {
   const { data: reviews } = useReviews();
   const homepage = useHomepage();
   const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("all");
+  const [slideIndex, setSlideIndex] = useState(0);
 
-  const hero = homepage.heroSlides[0];
+  const heading = (key: keyof typeof FALLBACK_HEADINGS) =>
+    homepage.sectionHeadings[key]?.trim() || FALLBACK_HEADINGS[key];
+  const heroSlideImages = homepage.heroSlides
+    .filter((slide) => Boolean(slide.image))
+    .map((slide) => ({ src: slide.image, alt: slide.title || "Vetastudio handwoven basket" }));
+  const hero = homepage.heroSlides[slideIndex] ?? homepage.heroSlides[0];
   const featured = products
     .filter((p) => {
       if (tab === "all") return p.featured;
