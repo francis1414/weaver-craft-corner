@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { SmartImage } from "@/components/SmartImage";
+import { WholesaleForm } from "@/components/WholesaleForm";
+
 import { useSettings } from "@/hooks/use-store-data";
 import { IMAGES } from "@/lib/mock-data";
 import { breadcrumbJsonLd, canonical, jsonLdScript, SITE_NAME } from "@/lib/seo";
@@ -145,12 +147,20 @@ function WholesalePage() {
         </ol>
       </section>
 
-      <section className="mt-20 bg-stone/60 p-8 md:p-12">
+      <section id="enquiry" className="mt-20 scroll-mt-28 bg-stone/60 p-8 md:p-12">
         <h2 className="font-serif text-3xl">Start a trade enquiry</h2>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           Tell us the pieces, quantities and dates you are working to and we will come back with
           pricing, lead time and freight options.
         </p>
+        <div className="mt-10">
+          <WholesaleForm />
+        </div>
+      </section>
+
+      <section className="mt-16 bg-stone/60 p-8 md:p-12">
+        <h2 className="font-serif text-3xl">Prefer to talk first?</h2>
+
         <ul className="mt-6 space-y-2 text-sm">
           <li>
             WhatsApp:{" "}
