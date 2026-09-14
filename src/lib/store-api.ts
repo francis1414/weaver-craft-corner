@@ -305,6 +305,7 @@ export async function submitReview(input: {
 
 export interface OrderDraft {
   orderNumber: string;
+  checkoutToken: string;
   customer: Order["customer"];
   items: Order["items"];
   subtotal: number;
@@ -320,6 +321,7 @@ export interface OrderDraft {
 export async function createOrder(draft: OrderDraft): Promise<void> {
   const { error } = await db.from("orders").insert({
     order_number: draft.orderNumber,
+    checkout_token: draft.checkoutToken,
     customer: draft.customer,
     items: draft.items,
     subtotal: draft.subtotal,

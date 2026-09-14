@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1789418821291,
+      "tag": "0000_secure_checkout_order_lookup",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789419020931,
+      "tag": "0001_protect_public_order_creation",
+      "breakpoints": true
+    }
+  ]
+}

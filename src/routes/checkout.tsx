@@ -57,6 +57,12 @@ const SHIPPING = [
   { id: "express", label: "DHL Express (3–5 days)", multiplier: 2.2 },
 ] as const;
 
+function createCheckoutToken(): string {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
 function CheckoutPage() {
   const { cart, cartSubtotal, discountRate, promoCode, applyPromo, clearCart, currency } =
     useStore();
@@ -70,6 +76,7 @@ function CheckoutPage() {
   const [code, setCode] = useState("");
   const [pending, setPending] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
+  const [checkoutToken, setCheckoutToken] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -103,9 +110,11 @@ function CheckoutPage() {
     }
     setPending(true);
     const number = `VS-${Date.now().toString().slice(-8)}`;
+    const token = createCheckoutToken();
     try {
       await createOrder({
         orderNumber: number,
+        checkoutToken: token,
         customer: parsed.data,
         items: cart.map((l) => ({
           productId: l.productId,
@@ -124,6 +133,7 @@ function CheckoutPage() {
         customerNotes: notes,
       });
       setOrderNumber(number);
+      setCheckoutToken(token);
       clearCart();
       setStep(payment === "card" && paymentsConfigured() ? 5 : 4);
     } catch {
@@ -133,7 +143,7 @@ function CheckoutPage() {
     }
   }
 
-  if (step === 5 && orderNumber) {
+  if (step === 5 && orderNumber && checkoutToken) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-16 md:px-8">
         <PaymentTestModeBanner />
@@ -145,6 +155,7 @@ function CheckoutPage() {
         <div className="mt-8">
           <StripeEmbeddedCheckout
             orderNumber={orderNumber}
+            checkoutToken={checkoutToken}
             returnUrl={`${window.location.origin}/checkout/return?session_id={CHECKOUT_SESSION_ID}`}
           />
         </div>

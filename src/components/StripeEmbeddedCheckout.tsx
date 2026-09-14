@@ -8,10 +8,11 @@ import { whatsappLink } from "@/lib/whatsapp";
 
 interface Props {
   orderNumber: string;
+  checkoutToken: string;
   returnUrl: string;
 }
 
-export function StripeEmbeddedCheckout({ orderNumber, returnUrl }: Props) {
+export function StripeEmbeddedCheckout({ orderNumber, checkoutToken, returnUrl }: Props) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -24,7 +25,7 @@ export function StripeEmbeddedCheckout({ orderNumber, returnUrl }: Props) {
     (async () => {
       try {
         const result = await createOrderCheckout({
-          data: { orderNumber, returnUrl, environment: getStripeEnvironment() },
+          data: { orderNumber, checkoutToken, returnUrl, environment: getStripeEnvironment() },
         });
         if (cancelled) return;
         if ("error" in result) {
@@ -46,7 +47,7 @@ export function StripeEmbeddedCheckout({ orderNumber, returnUrl }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [orderNumber, returnUrl, attempt]);
+  }, [orderNumber, checkoutToken, returnUrl, attempt]);
 
   if (error) {
     return (
