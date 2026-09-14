@@ -124,6 +124,7 @@ export type Database = {
       }
       orders: {
         Row: {
+          checkout_token: string | null
           created_at: string
           currency: string
           customer: Json
@@ -145,6 +146,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          checkout_token?: string | null
           created_at?: string
           currency?: string
           customer?: Json
@@ -166,6 +168,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          checkout_token?: string | null
           created_at?: string
           currency?: string
           customer?: Json
@@ -447,6 +450,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_order_for_checkout: {
+        Args: { _checkout_token: string; _order_number: string }
+        Returns: {
+          currency: string
+          customer: Json
+          items: Json
+          order_number: string
+          payment_status: string
+          total: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
