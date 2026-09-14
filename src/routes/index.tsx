@@ -307,7 +307,7 @@ function HomePage() {
                   : "md:grid-cols-3",
             )}
           >
-            {homepage.campaignCards.slice(0, 3).map((card) => (
+            {(homepage.campaignCards ?? []).slice(0, 3).map((card) => (
               <a
                 key={card.title}
                 href={card.href?.trim() || "/shop"}
