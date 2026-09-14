@@ -512,7 +512,19 @@ function ProductPage() {
           ))}
         </div>
         <div className="max-w-3xl px-6 py-8 text-sm leading-relaxed text-muted-foreground">
-          {tab === "Description" && <p>{product.description}</p>}
+          {tab === "Description" && (
+            <div className="space-y-4">
+              {descriptionParagraphs(product.description).length > 0 ? (
+                descriptionParagraphs(product.description).map((para, i) => (
+                  <p key={i} className="text-foreground/90 first-letter:font-serif first-letter:text-2xl first-letter:font-normal first-letter:mr-1 first-letter:text-gold first:mt-0">
+                    {para}
+                  </p>
+                ))
+              ) : (
+                <p>{product.description}</p>
+              )}
+            </div>
+          )}
           {tab === "Dimensions & Weight" && (
             <ul className="space-y-1.5">
               <li>Dimensions: {product.dimensions || "Varies slightly by weave."}</li>
