@@ -28,6 +28,8 @@ import { submitReview } from "@/lib/store-api";
 import { cn } from "@/lib/utils";
 import { youtubeEmbedUrl } from "@/lib/media";
 import { absoluteUrl, breadcrumbJsonLd, canonical, jsonLdScript } from "@/lib/seo";
+import { assetUrl } from "@/lib/asset-url";
+import { fetchProducts } from "@/lib/store-api";
 
 export const Route = createFileRoute("/product/$slug")({
   loader: async ({ params }) => {
