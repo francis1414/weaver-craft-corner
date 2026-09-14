@@ -123,9 +123,18 @@ export function Header() {
             </AnimatePresence>
           </div>
 
+          <Link
+            to="/wholesale"
+            hash="enquiry"
+            className="mr-1 hidden h-11 items-center border border-gold px-4 text-[11px] uppercase tracking-[0.16em] text-gold transition-colors hover:bg-gold hover:text-gold-foreground md:inline-flex"
+          >
+            Buy Wholesale
+          </Link>
+
           <IconButton label="Wishlist" count={wishlist.length} onClick={() => openDrawer("wishlist")}>
             <Heart size={18} />
           </IconButton>
+
           <IconButton label="Compare" count={compare.length} onClick={() => openDrawer("compare")}>
             <Scale size={18} />
           </IconButton>
