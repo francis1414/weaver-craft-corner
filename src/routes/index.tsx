@@ -300,9 +300,9 @@ function HomePage() {
           <div
             className={cn(
               "mt-10 grid gap-6",
-              homepage.campaignCards.length === 1
+              (homepage.campaignCards ?? []).length === 1
                 ? "md:grid-cols-1"
-                : homepage.campaignCards.length === 2
+                : (homepage.campaignCards ?? []).length === 2
                   ? "md:grid-cols-2"
                   : "md:grid-cols-3",
             )}
