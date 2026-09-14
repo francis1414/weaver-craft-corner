@@ -68,7 +68,7 @@ function HomePage() {
   const [slideIndex, setSlideIndex] = useState(0);
 
   const heading = (key: keyof typeof FALLBACK_HEADINGS) =>
-    homepage.sectionHeadings[key]?.trim() || FALLBACK_HEADINGS[key];
+    homepage.sectionHeadings?.[key]?.trim() || FALLBACK_HEADINGS[key];
   const heroSlideImages = homepage.heroSlides
     .filter((slide) => Boolean(slide.image))
     .map((slide) => ({ src: slide.image, alt: slide.title || "Vetastudio handwoven basket" }));
