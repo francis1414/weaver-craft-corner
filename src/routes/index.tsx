@@ -262,7 +262,7 @@ function HomePage() {
 
       {/* New arrivals */}
       <section className="mx-auto max-w-[1400px] px-4 py-20 md:px-8">
-        <h2 className="font-serif text-3xl md:text-4xl">Newly added</h2>
+        <h2 className="font-serif text-3xl md:text-4xl">{heading("arrivals")}</h2>
         <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
           {arrivals.map((p, i) => (
             <ProductCard key={p.id} product={p} index={i} />
@@ -279,7 +279,7 @@ function HomePage() {
             ratio="4/3"
           />
           <div className="flex flex-col justify-center">
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">Weaver spotlight</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-gold">{heading("spotlight")}</p>
             <blockquote className="mt-5 font-serif text-2xl leading-snug md:text-3xl">
               “{homepage.weaverSpotlights[0].quote}”
             </blockquote>
@@ -291,9 +291,43 @@ function HomePage() {
         </section>
       )}
 
+      {/* Campaign cards */}
+      {homepage.campaignCards.length > 0 && (
+        <section className="mx-auto max-w-[1400px] px-4 pb-20 md:px-8">
+          <h2 className="font-serif text-3xl md:text-4xl">{heading("campaigns")}</h2>
+          <div
+            className={cn(
+              "mt-10 grid gap-6",
+              homepage.campaignCards.length === 1
+                ? "md:grid-cols-1"
+                : homepage.campaignCards.length === 2
+                  ? "md:grid-cols-2"
+                  : "md:grid-cols-3",
+            )}
+          >
+            {homepage.campaignCards.slice(0, 3).map((card) => (
+              <a
+                key={card.title}
+                href={card.href?.trim() || "/shop"}
+                className="group flex flex-col border border-border"
+              >
+                <SmartImage src={card.image} alt={card.title} ratio="4/3" />
+                <div className="p-6">
+                  <h3 className="font-serif text-xl">{card.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.body}</p>
+                  <span className="mt-4 inline-block text-xs uppercase tracking-[0.18em] text-gold">
+                    Explore
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Testimonials */}
       <section className="mx-auto max-w-[1400px] px-4 pb-24 md:px-8">
-        <h2 className="font-serif text-3xl md:text-4xl">Collector notes</h2>
+        <h2 className="font-serif text-3xl md:text-4xl">{heading("testimonials")}</h2>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {reviews.slice(0, 3).map((review) => (
             <article key={review.id} className="border border-border p-6">
