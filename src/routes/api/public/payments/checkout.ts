@@ -22,10 +22,10 @@ export const Route = createFileRoute("/api/public/payments/checkout")({
 
         try {
           const body = (await request.json()) as Record<string, unknown>;
-          const orderNumber = typeof body.orderNumber === "string" ? body.orderNumber : "";
-          const checkoutToken = typeof body.checkoutToken === "string" ? body.checkoutToken : "";
-          const returnUrl = typeof body.returnUrl === "string" ? body.returnUrl : "";
-          const environment = body.environment === "live" ? "live" : body.environment === "sandbox" ? "sandbox" : null;
+          const orderNumber = typeof body["orderNumber"] === "string" ? body["orderNumber"] : "";
+          const checkoutToken = typeof body["checkoutToken"] === "string" ? body["checkoutToken"] : "";
+          const returnUrl = typeof body["returnUrl"] === "string" ? body["returnUrl"] : "";
+          const environment = body["environment"] === "live" ? "live" : body["environment"] === "sandbox" ? "sandbox" : null;
 
           if (!/^[A-Za-z0-9-]{4,40}$/.test(orderNumber)) throw new Error("Invalid order reference");
           if (!/^[a-f0-9]{64}$/.test(checkoutToken)) throw new Error("Invalid checkout token");
