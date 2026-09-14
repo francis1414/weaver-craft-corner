@@ -189,7 +189,7 @@ function ShopPage() {
   const filterPanel = (
     <div className="space-y-8">
       <section>
-        <h3 className="text-xs uppercase tracking-[0.2em] text-foreground">Craft Categories</h3>
+        <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">Craft Categories</h2>
         <ul className="mt-4 space-y-1">
           <li>
             <button
@@ -222,7 +222,7 @@ function ShopPage() {
       </section>
 
       <section>
-        <h3 className="text-xs uppercase tracking-[0.2em] text-foreground">Price</h3>
+        <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">Price</h2>
         <input
           type="range"
           min={0}
@@ -251,7 +251,7 @@ function ShopPage() {
       </section>
 
       <section>
-        <h3 className="text-xs uppercase tracking-[0.2em] text-foreground">Natural Dye Palette</h3>
+        <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">Natural Dye Palette</h2>
         <div className="mt-4 flex flex-wrap gap-3">
           {DYE_COLORS.map((dye) => {
             const value = dye.name.toLowerCase();
