@@ -30,23 +30,47 @@ import { youtubeEmbedUrl } from "@/lib/media";
 import { absoluteUrl, breadcrumbJsonLd, canonical, jsonLdScript } from "@/lib/seo";
 
 export const Route = createFileRoute("/product/$slug")({
-  head: ({ params }) => {
-    const name = params.slug
-      .split("-")
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(" ");
+  loader: async ({ params }) => {
+    try {
+      const products = await fetchProducts();
+      const match = products.find((p) => p.slug === params.slug);
+      if (!match) return { product: null };
+      const image = match.primaryImage || match.images[0] || "";
+      return {
+        product: {
+          name: match.name,
+          description: match.description,
+          image: image ? assetUrl(image) : "",
+          price: match.salePrice ?? match.price,
+          inStock: match.stockQuantity > 0,
+          rating: match.rating,
+          reviewCount: match.reviewCount,
+          sku: match.sku,
+          material: match.material,
+        },
+      };
+    } catch {
+      return { product: null };
+    }
+  },
+  head: ({ params, loaderData }) => {
+    const loaded = loaderData?.product ?? null;
+    const name =
+      loaded?.name ??
+      params.slug
+        .split("-")
+        .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(" ");
+    const description =
+      loaded?.description && loaded.description.trim().length > 40
+        ? loaded.description.trim().slice(0, 300)
+        : `${name}: handwoven Bolga elephant grass craft from Ghana, fair-wage made and shipped carbon-neutral.`;
     return {
       meta: [
         { title: `${name} — Vetastudio` },
-        {
-          name: "description",
-          content: `${name}: handwoven Bolga elephant grass craft from Ghana, fair-wage made and shipped carbon-neutral.`,
-        },
+        { name: "description", content: description },
         { property: "og:title", content: `${name} — Vetastudio` },
-        {
-          property: "og:description",
-          content: `${name}: handwoven Bolga elephant grass craft from Ghana.`,
-        },
+        { property: "og:description", content: description },
         { property: "og:type", content: "product" },
         { name: "twitter:card", content: "summary_large_image" },
         ...canonical(`/product/${params.slug}`).meta,
@@ -59,7 +83,33 @@ export const Route = createFileRoute("/product/$slug")({
           name,
           url: absoluteUrl(`/product/${params.slug}`),
           brand: { "@type": "Brand", name: "Vetastudio" },
-          material: "Elephant grass (veta vera)",
+          material: loaded?.material || "Elephant grass (veta vera)",
+          description,
+          ...(loaded?.image ? { image: [loaded.image] } : {}),
+          ...(loaded?.sku ? { sku: loaded.sku } : {}),
+          ...(loaded
+            ? {
+                offers: {
+                  "@type": "Offer",
+                  url: absoluteUrl(`/product/${params.slug}`),
+                  price: loaded.price.toFixed(2),
+                  priceCurrency: "USD",
+                  availability: loaded.inStock
+                    ? "https://schema.org/InStock"
+                    : "https://schema.org/OutOfStock",
+                  itemCondition: "https://schema.org/NewCondition",
+                },
+              }
+            : {}),
+          ...(loaded && loaded.reviewCount > 0 && loaded.rating > 0
+            ? {
+                aggregateRating: {
+                  "@type": "AggregateRating",
+                  ratingValue: loaded.rating.toFixed(1),
+                  reviewCount: loaded.reviewCount,
+                },
+              }
+            : {}),
         }),
         jsonLdScript(
           breadcrumbJsonLd([
