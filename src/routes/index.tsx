@@ -234,9 +234,11 @@ function HomePage() {
         <div className="mx-auto max-w-[1400px] px-4 md:px-8">
           <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_2fr]">
             <div>
-              <p className="label-caps text-gold">{homepage.fairWage.eyebrow}</p>
+              <p className="label-caps text-gold">
+                {homepage.fairWage?.eyebrow || "Fair-wage transparency"}
+              </p>
               <h2 className="mt-3 font-serif text-3xl leading-tight md:text-4xl">
-                {homepage.fairWage.heading}
+                {homepage.fairWage?.heading || "Every basket pays its maker first"}
               </h2>
               <Link
                 to="/about"
