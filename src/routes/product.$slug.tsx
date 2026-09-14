@@ -141,6 +141,24 @@ const RATING_LABEL: Record<number, string> = {
   1: "1 Star — Disappointed",
 };
 
+/** Short excerpt of the description for display below the product title. */
+function productExcerpt(description: string): string {
+  const text = description.trim();
+  if (!text) return "";
+  const firstSentence = text.split(/(?<=[.!?])\s/)[0] ?? text;
+  return firstSentence.length > 160 ? `${firstSentence.slice(0, 157)}…` : firstSentence;
+}
+
+/** Split a description into readable paragraphs. */
+function descriptionParagraphs(description: string): string[] {
+  const text = description.trim();
+  if (!text) return [];
+  return text
+    .split(/\n{2,}|\r\n{2,}/)
+    .map((p) => p.replace(/\s+/g, " ").trim())
+    .filter(Boolean);
+}
+
 const TABS = [
   "Description",
   "Dimensions & Weight",
