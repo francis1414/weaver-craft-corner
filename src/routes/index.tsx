@@ -10,6 +10,7 @@ import { StarRating } from "@/components/StarRating";
 import { useCategories, useHomepage, useProducts, useReviews } from "@/hooks/use-store-data";
 import { cn } from "@/lib/utils";
 import { canonical, jsonLdScript, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+import type { SectionHeadingKey } from "@/types";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -39,6 +40,17 @@ export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
+/** Used when a heading has not been customised in the homepage editor. */
+const FALLBACK_HEADINGS: Record<SectionHeadingKey, string> = {
+  categories: "Shop by craft",
+  featured: "The signature collection",
+  process: "From grass to basket",
+  arrivals: "Newly added",
+  campaigns: "Studio campaigns",
+  spotlight: "Weaver spotlight",
+  testimonials: "Collector notes",
+};
+
 const TABS = [
   { id: "all", label: "All" },
   { id: "sculpture", label: "Sculptural Baskets" },
@@ -53,8 +65,14 @@ function HomePage() {
   const { data: reviews } = useReviews();
   const homepage = useHomepage();
   const [tab, setTab] = useState<(typeof TABS)[number]["id"]>("all");
+  const [slideIndex, setSlideIndex] = useState(0);
 
-  const hero = homepage.heroSlides[0];
+  const heading = (key: keyof typeof FALLBACK_HEADINGS) =>
+    homepage.sectionHeadings[key]?.trim() || FALLBACK_HEADINGS[key];
+  const heroSlideImages = homepage.heroSlides
+    .filter((slide) => Boolean(slide.image))
+    .map((slide) => ({ src: slide.image, alt: slide.title || "Vetastudio handwoven basket" }));
+  const hero = homepage.heroSlides[slideIndex] ?? homepage.heroSlides[0];
   const featured = products
     .filter((p) => {
       if (tab === "all") return p.featured;
@@ -82,12 +100,12 @@ function HomePage() {
               "Sculptural baskets, lampshades and fans made by fair-wage artisans in Upper East Ghana."}
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
-            <Link
-              to="/shop"
+            <a
+              href={hero?.ctaHref?.trim() || "/shop"}
               className="flex h-12 items-center bg-foreground px-7 text-xs uppercase tracking-[0.2em] text-background transition-opacity hover:opacity-90"
             >
-              Shop Collection
-            </Link>
+              {hero?.ctaLabel?.trim() || "Shop Collection"}
+            </a>
             <Link
               to="/about"
               className="flex h-12 items-center border border-foreground px-7 text-xs uppercase tracking-[0.2em] transition-colors hover:border-gold hover:text-gold"
@@ -96,7 +114,11 @@ function HomePage() {
             </Link>
           </div>
         </div>
-        <HeroSlideshow className="min-h-[420px] w-full lg:h-full" />
+        <HeroSlideshow
+          className="min-h-[420px] w-full lg:h-full"
+          slides={heroSlideImages}
+          onIndexChange={setSlideIndex}
+        />
       </section>
 
       {/* Value pillars */}
@@ -113,7 +135,7 @@ function HomePage() {
 
       {/* Categories */}
       <section className="mx-auto max-w-[1400px] px-4 py-20 md:px-8">
-        <h2 className="font-serif text-3xl md:text-4xl">Shop by craft</h2>
+        <h2 className="font-serif text-3xl md:text-4xl">{heading("categories")}</h2>
         <div
           className={cn(
             "mt-10 grid gap-5 grid-cols-2 sm:grid-cols-3",
@@ -156,7 +178,7 @@ function HomePage() {
       {/* Featured collection */}
       <section className="mx-auto max-w-[1400px] px-4 pb-20 md:px-8">
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <h2 className="font-serif text-3xl md:text-4xl">The signature collection</h2>
+          <h2 className="font-serif text-3xl md:text-4xl">{heading("featured")}</h2>
           <div className="flex flex-wrap gap-2">
             {TABS.map((t) => (
               <button
@@ -183,8 +205,17 @@ function HomePage() {
       {/* Process */}
       <section className="border-y border-border bg-stone/40">
         <div className="mx-auto max-w-[1400px] px-4 py-20 md:px-8">
-          <h2 className="font-serif text-3xl md:text-4xl">From grass to basket</h2>
-          <ol className="mt-10 grid gap-8 md:grid-cols-5">
+          <h2 className="font-serif text-3xl md:text-4xl">{heading("process")}</h2>
+          <ol
+            className={cn(
+              "mt-10 grid gap-8",
+              homepage.processSteps.length <= 3
+                ? "md:grid-cols-3"
+                : homepage.processSteps.length === 4
+                  ? "md:grid-cols-4"
+                  : "md:grid-cols-5",
+            )}
+          >
             {homepage.processSteps.map((step, i) => (
               <li key={step.step}>
                 <span className="font-serif text-3xl text-gold">0{i + 1}</span>
@@ -203,33 +234,20 @@ function HomePage() {
         <div className="mx-auto max-w-[1400px] px-4 md:px-8">
           <div className="grid items-start gap-10 lg:grid-cols-[1.1fr_2fr]">
             <div>
-              <p className="label-caps text-gold">Fair-wage transparency</p>
+              <p className="label-caps text-gold">{homepage.fairWage.eyebrow}</p>
               <h2 className="mt-3 font-serif text-3xl leading-tight md:text-4xl">
-                Every basket pays its maker first
+                {homepage.fairWage.heading}
               </h2>
               <Link
                 to="/about"
                 hash="transparency"
                 className="mt-6 inline-block border border-gold px-6 py-3 text-xs uppercase tracking-[0.18em] text-gold transition-colors hover:bg-gold hover:text-foreground"
               >
-                See where your money goes
+                {homepage.fairWage.ctaLabel}
               </Link>
             </div>
             <div className="grid gap-8 sm:grid-cols-3">
-              {[
-                {
-                  title: "2.4× fair wages",
-                  body: "Per-piece commissions at 2.4× the regional average, paid on collection day — never on sale.",
-                },
-                {
-                  title: "Medical care covered",
-                  body: "A share of every order funds clinic visits, prescriptions and emergencies for weavers and their children.",
-                },
-                {
-                  title: "Community projects",
-                  body: "School fees, boreholes and dye gardens funded in the weaving villages of Bolgatanga, Sumbrungu and Zuarungu.",
-                },
-              ].map((item) => (
+              {homepage.fairWagePillars.slice(0, 3).map((item) => (
                 <div key={item.title}>
                   <h3 className="font-serif text-xl text-gold">{item.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-background/80">
@@ -244,7 +262,7 @@ function HomePage() {
 
       {/* New arrivals */}
       <section className="mx-auto max-w-[1400px] px-4 py-20 md:px-8">
-        <h2 className="font-serif text-3xl md:text-4xl">Newly added</h2>
+        <h2 className="font-serif text-3xl md:text-4xl">{heading("arrivals")}</h2>
         <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
           {arrivals.map((p, i) => (
             <ProductCard key={p.id} product={p} index={i} />
@@ -261,7 +279,7 @@ function HomePage() {
             ratio="4/3"
           />
           <div className="flex flex-col justify-center">
-            <p className="text-xs uppercase tracking-[0.3em] text-gold">Weaver spotlight</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-gold">{heading("spotlight")}</p>
             <blockquote className="mt-5 font-serif text-2xl leading-snug md:text-3xl">
               “{homepage.weaverSpotlights[0].quote}”
             </blockquote>
@@ -273,9 +291,43 @@ function HomePage() {
         </section>
       )}
 
+      {/* Campaign cards */}
+      {homepage.campaignCards.length > 0 && (
+        <section className="mx-auto max-w-[1400px] px-4 pb-20 md:px-8">
+          <h2 className="font-serif text-3xl md:text-4xl">{heading("campaigns")}</h2>
+          <div
+            className={cn(
+              "mt-10 grid gap-6",
+              homepage.campaignCards.length === 1
+                ? "md:grid-cols-1"
+                : homepage.campaignCards.length === 2
+                  ? "md:grid-cols-2"
+                  : "md:grid-cols-3",
+            )}
+          >
+            {homepage.campaignCards.slice(0, 3).map((card) => (
+              <a
+                key={card.title}
+                href={card.href?.trim() || "/shop"}
+                className="group flex flex-col border border-border"
+              >
+                <SmartImage src={card.image} alt={card.title} ratio="4/3" />
+                <div className="p-6">
+                  <h3 className="font-serif text-xl">{card.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{card.body}</p>
+                  <span className="mt-4 inline-block text-xs uppercase tracking-[0.18em] text-gold">
+                    Explore
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Testimonials */}
       <section className="mx-auto max-w-[1400px] px-4 pb-24 md:px-8">
-        <h2 className="font-serif text-3xl md:text-4xl">Collector notes</h2>
+        <h2 className="font-serif text-3xl md:text-4xl">{heading("testimonials")}</h2>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {reviews.slice(0, 3).map((review) => (
             <article key={review.id} className="border border-border p-6">

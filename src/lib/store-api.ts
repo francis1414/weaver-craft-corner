@@ -167,12 +167,25 @@ export function mapSettings(row: Row): StoreSettings {
 
 export function mapHomepage(row: Row): HomepageContent {
   const list = <T,>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
+  const obj = (v: unknown): Record<string, unknown> =>
+    v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : {};
+  const fair = obj(row["fair_wage"]);
+  const headings = obj(row["section_headings"]);
   return {
     heroSlides: list(row["hero_slides"]),
     valuePillars: list(row["value_pillars"]),
     weaverSpotlights: list(row["weaver_spotlights"]),
     processSteps: list(row["process_steps"]),
     campaignCards: list(row["campaign_cards"]),
+    fairWage: {
+      eyebrow: str(fair["eyebrow"], "Fair-wage transparency"),
+      heading: str(fair["heading"], "Every basket pays its maker first"),
+      ctaLabel: str(fair["ctaLabel"], "See where your money goes"),
+    },
+    fairWagePillars: list(row["fair_wage_pillars"]),
+    sectionHeadings: Object.fromEntries(
+      Object.entries(headings).map(([k, v]) => [k, String(v ?? "")]),
+    ),
   };
 }
 
