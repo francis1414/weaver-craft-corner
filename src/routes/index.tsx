@@ -10,6 +10,7 @@ import { StarRating } from "@/components/StarRating";
 import { useCategories, useHomepage, useProducts, useReviews } from "@/hooks/use-store-data";
 import { cn } from "@/lib/utils";
 import { canonical, jsonLdScript, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+import type { SectionHeadingKey } from "@/types";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -38,6 +39,17 @@ export const Route = createFileRoute("/")({
   }),
   component: HomePage,
 });
+
+/** Used when a heading has not been customised in the homepage editor. */
+const FALLBACK_HEADINGS: Record<SectionHeadingKey, string> = {
+  categories: "Shop by craft",
+  featured: "The signature collection",
+  process: "From grass to basket",
+  arrivals: "Newly added",
+  campaigns: "Studio campaigns",
+  spotlight: "Weaver spotlight",
+  testimonials: "Collector notes",
+};
 
 const TABS = [
   { id: "all", label: "All" },
