@@ -341,7 +341,35 @@ function ProductPage() {
             )}
           </div>
 
-          <p className="mt-6 text-sm leading-relaxed text-muted-foreground">{product.description}</p>
+          <div className="mt-6">
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {productExcerpt(product.description)}
+            </p>
+            <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-1.5 text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+              {product.dimensions && (
+                <div className="flex gap-1.5">
+                  <dt>Size</dt>
+                  <dd className="text-foreground">{product.dimensions}</dd>
+                </div>
+              )}
+              <div className="flex gap-1.5">
+                <dt>Weight</dt>
+                <dd className="text-foreground">{product.weightKg || 1.2} kg</dd>
+              </div>
+              {product.capacity && (
+                <div className="flex gap-1.5">
+                  <dt>Capacity</dt>
+                  <dd className="text-foreground">{product.capacity}</dd>
+                </div>
+              )}
+              {product.handle && (
+                <div className="flex gap-1.5">
+                  <dt>Handle</dt>
+                  <dd className="text-foreground">{product.handle}</dd>
+                </div>
+              )}
+            </dl>
+          </div>
 
           {/* Shipping box */}
           <div className="mt-7 border border-border">
