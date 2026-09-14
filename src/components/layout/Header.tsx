@@ -163,7 +163,16 @@ export function Header() {
                   {item.label}
                 </Link>
               ))}
+              <Link
+                to="/wholesale"
+                hash="enquiry"
+                onClick={() => setMobileOpen(false)}
+                className="mt-3 mb-3 inline-flex h-12 items-center justify-center border border-gold text-xs uppercase tracking-[0.2em] text-gold"
+              >
+                Buy Wholesale
+              </Link>
             </div>
+
           </motion.nav>
         )}
       </AnimatePresence>
