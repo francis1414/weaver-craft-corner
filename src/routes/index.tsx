@@ -210,7 +210,7 @@ function HomePage() {
               <Link
                 to="/about"
                 hash="transparency"
-                className="mt-6 inline-block border border-gold px-6 py-3 text-xs uppercase tracking-[0.18em] text-gold transition-colors hover:bg-gold hover:text-ink"
+                className="mt-6 inline-block border border-gold px-6 py-3 text-xs uppercase tracking-[0.18em] text-gold transition-colors hover:bg-gold hover:text-foreground"
               >
                 See where your money goes
               </Link>
@@ -232,7 +232,7 @@ function HomePage() {
               ].map((item) => (
                 <div key={item.title}>
                   <h3 className="font-serif text-xl text-gold">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-primary-foreground/80">
+                  <p className="mt-2 text-sm leading-relaxed text-background/80">
                     {item.body}
                   </p>
                 </div>
