@@ -303,7 +303,7 @@ export function WholesaleForm() {
           </ul>
         )}
         <p className="mt-6 border-t border-border pt-4 text-xs leading-relaxed text-muted-foreground">
-          Minimum trade order is 20 units across the catalogue. Quantities here are indicative — we
+          Minimum trade order is 10 units across the catalogue. Quantities here are indicative — we
           confirm pricing, lead time and freight with the cooperative before you commit.
         </p>
       </aside>
