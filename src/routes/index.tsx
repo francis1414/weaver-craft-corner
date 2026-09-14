@@ -245,7 +245,7 @@ function HomePage() {
                 hash="transparency"
                 className="mt-6 inline-block border border-gold px-6 py-3 text-xs uppercase tracking-[0.18em] text-gold transition-colors hover:bg-gold hover:text-foreground"
               >
-                {homepage.fairWage.ctaLabel}
+                {homepage.fairWage?.ctaLabel || "See where your money goes"}
               </Link>
             </div>
             <div className="grid gap-8 sm:grid-cols-3">
