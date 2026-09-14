@@ -294,7 +294,7 @@ function HomePage() {
       )}
 
       {/* Campaign cards */}
-      {homepage.campaignCards.length > 0 && (
+      {(homepage.campaignCards ?? []).length > 0 && (
         <section className="mx-auto max-w-[1400px] px-4 pb-20 md:px-8">
           <h2 className="font-serif text-3xl md:text-4xl">{heading("campaigns")}</h2>
           <div
