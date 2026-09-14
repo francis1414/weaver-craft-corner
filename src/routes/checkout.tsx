@@ -13,6 +13,8 @@ import { usePrice } from "@/hooks/use-price";
 import { createOrder } from "@/lib/store-api";
 import { paymentsConfigured } from "@/lib/stripe";
 import { cn } from "@/lib/utils";
+import { whatsappLink } from "@/lib/whatsapp";
+
 
 
 export const Route = createFileRoute("/checkout")({
