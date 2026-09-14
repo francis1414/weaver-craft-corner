@@ -12,6 +12,29 @@ interface Props {
   returnUrl: string;
 }
 
+const LIVE_PAYMENT_SERVICE = "https://weaver-craft-corner.lovable.app";
+
+async function requestCheckout(data: {
+  orderNumber: string;
+  checkoutToken: string;
+  returnUrl: string;
+  environment: "sandbox" | "live";
+}) {
+  const isLovableHosted =
+    window.location.hostname.endsWith(".lovable.app") ||
+    window.location.hostname === "localhost";
+  if (isLovableHosted) return createOrderCheckout({ data });
+
+  const response = await fetch(`${LIVE_PAYMENT_SERVICE}/api/public/payments/checkout`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  const result = (await response.json()) as { clientSecret?: string; error?: string };
+  if (!response.ok && !result.error) throw new Error("The secure payment service is unavailable");
+  return result.error ? { error: result.error } : { clientSecret: result.clientSecret ?? "" };
+}
+
 export function StripeEmbeddedCheckout({ orderNumber, checkoutToken, returnUrl }: Props) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -24,8 +47,11 @@ export function StripeEmbeddedCheckout({ orderNumber, checkoutToken, returnUrl }
 
     (async () => {
       try {
-        const result = await createOrderCheckout({
-          data: { orderNumber, checkoutToken, returnUrl, environment: getStripeEnvironment() },
+        const result = await requestCheckout({
+          orderNumber,
+          checkoutToken,
+          returnUrl,
+          environment: getStripeEnvironment(),
         });
         if (cancelled) return;
         if ("error" in result) {
