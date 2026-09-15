@@ -10,14 +10,15 @@ export function CookieNotice() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    let stored: string | null = "accepted";
     try {
-      if (!localStorage.getItem(STORAGE_KEY)) {
-        const t = setTimeout(() => setOpen(true), 900);
-        return () => clearTimeout(t);
-      }
+      stored = localStorage.getItem(STORAGE_KEY);
     } catch {
       /* storage unavailable */
     }
+    if (stored) return undefined;
+    const t = setTimeout(() => setOpen(true), 900);
+    return () => clearTimeout(t);
   }, []);
 
   function decide(value: "accepted" | "essential") {
