@@ -20,13 +20,13 @@ import { whatsappLink } from "@/lib/whatsapp";
 export const Route = createFileRoute("/checkout")({
   head: () => ({
     meta: [
-      { title: "Secure Checkout — Vetastudio" },
+      { title: "Secure Checkout — Veta Vera Studio" },
       {
         name: "description",
         content:
-          "Complete your Vetastudio order: shipping details, delivery method and order confirmation.",
+          "Complete your Veta Vera Studio order: shipping details, delivery method and order confirmation.",
       },
-      { property: "og:title", content: "Secure Checkout — Vetastudio" },
+      { property: "og:title", content: "Secure Checkout — Veta Vera Studio" },
       { property: "og:description", content: "Complete your handwoven basket order." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -191,7 +191,7 @@ function CheckoutPage() {
           {contactToPay && (
             <a
               href={whatsappLink(
-                `Hello Vetastudio, I have placed order ${orderNumber} and would like to arrange payment.`,
+                `Hello Veta Vera Studio, I have placed order ${orderNumber} and would like to arrange payment.`,
               )}
               target="_blank"
               rel="noopener noreferrer"

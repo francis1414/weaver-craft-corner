@@ -36,12 +36,12 @@ export const Route = createFileRoute("/journal/$slug")({
     const description =
       loaded?.excerpt && loaded.excerpt.trim().length > 40
         ? loaded.excerpt.trim().slice(0, 300)
-        : `${title}: an essay from the Vetastudio journal on Ghanaian craft and sustainable decor.`;
+        : `${title}: an essay from the Veta Vera Studio journal on Ghanaian craft and sustainable decor.`;
     return {
       meta: [
-        { title: `${title} — Vetastudio Journal` },
+        { title: `${title} — Veta Vera Studio Journal` },
         { name: "description", content: description },
-        { property: "og:title", content: `${title} — Vetastudio Journal` },
+        { property: "og:title", content: `${title} — Veta Vera Studio Journal` },
         { property: "og:description", content: description },
         { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
@@ -63,8 +63,8 @@ export const Route = createFileRoute("/journal/$slug")({
           ...(loaded?.publishedAt
             ? { datePublished: loaded.publishedAt, dateModified: loaded.publishedAt }
             : {}),
-          author: { "@type": "Organization", name: loaded?.author || "Vetastudio" },
-          publisher: { "@type": "Organization", name: "Vetastudio" },
+          author: { "@type": "Organization", name: loaded?.author || "Veta Vera Studio" },
+          publisher: { "@type": "Organization", name: "Veta Vera Studio" },
         }),
       ],
     };

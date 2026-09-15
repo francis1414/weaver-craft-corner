@@ -6,12 +6,12 @@ import { whatsappLink } from "@/lib/whatsapp";
 export const Route = createFileRoute("/checkout/return")({
   head: () => ({
     meta: [
-      { title: "Payment Received — Vetastudio" },
+      { title: "Payment Received — Veta Vera Studio" },
       {
         name: "description",
-        content: "Your Vetastudio payment has been received and your handwoven order is confirmed.",
+        content: "Your Veta Vera Studio payment has been received and your handwoven order is confirmed.",
       },
-      { property: "og:title", content: "Payment Received — Vetastudio" },
+      { property: "og:title", content: "Payment Received — Veta Vera Studio" },
       { property: "og:description", content: "Your handwoven basket order is confirmed." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -43,7 +43,7 @@ function CheckoutReturn() {
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <a
           href={whatsappLink(
-            `Hello Vetastudio, I have just completed an order${
+            `Hello Veta Vera Studio, I have just completed an order${
               sessionId ? ` (reference ${sessionId})` : ""
             } and would like updates on WhatsApp.`,
           )}

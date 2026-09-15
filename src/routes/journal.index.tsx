@@ -7,13 +7,13 @@ import { canonical } from "@/lib/seo";
 export const Route = createFileRoute("/journal/")({
   head: () => ({
     meta: [
-      { title: "The Journal — Sustainable Decor & Ghanaian Craft | Vetastudio" },
+      { title: "The Journal — Sustainable Decor & Ghanaian Craft | Veta Vera Studio" },
       {
         name: "description",
         content:
           "Essays on West African weaving traditions, natural dyeing, and living well with handmade objects.",
       },
-      { property: "og:title", content: "The Journal — Vetastudio" },
+      { property: "og:title", content: "The Journal — Veta Vera Studio" },
       {
         property: "og:description",
         content: "Essays on West African weaving, natural dyeing and sustainable decor.",
@@ -36,7 +36,7 @@ function JournalPage() {
       <header className="grid items-end gap-8 border-b border-border pb-10 md:grid-cols-[minmax(0,1fr)_auto]">
         <div className="max-w-3xl">
           <p className="label-caps text-gold">Stories, provenance & interior styling</p>
-          <h1 className="mt-5 font-serif text-5xl leading-tight md:text-7xl">The Vetastudio Journal</h1>
+          <h1 className="mt-5 font-serif text-5xl leading-tight md:text-7xl">The Veta Vera Studio Journal</h1>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
             Exploring the intersection of ancestral Ghanaian craftsmanship and contemporary design.
             Our stories are woven from the hands of the masters.

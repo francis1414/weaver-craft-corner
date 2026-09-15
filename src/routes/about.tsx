@@ -9,15 +9,15 @@ import { breadcrumbJsonLd, canonical, jsonLdScript, organizationJsonLd } from "@
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "Our Story — Fair-Trade Bolga Basket Weavers in Ghana | Vetastudio" },
+      { title: "Our Story — Fair-Trade Bolga Basket Weavers in Ghana | Veta Vera Studio" },
       {
         name: "description",
         content:
-          "Meet the Bolgatanga weaving cooperatives behind Vetastudio: fair-wage certified artisans working with veta vera elephant grass.",
+          "Meet the Bolgatanga weaving cooperatives behind Veta Vera Studio: fair-wage certified artisans working with veta vera elephant grass.",
       },
       {
         property: "og:title",
-        content: "Our Story — Fair-Trade Bolga Basket Weavers in Ghana | Vetastudio",
+        content: "Our Story — Fair-Trade Bolga Basket Weavers in Ghana | Veta Vera Studio",
       },
       {
         property: "og:description",
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/about")({
       jsonLdScript({
         "@context": "https://schema.org",
         "@type": "AboutPage",
-        name: "The Vetastudio Story",
+        name: "The Veta Vera Studio Story",
         url: "https://weaver-craft-corner.lovable.app/about",
         about: organizationJsonLd,
       }),
@@ -52,7 +52,7 @@ function AboutPage() {
     <div className="mx-auto max-w-[1280px] px-4 py-16 md:px-8 md:py-24">
       <header id="story" className="mx-auto max-w-3xl scroll-mt-24 text-center">
         <p className="label-caps text-gold">Our brand heritage & provenance</p>
-        <h1 className="mt-5 font-serif text-5xl leading-tight md:text-7xl">The Vetastudio Story</h1>
+        <h1 className="mt-5 font-serif text-5xl leading-tight md:text-7xl">The Veta Vera Studio Story</h1>
         <p className="mt-6 text-base leading-relaxed text-muted-foreground">
           Authentic handmade craftsmanship from Ghana, presented as contemporary, globally desirable
           fibre art for modern living.
@@ -151,7 +151,7 @@ function AboutPage() {
           <StoryVideo
             src={IMAGES.storyFilm}
             poster={IMAGES.weavingCircle}
-            label="Vetastudio studio film: weaving inside a Bolgatanga compound"
+            label="Veta Vera Studio studio film: weaving inside a Bolgatanga compound"
           />
         </div>
       </StoryChapter>
@@ -168,14 +168,14 @@ function AboutPage() {
             sold — at per-piece rates agreed with cooperative leaders each season.
           </p>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-            That handover is the whole point of Vetastudio: your basket is traceable to a household in
+            That handover is the whole point of Veta Vera Studio: your basket is traceable to a household in
             Bolgatanga, Sumbrungu or Zuarungu rather than to an anonymous wholesale crate.
           </p>
         </div>
         <div className="order-1 hover-zoom shadow-editorial md:order-2">
           <SmartImage
             src={IMAGES.weaverPortrait}
-            alt="Vetastudio weaver holding the finished striped Bolga basket she wove"
+            alt="Veta Vera Studio weaver holding the finished striped Bolga basket she wove"
             ratio="4/3"
           />
         </div>
@@ -258,7 +258,7 @@ function AboutPage() {
         <p className="label-caps text-gold">Complete transparency</p>
         <h2 className="mt-3 font-serif text-3xl">Where your money goes</h2>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          For every $100 you spend at Vetastudio, this is the audited split. More than half of each
+          For every $100 you spend at Veta Vera Studio, this is the audited split. More than half of each
           purchase reaches the weaving communities directly — through wages, medical care and
           community projects.
         </p>

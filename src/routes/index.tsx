@@ -14,7 +14,7 @@ import { canonical, jsonLdScript, organizationJsonLd, websiteJsonLd } from "@/li
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Vetastudio — Handwoven Bolga Baskets & Collectible Fibre Art from Ghana" },
+      { title: "Veta Vera Studio — Handwoven Bolga Baskets & Collectible Fibre Art from Ghana" },
       {
         name: "description",
         content:
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/")({
       },
       {
         property: "og:title",
-        content: "Vetastudio — Handwoven Bolga Baskets & Collectible Fibre Art from Ghana",
+        content: "Veta Vera Studio — Handwoven Bolga Baskets & Collectible Fibre Art from Ghana",
       },
       {
         property: "og:description",

@@ -110,7 +110,7 @@ function AdminLayout() {
           </span>
           <span className="min-w-0">
             <Link to="/admin" className="block font-serif text-lg tracking-[0.14em]">
-              VETASTUDIO
+              VETA VERA STUDIO
             </Link>
             <span className="mt-0.5 flex items-center gap-1 text-[10px] uppercase tracking-[0.18em] text-[#C29B38]">
               <ShieldCheck className="h-3 w-3" /> Admin suite

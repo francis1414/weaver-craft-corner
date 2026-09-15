@@ -90,7 +90,7 @@ export function StripeEmbeddedCheckout({ orderNumber, checkoutToken, returnUrl }
           </button>
           <a
             href={whatsappLink(
-              `Hello Vetastudio, I would like to pay for order ${orderNumber}. The card form did not open.`,
+              `Hello Veta Vera Studio, I would like to pay for order ${orderNumber}. The card form did not open.`,
             )}
             target="_blank"
             rel="noopener noreferrer"

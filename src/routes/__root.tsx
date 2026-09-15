@@ -90,14 +90,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Vetastudio — Handwoven Bolga Baskets" },
+      { title: "Veta Vera Studio — Handwoven Bolga Baskets" },
       {
         name: "description",
         content:
           "Fair-wage handwoven Bolgatanga baskets and elephant grass craft from Upper East Ghana.",
       },
-      { name: "author", content: "Vetastudio" },
-      { property: "og:title", content: "Vetastudio — Handwoven Bolga Baskets" },
+      { name: "author", content: "Veta Vera Studio" },
+      { property: "og:title", content: "Veta Vera Studio — Handwoven Bolga Baskets" },
       {
         property: "og:description",
         content: "Sculptural elephant grass craft from Bolgatanga, Ghana.",

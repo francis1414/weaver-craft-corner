@@ -127,7 +127,7 @@ export function mapJournal(row: Row): JournalEntry {
     excerpt: str(row["excerpt"]),
     content: str(row["content"]),
     coverImage: str(row["cover_image"]),
-    author: str(row["author"], "Vetastudio"),
+    author: str(row["author"], "Veta Vera Studio"),
     readTime: num(row["read_time"], 4),
     publishedAt: str(row["published_at"]),
     tags: arr(row["tags"]),

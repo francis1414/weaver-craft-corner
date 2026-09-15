@@ -69,9 +69,9 @@ export const Route = createFileRoute("/product/$slug")({
         : `${name}: handwoven Bolga elephant grass craft from Ghana, fair-wage made and shipped carbon-neutral.`;
     return {
       meta: [
-        { title: `${name} — Vetastudio` },
+        { title: `${name} — Veta Vera Studio` },
         { name: "description", content: description },
-        { property: "og:title", content: `${name} — Vetastudio` },
+        { property: "og:title", content: `${name} — Veta Vera Studio` },
         { property: "og:description", content: description },
         { property: "og:type", content: "product" },
         { name: "twitter:card", content: "summary_large_image" },
@@ -84,7 +84,7 @@ export const Route = createFileRoute("/product/$slug")({
           "@type": "Product",
           name,
           url: absoluteUrl(`/product/${params.slug}`),
-          brand: { "@type": "Brand", name: "Vetastudio" },
+          brand: { "@type": "Brand", name: "Veta Vera Studio" },
           material: loaded?.material || "Elephant grass (veta vera)",
           description,
           ...(loaded?.image ? { image: [loaded.image] } : {}),
