@@ -15,6 +15,7 @@ import {
   ShoppingBag,
   Star,
   Store,
+  TrendingUp,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ interface NavItem {
 
 const NAV: NavItem[] = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
+  { to: "/admin/analytics", label: "Visitors", icon: TrendingUp },
   { to: "/admin/products", label: "Products", icon: Package },
   { to: "/admin/orders", label: "Orders", icon: ShoppingBag },
   { to: "/admin/payments", label: "Payments", icon: CreditCard },

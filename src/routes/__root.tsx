@@ -23,6 +23,7 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { CartDrawer } from "@/components/drawers/CartDrawer";
 import { WishlistDrawer } from "@/components/drawers/WishlistDrawer";
 import { CompareModal } from "@/components/drawers/CompareModal";
+import { VisitorTracker } from "@/components/analytics/VisitorTracker";
 
 function NotFoundComponent() {
   return (
@@ -183,6 +184,7 @@ function StoreShell() {
       <CartDrawer />
       <WishlistDrawer />
       <CompareModal />
+      <VisitorTracker />
       <Toaster position="bottom-right" />
     </div>
   );

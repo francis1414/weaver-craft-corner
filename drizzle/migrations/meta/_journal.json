@@ -15,6 +15,13 @@
       "when": 1789419020931,
       "tag": "0001_protect_public_order_creation",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789488919124,
+      "tag": "0002_create_page_views_analytics",
+      "breakpoints": true
     }
   ]
 }
