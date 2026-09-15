@@ -97,7 +97,7 @@ export function WholesaleForm() {
 
     const d = parsed.data;
     const lines = [
-      "*Wholesale enquiry — Vetastudio*",
+      "*Wholesale enquiry — Veta Vera Studio*",
       "",
       `Name: ${d.name}`,
       ...(d.company ? [`Business: ${d.company}`] : []),

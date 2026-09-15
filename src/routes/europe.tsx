@@ -5,7 +5,7 @@ import { IMAGES } from "@/lib/mock-data";
 import { EUROPE_MARKETS, breadcrumbJsonLd, canonical, jsonLdScript, SITE_NAME, SITE_URL } from "@/lib/seo";
 import { WHATSAPP_DISPLAY, whatsappLink } from "@/lib/whatsapp";
 
-const TITLE = "Bolga Baskets Delivered to Europe — France, Germany, Switzerland, Spain, Greece, Monaco | Vetastudio";
+const TITLE = "Bolga Baskets Delivered to Europe — France, Germany, Switzerland, Spain, Greece, Monaco | Veta Vera Studio";
 const DESCRIPTION =
   "Handwoven Bolga baskets and fibre art shipped from Ghana to Europe: tracked delivery to France, Germany, Switzerland, Monaco, Spain and Greece in 7–10 business days, with euro and Swiss franc pricing at checkout.";
 
@@ -66,7 +66,7 @@ function EuropePage() {
             Shop the collection
           </Link>
           <a
-            href={whatsappLink("Hello Vetastudio, I am ordering from Europe and have a delivery question.")}
+            href={whatsappLink("Hello Veta Vera Studio, I am ordering from Europe and have a delivery question.")}
             target="_blank"
             rel="noreferrer noopener"
             className="inline-flex h-12 items-center border border-gold px-8 text-xs uppercase tracking-[0.2em] text-gold transition-colors hover:bg-gold hover:text-gold-foreground"

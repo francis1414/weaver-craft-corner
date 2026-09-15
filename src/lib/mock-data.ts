@@ -297,7 +297,7 @@ export const MOCK_JOURNAL: JournalEntry[] = [
     content:
       "Elephant grass is cut at the end of the rainy season, split by thumbnail, twisted into cord and dried in the sun before dyeing and weaving.",
     coverImage: IMAGES.artisan,
-    author: "Vetastudio",
+    author: "Veta Vera Studio",
     readTime: 6,
     publishedAt: now,
     tags: ["craft", "process"],
@@ -309,7 +309,7 @@ export const MOCK_JOURNAL: JournalEntry[] = [
     excerpt: "Your basket travels flat. Here is the ten-minute ritual that returns it to shape.",
     content: "Mist with warm water, press the walls outward, stuff loosely and leave overnight.",
     coverImage: IMAGES.hero,
-    author: "Vetastudio",
+    author: "Veta Vera Studio",
     readTime: 4,
     publishedAt: now,
     tags: ["care", "guide"],

@@ -10,15 +10,15 @@ import { WHATSAPP_DISPLAY, whatsappLink } from "@/lib/whatsapp";
 export const Route = createFileRoute("/care")({
   head: () => ({
     meta: [
-      { title: "Help & Support — Bolga Basket Care, Shipping, Returns | Vetastudio" },
+      { title: "Help & Support — Bolga Basket Care, Shipping, Returns | Veta Vera Studio" },
       {
         name: "description",
         content:
-          "Vetastudio help centre: reshape a folded Bolga basket in minutes, plus worldwide express shipping rates, returns policy, custom and wholesale orders, and contact details.",
+          "Veta Vera Studio help centre: reshape a folded Bolga basket in minutes, plus worldwide express shipping rates, returns policy, custom and wholesale orders, and contact details.",
       },
       {
         property: "og:title",
-        content: "Help & Support — Basket Care, Shipping & Returns | Vetastudio",
+        content: "Help & Support — Basket Care, Shipping & Returns | Veta Vera Studio",
       },
       {
         property: "og:description",
@@ -67,7 +67,7 @@ const STEPS = [
 
 const FAQS = [
   {
-    q: "Are Vetastudio baskets genuinely handmade in Ghana?",
+    q: "Are Veta Vera Studio baskets genuinely handmade in Ghana?",
     a: "Yes. Every piece is woven by hand in Bolgatanga, Sumbrungu and Zuarungu in Upper East Ghana from veta vera elephant grass. Nothing is machine-made and nothing is imported for resale.",
   },
   {
@@ -216,7 +216,7 @@ function CarePage() {
         <div className="mt-6 flex flex-wrap gap-3">
           <a
             href={whatsappLink(
-              "Hello Vetastudio, I would like a quote for a custom or wholesale basket order.",
+              "Hello Veta Vera Studio, I would like a quote for a custom or wholesale basket order.",
             )}
             target="_blank"
             rel="noreferrer noopener"
@@ -261,7 +261,7 @@ function CarePage() {
           <li>
             WhatsApp:{" "}
             <a
-              href={whatsappLink("Hello Vetastudio, I have a question.")}
+              href={whatsappLink("Hello Veta Vera Studio, I have a question.")}
               target="_blank"
               rel="noreferrer noopener"
               className="text-gold hover:underline"

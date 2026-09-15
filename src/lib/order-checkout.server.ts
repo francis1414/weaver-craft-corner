@@ -74,7 +74,7 @@ export async function createOrderCheckoutSession(data: {
         price_data: {
           currency,
           product_data: {
-            name: item.name?.slice(0, 250) || `Vetastudio order ${order.order_number}`,
+            name: item.name?.slice(0, 250) || `Veta Vera Studio order ${order.order_number}`,
             ...(item.image?.startsWith("https://") ? { images: [item.image] } : {}),
           },
           unit_amount: unit,
@@ -89,7 +89,7 @@ export async function createOrderCheckoutSession(data: {
       lineItems.push({
         price_data: {
           currency,
-          product_data: { name: `Vetastudio order ${order.order_number}` },
+          product_data: { name: `Veta Vera Studio order ${order.order_number}` },
           unit_amount: total,
         },
         quantity: 1,
@@ -112,7 +112,7 @@ export async function createOrderCheckoutSession(data: {
       ui_mode: "embedded_page",
       return_url: data.returnUrl,
       line_items: lineItems,
-      payment_intent_data: { description: `Vetastudio order ${order.order_number}` },
+      payment_intent_data: { description: `Veta Vera Studio order ${order.order_number}` },
       ...(customer.email ? { customer_email: customer.email } : {}),
       metadata: { orderNumber: order.order_number },
     });

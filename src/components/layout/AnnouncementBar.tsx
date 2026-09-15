@@ -29,7 +29,7 @@ export function AnnouncementBar() {
             <Mail size={12} /> {settings.supportEmail}
           </a>
           <a
-            href={whatsappLink("Hello Vetastudio, I have an enquiry.")}
+            href={whatsappLink("Hello Veta Vera Studio, I have an enquiry.")}
             target="_blank"
             rel="noreferrer noopener"
             className="hidden items-center gap-1.5 hover:text-gold lg:flex"

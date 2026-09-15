@@ -13,16 +13,16 @@ import { claimAdminRole } from "@/lib/admin.functions";
 export const Route = createFileRoute("/admin-auth")({
   head: () => ({
     meta: [
-      { title: "Merchant Access | Vetastudio Back-Office" },
+      { title: "Merchant Access | Veta Vera Studio Back-Office" },
       {
         name: "description",
         content:
-          "Secure sign-in for the Vetastudio merchant back-office: manage Bolga basket catalogue, orders and homepage content.",
+          "Secure sign-in for the Veta Vera Studio merchant back-office: manage Bolga basket catalogue, orders and homepage content.",
       },
-      { property: "og:title", content: "Merchant Access | Vetastudio" },
+      { property: "og:title", content: "Merchant Access | Veta Vera Studio" },
       {
         property: "og:description",
-        content: "Sign in to the Vetastudio administrative back-office.",
+        content: "Sign in to the Veta Vera Studio administrative back-office.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -68,7 +68,7 @@ function AdminAuthPage() {
           </span>
           <h1 className="mt-4 font-serif text-3xl">Merchant back-office</h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Sign in to manage the Vetastudio storefront.
+            Sign in to manage the Veta Vera Studio storefront.
           </p>
         </div>
 

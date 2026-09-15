@@ -20,7 +20,7 @@ type ShopSearch = {
 export const Route = createFileRoute("/shop")({
   head: () => ({
     meta: [
-      { title: "Shop Handwoven Bolga Baskets & Fibre Art — Ships to Europe | Vetastudio" },
+      { title: "Shop Handwoven Bolga Baskets & Fibre Art — Ships to Europe | Veta Vera Studio" },
       {
         name: "description",
         content:
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/shop")({
       },
       {
         property: "og:title",
-        content: "Shop Handwoven Bolga Baskets & Fibre Art — Ships to Europe | Vetastudio",
+        content: "Shop Handwoven Bolga Baskets & Fibre Art — Ships to Europe | Veta Vera Studio",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

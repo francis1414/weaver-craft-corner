@@ -11,7 +11,7 @@ import { WHATSAPP_DISPLAY, whatsappLink } from "@/lib/whatsapp";
 export const Route = createFileRoute("/wholesale")({
   head: () => ({
     meta: [
-      { title: "Wholesale Bolga Baskets — Trade & Bulk Orders Direct from Ghana | Vetastudio" },
+      { title: "Wholesale Bolga Baskets — Trade & Bulk Orders Direct from Ghana | Veta Vera Studio" },
       {
         name: "description",
         content:
@@ -90,14 +90,14 @@ function WholesalePage() {
           Wholesale Bolga baskets, woven to order in Ghana
         </h1>
         <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-          Vetastudio supplies retailers, interior designers, hospitality projects and gallery shops
+          Veta Vera Studio supplies retailers, interior designers, hospitality projects and gallery shops
           with handwoven elephant grass baskets, lampshades, planters, fans and totes — produced
           directly with Bolgatanga weaving cooperatives at fair-wage rates.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <a
             href={whatsappLink(
-              "Hello Vetastudio, I would like trade pricing for a wholesale order.",
+              "Hello Veta Vera Studio, I would like trade pricing for a wholesale order.",
             )}
             target="_blank"
             rel="noreferrer noopener"
@@ -166,7 +166,7 @@ function WholesalePage() {
             WhatsApp:{" "}
             <a
               href={whatsappLink(
-                "Hello Vetastudio, I would like trade pricing for a wholesale order.",
+                "Hello Veta Vera Studio, I would like trade pricing for a wholesale order.",
               )}
               target="_blank"
               rel="noreferrer noopener"

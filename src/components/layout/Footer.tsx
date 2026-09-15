@@ -61,9 +61,9 @@ export function Footer() {
 
         <div className="mt-16 grid gap-12 lg:grid-cols-[1.65fr_0.8fr_0.8fr_1fr]">
           <div>
-            <h2 className="font-serif text-2xl text-background">Vetastudio</h2>
+            <h2 className="font-serif text-2xl text-background">Veta Vera Studio</h2>
             <p className="mt-5 max-w-md text-sm leading-relaxed text-background/55">
-              Vetastudio celebrates authentic handmade craftsmanship from Ghana, presenting traditional Bolgatanga basket weaving as contemporary, globally desirable fibre art and luxury home décor.
+              Veta Vera Studio celebrates authentic handmade craftsmanship from Ghana, presenting traditional Bolgatanga basket weaving as contemporary, globally desirable fibre art and luxury home décor.
             </p>
             <ul className="mt-7 space-y-3 text-sm text-background/55">
               <li className="flex items-center gap-3"><MapPin size={16} className="shrink-0 text-gold" /> St Louis USA and Bolgatanga Ghana</li>
@@ -78,7 +78,7 @@ export function Footer() {
               <li className="flex items-center gap-3">
                 <MessageCircle size={16} className="shrink-0 text-gold" />
                 <a
-                  href={whatsappLink("Hello Vetastudio, I have an enquiry.")}
+                  href={whatsappLink("Hello Veta Vera Studio, I have an enquiry.")}
                   target="_blank"
                   rel="noreferrer noopener"
                   className="hover:text-gold"
@@ -133,7 +133,7 @@ export function Footer() {
         </div>
 
         <div className="mt-14 flex flex-col gap-2 border-t border-background/10 pt-6 text-xs text-background/45 sm:flex-row sm:justify-between">
-          <span>© {new Date().getFullYear()} Vetastudio. All rights reserved.</span>
+          <span>© {new Date().getFullYear()} Veta Vera Studio. All rights reserved.</span>
           <span>Woven in Bolgatanga, Ghana</span>
         </div>
       </div>

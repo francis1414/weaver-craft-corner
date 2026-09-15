@@ -49,10 +49,10 @@ export function Header() {
           >
             {mobileOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
-          <Link to="/" className="shrink-0" aria-label="Vetastudio home">
+          <Link to="/" className="shrink-0" aria-label="Veta Vera Studio home">
             <img
               src={assetUrl(logo.url)}
-              alt="Vetastudio — handmade in Ghana, made to inspire"
+              alt="Veta Vera Studio — handmade in Ghana, made to inspire"
               width={220}
               height={58}
               className="h-12 w-auto md:h-16"
