@@ -727,6 +727,8 @@ function ProductPage() {
           </div>
         </section>
       )}
+
+      <ImpactPopup />
     </div>
   );
 }
