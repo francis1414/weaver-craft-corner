@@ -13,6 +13,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminAuthRouteImport } from './routes/admin-auth'
+import { Route as BolgaArtBasketsRouteImport } from './routes/bolga-art-baskets'
+import { Route as BolgaBasketsRouteImport } from './routes/bolga-baskets'
 import { Route as CareRouteImport } from './routes/care'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CollectRouteImport } from './routes/collect'
@@ -57,6 +59,16 @@ const AboutRoute = AboutRouteImport.update({
 const AdminAuthRoute = AdminAuthRouteImport.update({
   id: '/admin-auth',
   path: '/admin-auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BolgaArtBasketsRoute = BolgaArtBasketsRouteImport.update({
+  id: '/bolga-art-baskets',
+  path: '/bolga-art-baskets',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BolgaBasketsRoute = BolgaBasketsRouteImport.update({
+  id: '/bolga-baskets',
+  path: '/bolga-baskets',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CareRoute = CareRouteImport.update({
@@ -205,6 +217,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin-auth': typeof AdminAuthRoute
+  '/bolga-art-baskets': typeof BolgaArtBasketsRoute
+  '/bolga-baskets': typeof BolgaBasketsRoute
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRouteWithChildren
   '/collect': typeof CollectRoute
@@ -236,6 +250,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin-auth': typeof AdminAuthRoute
+  '/bolga-art-baskets': typeof BolgaArtBasketsRoute
+  '/bolga-baskets': typeof BolgaBasketsRoute
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRouteWithChildren
   '/collect': typeof CollectRoute
@@ -268,6 +284,8 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/admin-auth': typeof AdminAuthRoute
+  '/bolga-art-baskets': typeof BolgaArtBasketsRoute
+  '/bolga-baskets': typeof BolgaBasketsRoute
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRouteWithChildren
   '/collect': typeof CollectRoute
@@ -301,6 +319,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin-auth'
+    | '/bolga-art-baskets'
+    | '/bolga-baskets'
     | '/care'
     | '/checkout'
     | '/collect'
@@ -332,6 +352,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin-auth'
+    | '/bolga-art-baskets'
+    | '/bolga-baskets'
     | '/care'
     | '/checkout'
     | '/collect'
@@ -363,6 +385,8 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/about'
     | '/admin-auth'
+    | '/bolga-art-baskets'
+    | '/bolga-baskets'
     | '/care'
     | '/checkout'
     | '/collect'
@@ -396,6 +420,8 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   AdminAuthRoute: typeof AdminAuthRoute
+  BolgaArtBasketsRoute: typeof BolgaArtBasketsRoute
+  BolgaBasketsRoute: typeof BolgaBasketsRoute
   CareRoute: typeof CareRoute
   CheckoutRoute: typeof CheckoutRouteWithChildren
   CollectRoute: typeof CollectRoute
@@ -439,6 +465,20 @@ declare module '@tanstack/react-router' {
       path: '/admin-auth'
       fullPath: '/admin-auth'
       preLoaderRoute: typeof AdminAuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bolga-art-baskets': {
+      id: '/bolga-art-baskets'
+      path: '/bolga-art-baskets'
+      fullPath: '/bolga-art-baskets'
+      preLoaderRoute: typeof BolgaArtBasketsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bolga-baskets': {
+      id: '/bolga-baskets'
+      path: '/bolga-baskets'
+      fullPath: '/bolga-baskets'
+      preLoaderRoute: typeof BolgaBasketsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/care': {
@@ -685,6 +725,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   AdminAuthRoute: AdminAuthRoute,
+  BolgaArtBasketsRoute: BolgaArtBasketsRoute,
+  BolgaBasketsRoute: BolgaBasketsRoute,
   CareRoute: CareRoute,
   CheckoutRoute: CheckoutRouteWithChildren,
   CollectRoute: CollectRoute,
