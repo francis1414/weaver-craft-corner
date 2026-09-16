@@ -24,6 +24,7 @@ import { CartDrawer } from "@/components/drawers/CartDrawer";
 import { WishlistDrawer } from "@/components/drawers/WishlistDrawer";
 import { CompareModal } from "@/components/drawers/CompareModal";
 import { VisitorTracker } from "@/components/analytics/VisitorTracker";
+import { CookieNotice } from "@/components/CookieNotice";
 
 function NotFoundComponent() {
   return (
@@ -185,6 +186,7 @@ function StoreShell() {
       <WishlistDrawer />
       <CompareModal />
       <VisitorTracker />
+      <CookieNotice />
       <Toaster position="bottom-right" />
     </div>
   );
