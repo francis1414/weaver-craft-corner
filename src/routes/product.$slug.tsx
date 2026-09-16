@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { ProductCard } from "@/components/ProductCard";
+import { ImpactPopup } from "@/components/ImpactPopup";
 import { SmartImage } from "@/components/SmartImage";
 import { StarPicker, StarRating } from "@/components/StarRating";
 import { useStore } from "@/context/StoreProvider";
