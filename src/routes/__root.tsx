@@ -186,6 +186,7 @@ function StoreShell() {
       <WishlistDrawer />
       <CompareModal />
       <VisitorTracker />
+      <CookieNotice />
       <Toaster position="bottom-right" />
     </div>
   );
