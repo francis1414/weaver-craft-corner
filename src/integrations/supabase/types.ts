@@ -60,6 +60,7 @@ export type Database = {
           fair_wage_pillars: Json
           hero_slides: Json
           id: string
+          instagram_posts: Json
           process_steps: Json
           section_headings: Json
           updated_at: string
@@ -72,6 +73,7 @@ export type Database = {
           fair_wage_pillars?: Json
           hero_slides?: Json
           id?: string
+          instagram_posts?: Json
           process_steps?: Json
           section_headings?: Json
           updated_at?: string
@@ -84,6 +86,7 @@ export type Database = {
           fair_wage_pillars?: Json
           hero_slides?: Json
           id?: string
+          instagram_posts?: Json
           process_steps?: Json
           section_headings?: Json
           updated_at?: string
