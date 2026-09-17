@@ -93,6 +93,8 @@ export function Footer() {
             title="Shop"
             links={[
               { to: "/shop", label: "All Baskets" },
+              { to: "/bolga-baskets", label: "Bolga Basket Guide" },
+              { to: "/bolga-art-baskets", label: "Bolga Art Baskets" },
               { to: "/shop", search: { sort: "newest" }, label: "New Arrivals" },
               { to: "/shop", search: { sort: "rating" }, label: "Best Sellers" },
               { to: "/shop", search: { sale: true }, label: "On Sale" },
