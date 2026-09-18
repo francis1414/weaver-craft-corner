@@ -173,6 +173,7 @@ export function mapHomepage(row: Row): HomepageContent {
     weaverSpotlights: list(row["weaver_spotlights"]),
     processSteps: list(row["process_steps"]),
     campaignCards: list(row["campaign_cards"]),
+    instagramPosts: list(row["instagram_posts"]),
   };
 }
 

@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -80,6 +81,15 @@ const SECTIONS: {
       { key: "image", label: "Card image", kind: "image" },
     ],
   },
+  {
+    key: "instagramPosts",
+    label: "Instagram posts",
+    fields: [
+      { key: "url", label: "Instagram post link" },
+      { key: "caption", label: "Short caption", kind: "textarea" },
+      { key: "image", label: "Post cover image", kind: "image" },
+    ],
+  },
 ];
 
 const COLUMN: Record<keyof HomepageContent, string> = {
@@ -88,9 +98,27 @@ const COLUMN: Record<keyof HomepageContent, string> = {
   weaverSpotlights: "weaver_spotlights",
   processSteps: "process_steps",
   campaignCards: "campaign_cards",
+  instagramPosts: "instagram_posts",
 };
 
 type Row = Record<string, unknown>;
+
+const instagramPostSchema = z.object({
+  url: z
+    .string()
+    .trim()
+    .url("Enter a complete Instagram post link")
+    .refine((value) => {
+      try {
+        const host = new URL(value).hostname.replace(/^www\./, "");
+        return host === "instagram.com";
+      } catch {
+        return false;
+      }
+    }, "Use a link from instagram.com"),
+  image: z.string().trim().min(1, "Add a cover image for every Instagram post"),
+  caption: z.string().trim().max(220, "Keep Instagram captions under 220 characters"),
+});
 
 function AdminHomepage() {
   const { data, isLoading } = useAdminHomepage();
@@ -106,10 +134,17 @@ function AdminHomepage() {
       weaverSpotlights: source.weaverSpotlights as unknown as Row[],
       processSteps: source.processSteps as unknown as Row[],
       campaignCards: source.campaignCards as unknown as Row[],
+      instagramPosts: source.instagramPosts as unknown as Row[],
     });
   }, [data]);
 
   async function save() {
+    const instagramPosts = (content["instagramPosts"] ?? []).slice(0, 4);
+    const parsedInstagram = z.array(instagramPostSchema).max(4).safeParse(instagramPosts);
+    if (!parsedInstagram.success) {
+      toast.error(parsedInstagram.error.issues[0]?.message ?? "Check the Instagram posts");
+      return;
+    }
     setBusy(true);
     try {
       await upsertSingleton("cms_homepage", {
@@ -118,6 +153,7 @@ function AdminHomepage() {
         weaver_spotlights: content["weaverSpotlights"] ?? [],
         process_steps: content["processSteps"] ?? [],
         campaign_cards: content["campaignCards"] ?? [],
+        instagram_posts: parsedInstagram.data,
         updated_at: new Date().toISOString(),
       });
       toast.success("Homepage content published");
@@ -226,6 +262,7 @@ function AdminHomepage() {
               ))}
               <Button
                 variant="outline"
+                disabled={section.key === "instagramPosts" && items.length >= 4}
                 onClick={() =>
                   update([
                     ...items,
@@ -237,6 +274,11 @@ function AdminHomepage() {
               >
                 <Plus className="mr-2 h-4 w-4" /> Add {section.label.toLowerCase()} item
               </Button>
+              {section.key === "instagramPosts" && (
+                <p className="text-xs text-muted-foreground">
+                  Add up to four posts. Paste the Instagram post link, then upload its cover image.
+                </p>
+              )}
             </TabsContent>
           );
         })}

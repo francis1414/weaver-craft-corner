@@ -374,6 +374,7 @@ export const MOCK_HOMEPAGE: HomepageContent = {
       image: IMAGES.sculpture,
     },
   ],
+  instagramPosts: [],
 };
 
 export const DYE_COLORS = [

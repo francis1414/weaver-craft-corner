@@ -184,12 +184,19 @@ export interface CampaignCard {
   image: string;
 }
 
+export interface InstagramPost {
+  url: string;
+  image: string;
+  caption: string;
+}
+
 export interface HomepageContent {
   heroSlides: HeroSlide[];
   valuePillars: ValuePillar[];
   weaverSpotlights: WeaverSpotlight[];
   processSteps: ProcessStep[];
   campaignCards: CampaignCard[];
+  instagramPosts: InstagramPost[];
 }
 
 export interface CartLine {

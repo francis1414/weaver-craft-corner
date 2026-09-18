@@ -3,6 +3,7 @@ import { Link, createFileRoute } from "@tanstack/react-router";
 import { motion } from "motion/react";
 
 import { HeroSlideshow } from "@/components/HeroSlideshow";
+import { InstagramGallery } from "@/components/InstagramGallery";
 import { StoryFilm } from "@/components/StoryFilm";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { SmartImage } from "@/components/SmartImage";
@@ -290,6 +291,8 @@ function HomePage() {
           ))}
         </div>
       </section>
+
+      <InstagramGallery posts={homepage.instagramPosts} />
     </div>
   );
 }
