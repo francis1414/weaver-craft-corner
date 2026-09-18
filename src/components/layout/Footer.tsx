@@ -9,6 +9,23 @@ import { z } from "zod";
 import { subscribeEmail } from "@/lib/store-api";
 import { useSettings } from "@/hooks/use-store-data";
 import { Button } from "@/components/ui/button";
+import visaIcon from "@/assets/payment-icons/visa.svg.asset.json";
+import mastercardIcon from "@/assets/payment-icons/mastercard.svg.asset.json";
+import applepayIcon from "@/assets/payment-icons/applepay.svg.asset.json";
+import klarnaIcon from "@/assets/payment-icons/klarna.svg.asset.json";
+import googlepayIcon from "@/assets/payment-icons/googlepay.svg.asset.json";
+import paypalIcon from "@/assets/payment-icons/paypal.svg.asset.json";
+import sslsecureIcon from "@/assets/payment-icons/sslsecure.svg.asset.json";
+
+const PAYMENT_ICONS = [
+  { src: visaIcon.url, alt: "Visa" },
+  { src: mastercardIcon.url, alt: "Mastercard" },
+  { src: applepayIcon.url, alt: "Apple Pay" },
+  { src: klarnaIcon.url, alt: "Klarna" },
+  { src: googlepayIcon.url, alt: "Google Pay" },
+  { src: paypalIcon.url, alt: "PayPal" },
+  { src: sslsecureIcon.url, alt: "SSL Secure" },
+];
 
 const emailSchema = z
   .string()
