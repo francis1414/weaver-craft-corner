@@ -9,6 +9,24 @@ import { z } from "zod";
 import { subscribeEmail } from "@/lib/store-api";
 import { useSettings } from "@/hooks/use-store-data";
 import { Button } from "@/components/ui/button";
+import visaIcon from "@/assets/payment-icons/visa.svg.asset.json";
+import mastercardIcon from "@/assets/payment-icons/mastercard.svg.asset.json";
+import applepayIcon from "@/assets/payment-icons/applepay.svg.asset.json";
+import klarnaIcon from "@/assets/payment-icons/klarna.svg.asset.json";
+import googlepayIcon from "@/assets/payment-icons/googlepay.svg.asset.json";
+import paypalIcon from "@/assets/payment-icons/paypal.svg.asset.json";
+import sslsecureIcon from "@/assets/payment-icons/sslsecure.svg.asset.json";
+import { assetUrl } from "@/lib/asset-url";
+
+const PAYMENT_ICONS = [
+  { src: assetUrl(visaIcon.url), alt: "Visa" },
+  { src: assetUrl(mastercardIcon.url), alt: "Mastercard" },
+  { src: assetUrl(applepayIcon.url), alt: "Apple Pay" },
+  { src: assetUrl(klarnaIcon.url), alt: "Klarna" },
+  { src: assetUrl(googlepayIcon.url), alt: "Google Pay" },
+  { src: assetUrl(paypalIcon.url), alt: "PayPal" },
+  { src: assetUrl(sslsecureIcon.url), alt: "SSL Secure" },
+];
 
 const emailSchema = z
   .string()
@@ -137,6 +155,21 @@ export function Footer() {
         <div className="mt-14 flex flex-col gap-2 border-t border-background/10 pt-6 text-xs text-background/45 sm:flex-row sm:justify-between">
           <span>© {new Date().getFullYear()} Veta Vera Studio. All rights reserved.</span>
           <span>Woven in Bolgatanga, Ghana</span>
+        </div>
+
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <span className="label-caps mr-1 text-[10px] text-background/40">We accept</span>
+          {PAYMENT_ICONS.map((icon) => (
+            <img
+              key={icon.alt}
+              src={icon.src}
+              alt={icon.alt}
+              loading="lazy"
+              width={48}
+              height={28}
+              className="h-7 w-12 rounded-sm bg-background/95 px-1.5 py-1 object-contain"
+            />
+          ))}
         </div>
       </div>
       <Button type="button" size="icon" variant="outline" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="fixed bottom-20 right-5 z-30 h-12 w-12 rounded-full border-background/25 bg-foreground text-background shadow-lift hover:bg-gold hover:text-gold-foreground md:bottom-7 md:right-7"><ArrowUp size={18} /></Button>
