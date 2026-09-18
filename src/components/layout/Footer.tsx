@@ -16,15 +16,16 @@ import klarnaIcon from "@/assets/payment-icons/klarna.svg.asset.json";
 import googlepayIcon from "@/assets/payment-icons/googlepay.svg.asset.json";
 import paypalIcon from "@/assets/payment-icons/paypal.svg.asset.json";
 import sslsecureIcon from "@/assets/payment-icons/sslsecure.svg.asset.json";
+import { assetUrl } from "@/lib/asset-url";
 
 const PAYMENT_ICONS = [
-  { src: visaIcon.url, alt: "Visa" },
-  { src: mastercardIcon.url, alt: "Mastercard" },
-  { src: applepayIcon.url, alt: "Apple Pay" },
-  { src: klarnaIcon.url, alt: "Klarna" },
-  { src: googlepayIcon.url, alt: "Google Pay" },
-  { src: paypalIcon.url, alt: "PayPal" },
-  { src: sslsecureIcon.url, alt: "SSL Secure" },
+  { src: assetUrl(visaIcon.url), alt: "Visa" },
+  { src: assetUrl(mastercardIcon.url), alt: "Mastercard" },
+  { src: assetUrl(applepayIcon.url), alt: "Apple Pay" },
+  { src: assetUrl(klarnaIcon.url), alt: "Klarna" },
+  { src: assetUrl(googlepayIcon.url), alt: "Google Pay" },
+  { src: assetUrl(paypalIcon.url), alt: "PayPal" },
+  { src: assetUrl(sslsecureIcon.url), alt: "SSL Secure" },
 ];
 
 const emailSchema = z
