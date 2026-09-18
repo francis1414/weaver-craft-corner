@@ -155,6 +155,19 @@ export function Footer() {
           <span>© {new Date().getFullYear()} Veta Vera Studio. All rights reserved.</span>
           <span>Woven in Bolgatanga, Ghana</span>
         </div>
+
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          <span className="label-caps mr-1 text-[10px] text-background/40">We accept</span>
+          {PAYMENT_ICONS.map((icon) => (
+            <img
+              key={icon.alt}
+              src={icon.src}
+              alt={icon.alt}
+              loading="lazy"
+              className="h-7 w-auto rounded-sm bg-background/95 px-2 py-1 object-contain"
+            />
+          ))}
+        </div>
       </div>
       <Button type="button" size="icon" variant="outline" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="fixed bottom-20 right-5 z-30 h-12 w-12 rounded-full border-background/25 bg-foreground text-background shadow-lift hover:bg-gold hover:text-gold-foreground md:bottom-7 md:right-7"><ArrowUp size={18} /></Button>
     </footer>
