@@ -165,7 +165,9 @@ export function Footer() {
               src={icon.src}
               alt={icon.alt}
               loading="lazy"
-              className="h-7 w-auto rounded-sm bg-background/95 px-2 py-1 object-contain"
+              width={48}
+              height={28}
+              className="h-7 w-12 rounded-sm bg-background/95 px-1.5 py-1 object-contain"
             />
           ))}
         </div>
