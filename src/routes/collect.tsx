@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import wovenLightInterior from "@/assets/woven-light-interior.avif.asset.json";
 import { SmartImage } from "@/components/SmartImage";
-import { IMAGES } from "@/lib/mock-data";
+import { assetUrl } from "@/lib/asset-url";
 import { breadcrumbJsonLd, canonical, jsonLdScript, organizationJsonLd, SITE_NAME, SITE_URL } from "@/lib/seo";
 import { WHATSAPP_DISPLAY, whatsappLink } from "@/lib/whatsapp";
 
@@ -116,7 +117,7 @@ function CollectPage() {
 
       <div className="mt-16 hover-zoom shadow-editorial">
         <SmartImage
-          src={IMAGES.sculpture}
+          src={assetUrl(wovenLightInterior.url)}
           alt="Sculptural handwoven elephant grass basket presented as collectible fibre art"
           ratio="16/9"
           priority

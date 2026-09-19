@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import wovenLightCloseup from "@/assets/woven-light-closeup.webp.asset.json";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { SmartImage } from "@/components/SmartImage";
 import { useProducts } from "@/hooks/use-store-data";
-import { IMAGES } from "@/lib/mock-data";
+import { assetUrl } from "@/lib/asset-url";
 import {
   breadcrumbJsonLd,
   canonical,
@@ -142,7 +143,7 @@ function BolgaBasketsPage() {
 
       <div className="mt-16 hover-zoom shadow-editorial">
         <SmartImage
-          src={IMAGES.storage}
+          src={assetUrl(wovenLightCloseup.url)}
           alt="Handwoven Bolga basket coiled from dyed elephant grass in Bolgatanga, Ghana"
           ratio="16/9"
           priority
