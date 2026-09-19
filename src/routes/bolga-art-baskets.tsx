@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import wovenLightInterior from "@/assets/woven-light-interior.avif.asset.json";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { SmartImage } from "@/components/SmartImage";
 import { useProducts } from "@/hooks/use-store-data";
-import { IMAGES } from "@/lib/mock-data";
+import { assetUrl } from "@/lib/asset-url";
 import {
   breadcrumbJsonLd,
   canonical,
@@ -129,7 +130,7 @@ function ArtBasketsPage() {
 
       <div className="mt-16 hover-zoom shadow-editorial">
         <SmartImage
-          src={IMAGES.sculpture}
+          src={assetUrl(wovenLightInterior.url)}
           alt="Sculptural Bolga art basket hand-coiled from dyed elephant grass"
           ratio="16/9"
           priority
