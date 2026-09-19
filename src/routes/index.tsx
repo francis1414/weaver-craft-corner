@@ -228,7 +228,7 @@ function HomePage() {
                 },
                 {
                   title: "Community projects",
-                  body: "School fees, boreholes and dye gardens funded in the weaving villages of Bolgatanga, Sumbrungu and Zuarungu.",
+                  body: "School fees, boreholes and dye gardens funded in the weaving villages of Bolgatanga, Sumbrungu and Winkongo.",
                 },
               ].map((item) => (
                 <div key={item.title}>
