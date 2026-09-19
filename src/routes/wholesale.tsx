@@ -56,7 +56,7 @@ export const Route = createFileRoute("/wholesale")({
 const REASONS = [
   {
     title: "Direct from the cooperative",
-    body: "No middle agents. Orders are placed with cooperative leaders in Bolgatanga, Sumbrungu and Zuarungu, so pricing reflects the weaver's rate rather than a reseller's margin.",
+    body: "No middle agents. Orders are placed with cooperative leaders in Bolgatanga, Sumbrungu and Winkongo, so pricing reflects the weaver's rate rather than a reseller's margin.",
   },
   {
     title: "Made to your specification",

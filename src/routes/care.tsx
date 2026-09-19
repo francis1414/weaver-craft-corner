@@ -68,7 +68,7 @@ const STEPS = [
 const FAQS = [
   {
     q: "Are Veta Vera Studio baskets genuinely handmade in Ghana?",
-    a: "Yes. Every piece is woven by hand in Bolgatanga, Sumbrungu and Zuarungu in Upper East Ghana from veta vera elephant grass. Nothing is machine-made and nothing is imported for resale.",
+    a: "Yes. Every piece is woven by hand in Bolgatanga, Sumbrungu and Winkongo in Upper East Ghana from veta vera elephant grass. Nothing is machine-made and nothing is imported for resale.",
   },
   {
     q: "Why does my basket arrive folded or flattened?",

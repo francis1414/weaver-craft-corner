@@ -169,7 +169,7 @@ function AboutPage() {
           </p>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
             That handover is the whole point of Veta Vera Studio: your basket is traceable to a household in
-            Bolgatanga, Sumbrungu or Zuarungu rather than to an anonymous wholesale crate.
+            Bolgatanga, Sumbrungu or Winkongo rather than to an anonymous wholesale crate.
           </p>
         </div>
         <div className="order-1 hover-zoom shadow-editorial md:order-2">
@@ -231,11 +231,11 @@ function AboutPage() {
             },
             {
               title: "Community investment (CSR)",
-              body: "Each year a fixed portion of studio revenue goes back into the weaving communities of Bolgatanga, Sumbrungu and Zuarungu: school fees and supplies for weavers' children, well and borehole maintenance, and new dye gardens that keep materials local.",
+              body: "Each year a fixed portion of studio revenue goes back into the weaving communities of Bolgatanga, Sumbrungu and Winkongo: school fees and supplies for weavers' children, well and borehole maintenance, and new dye gardens that keep materials local.",
             },
             {
               title: "The cooperative model",
-              body: "We buy from four cooperatives across Bolgatanga, Sumbrungu and Zuarungu. Each holds its own dye stock and rotates orders so no household is over-committed — and every cooperative sets its own seasonal rates with us.",
+              body: "We buy from four cooperatives across Bolgatanga, Sumbrungu and Winkongo. Each holds its own dye stock and rotates orders so no household is over-committed — and every cooperative sets its own seasonal rates with us.",
             },
             {
               title: "Named, never anonymous",
