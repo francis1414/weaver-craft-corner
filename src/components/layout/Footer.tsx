@@ -155,7 +155,6 @@ export function Footer() {
               key={icon.alt}
               src={icon.src}
               alt={icon.alt}
-              loading="lazy"
               width={48}
               height={28}
               className="h-7 w-12 rounded-sm bg-background/95 px-1.5 py-1 object-contain"
