@@ -9,23 +9,14 @@ import { z } from "zod";
 import { subscribeEmail } from "@/lib/store-api";
 import { useSettings } from "@/hooks/use-store-data";
 import { Button } from "@/components/ui/button";
-import visaIcon from "@/assets/payment-icons/visa.svg.asset.json";
-import mastercardIcon from "@/assets/payment-icons/mastercard.svg.asset.json";
-import applepayIcon from "@/assets/payment-icons/applepay.svg.asset.json";
-import klarnaIcon from "@/assets/payment-icons/klarna.svg.asset.json";
-import googlepayIcon from "@/assets/payment-icons/googlepay.svg.asset.json";
-import paypalIcon from "@/assets/payment-icons/paypal.svg.asset.json";
-import sslsecureIcon from "@/assets/payment-icons/sslsecure.svg.asset.json";
-import { assetUrl } from "@/lib/asset-url";
-
 const PAYMENT_ICONS = [
-  { src: assetUrl(visaIcon.url), alt: "Visa" },
-  { src: assetUrl(mastercardIcon.url), alt: "Mastercard" },
-  { src: assetUrl(applepayIcon.url), alt: "Apple Pay" },
-  { src: assetUrl(klarnaIcon.url), alt: "Klarna" },
-  { src: assetUrl(googlepayIcon.url), alt: "Google Pay" },
-  { src: assetUrl(paypalIcon.url), alt: "PayPal" },
-  { src: assetUrl(sslsecureIcon.url), alt: "SSL Secure" },
+  { src: "/payment-icons/visa.svg", alt: "Visa" },
+  { src: "/payment-icons/mastercard.svg", alt: "Mastercard" },
+  { src: "/payment-icons/applepay.svg", alt: "Apple Pay" },
+  { src: "/payment-icons/klarna.svg", alt: "Klarna" },
+  { src: "/payment-icons/googlepay.svg", alt: "Google Pay" },
+  { src: "/payment-icons/paypal.svg", alt: "PayPal" },
+  { src: "/payment-icons/sslsecure.svg", alt: "SSL Secure" },
 ];
 
 const emailSchema = z
