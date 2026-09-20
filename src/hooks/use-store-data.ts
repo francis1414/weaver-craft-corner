@@ -9,6 +9,7 @@ import {
   fetchCategories,
   fetchHomepage,
   fetchJournal,
+  fetchLookbook,
   fetchOrders,
   fetchProducts,
   fetchSettings,
@@ -26,6 +27,7 @@ import type {
   Category,
   HomepageContent,
   JournalEntry,
+  LookbookContent,
   Order,
   Product,
   Review,
@@ -105,6 +107,7 @@ export function useHomepage(): HomepageContent {
 const TABLE_QUERY_KEYS: Record<string, string> = {
   store_settings: "settings",
   cms_homepage: "homepage",
+  cms_lookbook: "lookbook",
 };
 
 /** Live database subscription that refreshes cached reads as merchants edit. */
@@ -141,4 +144,11 @@ export function useAdminHomepage() {
 
 export function useAdminSettings() {
   return useQuery<StoreSettings>({ queryKey: ["admin", "settings"], queryFn: fetchSettings });
+}
+
+export function useAdminLookbook() {
+  return useQuery<LookbookContent | null>({
+    queryKey: ["admin", "lookbook"],
+    queryFn: fetchLookbook,
+  });
 }

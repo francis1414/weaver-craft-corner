@@ -2,6 +2,7 @@ import { createFileRoute, Link, Outlet, useLocation, useNavigate } from "@tansta
 import { useQueryClient } from "@tanstack/react-query";
 import {
   BarChart3,
+  BookOpen,
   ChevronRight,
   CreditCard,
   FolderTree,
@@ -44,6 +45,7 @@ const NAV: NavItem[] = [
   { to: "/admin/reviews", label: "Reviews", icon: Star },
   { to: "/admin/subscribers", label: "Subscribers", icon: Mail },
   { to: "/admin/homepage", label: "Homepage CMS", icon: BarChart3 },
+  { to: "/admin/lookbook", label: "Trade Lookbook", icon: BookOpen },
   { to: "/admin/seo", label: "SEO audit", icon: Search },
   { to: "/admin/settings", label: "Store settings", icon: Settings },
 ];
@@ -61,6 +63,7 @@ function AdminLayout() {
     "categories",
     "subscribers",
     "cms_homepage",
+    "cms_lookbook",
     "store_settings",
   ]);
 

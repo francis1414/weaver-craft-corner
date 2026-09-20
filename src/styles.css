@@ -184,6 +184,46 @@
   }
 }
 
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  body {
+    background: white;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #trade-lookbook-print,
+  #trade-lookbook-print * {
+    visibility: visible;
+  }
+
+  #trade-lookbook-print {
+    position: absolute;
+    inset: 0;
+    width: 210mm;
+  }
+
+  .lookbook-page {
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .lookbook-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
 @utility hover-zoom {
   overflow: hidden;
   & img {
