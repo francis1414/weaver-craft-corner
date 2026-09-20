@@ -199,6 +199,26 @@ export interface HomepageContent {
   instagramPosts: InstagramPost[];
 }
 
+export interface LookbookProductOverride {
+  description?: string;
+  dimensions?: string;
+}
+
+export interface LookbookContent {
+  title: string;
+  edition: string;
+  companyProfile: string;
+  coverImage: string;
+  logoImage: string;
+  weaverImage: string;
+  contactEmail: string;
+  contactPhone: string;
+  contactAddress: string;
+  productOverrides: Record<string, LookbookProductOverride>;
+  productOrder: string[];
+  excludedProductIds: string[];
+}
+
 export interface CartLine {
   productId: string;
   slug: string;

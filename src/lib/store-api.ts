@@ -3,6 +3,7 @@ import type {
   Category,
   HomepageContent,
   JournalEntry,
+  LookbookContent,
   Order,
   Product,
   Review,
@@ -177,6 +178,27 @@ export function mapHomepage(row: Row): HomepageContent {
   };
 }
 
+export function mapLookbook(row: Row): LookbookContent {
+  const overrides = row["product_overrides"];
+  return {
+    title: str(row["title"], "Trade Lookbook"),
+    edition: str(row["edition"], "Handwoven in Ghana"),
+    companyProfile: str(row["company_profile"]),
+    coverImage: str(row["cover_image"]),
+    logoImage: str(row["logo_image"]),
+    weaverImage: str(row["weaver_image"]),
+    contactEmail: str(row["contact_email"]),
+    contactPhone: str(row["contact_phone"]),
+    contactAddress: str(row["contact_address"]),
+    productOverrides:
+      overrides && typeof overrides === "object" && !Array.isArray(overrides)
+        ? (overrides as LookbookContent["productOverrides"])
+        : {},
+    productOrder: arr(row["product_order"]),
+    excludedProductIds: arr(row["excluded_product_ids"]),
+  };
+}
+
 /* ------------------------------------------------------------------ queries */
 
 const db = supabase as unknown as {
@@ -273,6 +295,16 @@ export async function fetchHomepage(): Promise<HomepageContent> {
   if (error) throw error;
   if (!data) throw new Error("No homepage content");
   return mapHomepage(data as Row);
+}
+
+export async function fetchLookbook(): Promise<LookbookContent | null> {
+  const { data, error } = await db
+    .from("cms_lookbook")
+    .select("*")
+    .eq("id", "default")
+    .maybeSingle();
+  if (error) throw error;
+  return data ? mapLookbook(data as Row) : null;
 }
 
 /* ---------------------------------------------------------------- mutations */
