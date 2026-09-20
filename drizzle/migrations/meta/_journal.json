@@ -29,6 +29,13 @@
       "when": 1789605656960,
       "tag": "0003_add_instagram_posts_to_homepage",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789866793861,
+      "tag": "0004_create_trade_lookbook_cms",
+      "breakpoints": true
     }
   ]
 }

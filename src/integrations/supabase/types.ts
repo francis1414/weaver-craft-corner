@@ -95,6 +95,57 @@ export type Database = {
         }
         Relationships: []
       }
+      cms_lookbook: {
+        Row: {
+          company_profile: string
+          contact_address: string
+          contact_email: string
+          contact_phone: string
+          cover_image: string
+          edition: string
+          excluded_product_ids: Json
+          id: string
+          logo_image: string
+          product_order: Json
+          product_overrides: Json
+          title: string
+          updated_at: string
+          weaver_image: string
+        }
+        Insert: {
+          company_profile?: string
+          contact_address?: string
+          contact_email?: string
+          contact_phone?: string
+          cover_image?: string
+          edition?: string
+          excluded_product_ids?: Json
+          id?: string
+          logo_image?: string
+          product_order?: Json
+          product_overrides?: Json
+          title?: string
+          updated_at?: string
+          weaver_image?: string
+        }
+        Update: {
+          company_profile?: string
+          contact_address?: string
+          contact_email?: string
+          contact_phone?: string
+          cover_image?: string
+          edition?: string
+          excluded_product_ids?: Json
+          id?: string
+          logo_image?: string
+          product_order?: Json
+          product_overrides?: Json
+          title?: string
+          updated_at?: string
+          weaver_image?: string
+        }
+        Relationships: []
+      }
       journal: {
         Row: {
           author: string
