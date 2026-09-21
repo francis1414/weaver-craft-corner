@@ -374,7 +374,7 @@ function LookbookPages({
                       <p className="mt-5 text-[7pt] uppercase tracking-[0.18em] text-gold">{product.sku}</p>
                       <h3 className="mt-2 font-serif text-[17pt] leading-tight">{shortName(product.name)}</h3>
                       <p className="mt-3 text-[8pt] leading-[1.55] text-muted-foreground">{override?.description ?? conciseDescription(product.description)}</p>
-                      <p className="mt-auto border-t border-border pt-3 text-[8pt] font-medium uppercase tracking-[0.12em]">Size · {override?.dimensions ?? product.dimensions || "Made to order"}</p>
+                      <p className="mt-auto border-t border-border pt-3 text-[8pt] font-medium uppercase tracking-[0.12em]">Size · {(override?.dimensions ?? product.dimensions) || "Made to order"}</p>
                     </section>
                   );
                 })}
