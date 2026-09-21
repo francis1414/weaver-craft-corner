@@ -8,6 +8,7 @@ import coverAsset from "@/assets/trade-lookbook-cover.png.asset.json";
 import logoAsset from "@/assets/trade-lookbook-logo.png.asset.json";
 import weaverAsset from "@/assets/trade-lookbook-master-weaver.jpg.asset.json";
 import { Button } from "@/components/ui/button";
+import { MediaUploader } from "@/components/admin/MediaUploader";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,6 +18,16 @@ import { upsertSingleton } from "@/lib/store-api";
 import type { LookbookContent, Product } from "@/types";
 
 export const Route = createFileRoute("/_authenticated/admin/lookbook")({
+  head: () => ({
+    meta: [
+      { title: "Trade Lookbook Editor — Veta Vera Studio" },
+      { name: "description", content: "Edit and export the Veta Vera Studio wholesale trade lookbook." },
+      { property: "og:title", content: "Trade Lookbook Editor — Veta Vera Studio" },
+      { property: "og:description", content: "Edit and export the Veta Vera Studio wholesale trade lookbook." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: AdminLookbook,
 });
 
@@ -227,6 +238,9 @@ function AdminLookbook() {
           <div className="rounded-lg border border-border bg-card p-5">
             <h2 className="font-serif text-xl">Cover &amp; contact</h2>
             <div className="mt-4 space-y-4">
+              <MediaUploader label="Lookbook logo" value={content.logoImage ? [content.logoImage] : []} onChange={(images) => setContent({ ...content, logoImage: images[0] ?? "" })} multiple={false} accept="image/*" folder="lookbook" max={1} />
+              <MediaUploader label="Cover photograph" value={content.coverImage ? [content.coverImage] : []} onChange={(images) => setContent({ ...content, coverImage: images[0] ?? "" })} multiple={false} accept="image/*" folder="lookbook" max={1} />
+              <MediaUploader label="Master-weaver photograph" value={content.weaverImage ? [content.weaverImage] : []} onChange={(images) => setContent({ ...content, weaverImage: images[0] ?? "" })} multiple={false} accept="image/*" folder="lookbook" max={1} />
               <Field label="Document title" value={content.title} onChange={(title) => setContent({ ...content, title })} />
               <Field label="Edition line" value={content.edition} onChange={(edition) => setContent({ ...content, edition })} />
               <Field label="Email" value={content.contactEmail} onChange={(contactEmail) => setContent({ ...content, contactEmail })} />
