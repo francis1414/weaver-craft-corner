@@ -672,13 +672,15 @@ function LookbookPages({
       })}
 
       <article className="lookbook-page relative flex h-[297mm] w-[210mm] flex-col justify-between overflow-hidden bg-foreground px-14 py-14 text-background shadow-editorial" style={{ backgroundColor: "#1F1D1A", color: "#F5F2EC" }}>
-        <div>
+        {/* Painted panel so the dark page survives image export, not only screen CSS. */}
+        <div className="absolute inset-0" style={{ backgroundColor: "#1F1D1A" }} />
+        <div className="relative">
           <img src={src(content.logoImage)} alt="Veta Vera Studio" className="h-auto w-[125mm] object-contain mix-blend-screen" />
           <p className="mt-20 text-[8pt] uppercase tracking-[0.22em] text-gold">Trade enquiries</p>
           <h2 className="mt-5 max-w-[150mm] font-serif text-[38pt] leading-tight">Bring Ghanaian craft into your collection.</h2>
           <p className="mt-8 max-w-[120mm] text-[11pt] leading-relaxed text-background/70">For wholesale orders, custom colourways, interior projects and collector commissions, speak directly with our studio.</p>
         </div>
-        <div className="grid gap-5 border-t border-background/20 pt-8 text-[10pt]">
+        <div className="relative grid gap-5 border-t border-background/20 pt-8 text-[10pt]">
           <p>{content.contactEmail}</p><p>{content.contactPhone}</p><p>{content.contactAddress}</p><p className="mt-4 text-[8pt] uppercase tracking-[0.18em] text-gold">vetaverastudio.com · @vetaverastudio</p>
         </div>
       </article>
