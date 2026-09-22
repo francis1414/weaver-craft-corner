@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { Loader2, Lock } from "lucide-react";
 import { toast } from "sonner";
 
@@ -8,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
-import { claimAdminRole } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/admin-auth")({
   head: () => ({
@@ -34,7 +32,6 @@ export const Route = createFileRoute("/admin-auth")({
 
 function AdminAuthPage() {
   const navigate = useNavigate();
-  const claim = useServerFn(claimAdminRole);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -45,11 +42,6 @@ function AdminAuthPage() {
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      try {
-        await claim({ data: undefined });
-      } catch {
-        /* role already assigned */
-      }
       toast.success("Signed in");
       await navigate({ to: "/admin" });
     } catch (error) {

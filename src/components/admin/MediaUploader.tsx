@@ -32,7 +32,7 @@ interface Props {
 
 /**
  * Upload media from a computer, phone gallery or phone camera — or paste any
- * hosted URL. Files land in the private media bucket and are served through
+ * secure hosted URL. Files land in the private media bucket and are served through
  * the public media proxy route.
  */
 export function MediaUploader({
@@ -98,6 +98,23 @@ export function MediaUploader({
   function addUrl() {
     const trimmed = url.trim();
     if (!trimmed) return;
+    try {
+      const parsed = new URL(trimmed);
+      const youtube = parsed.hostname === "youtube.com" || parsed.hostname.endsWith(".youtube.com") || parsed.hostname === "youtu.be";
+      const mediaPath = parsed.pathname.toLowerCase();
+      if (parsed.protocol !== "https:" || (!isVideo && !/\.(avif|gif|jpe?g|png|webp)(?:$|[?#])/i.test(parsed.pathname + parsed.search))) {
+        throw new Error("Use a secure direct image link");
+      }
+      if (isVideo && youtube && !(/^\/watch$/.test(mediaPath) ? parsed.searchParams.has("v") : /^\/shorts\/[A-Za-z0-9_-]+/.test(mediaPath) || parsed.hostname === "youtu.be")) {
+        throw new Error("Use a valid YouTube video link");
+      }
+      if (isVideo && !youtube && !/\.(mp4|webm|mov)(?:$|[?#])/i.test(parsed.pathname + parsed.search)) {
+        throw new Error("Use a secure YouTube or direct video link");
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Enter a valid secure media link");
+      return;
+    }
     onChange(multiple ? [...value, trimmed] : [trimmed]);
     setUrl("");
   }

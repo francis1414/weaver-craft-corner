@@ -6,7 +6,15 @@ function isApprovedOrigin(origin: string | null): boolean {
   if (!origin) return false;
   try {
     const url = new URL(origin);
-    return url.protocol === "https:" || url.hostname === "localhost";
+    const exactHosts = new Set([
+      "vetaverra.com",
+      "www.vetaverra.com",
+      "shop.vetaverastudio.com",
+      "weaver-craft-corner.lovable.app",
+      "localhost",
+    ]);
+    const isPreview = url.hostname.endsWith(".lovable.app") && url.hostname.includes("-preview--");
+    return (url.protocol === "https:" || url.hostname === "localhost") && (exactHosts.has(url.hostname) || isPreview);
   } catch {
     return false;
   }
@@ -39,6 +47,10 @@ export const Route = createFileRoute("/api/public/payments/checkout")({
         const headers = corsHeaders(origin ?? "https://weaver-craft-corner.lovable.app");
 
         try {
+          const contentLength = Number(request.headers.get("content-length") ?? "0");
+          if (contentLength > 8_192) {
+            return Response.json({ error: "Checkout request is too large" }, { status: 413, headers });
+          }
           const body = (await request.json()) as Record<string, unknown>;
           const orderNumber = typeof body["orderNumber"] === "string" ? body["orderNumber"] : "";
           const checkoutToken = typeof body["checkoutToken"] === "string" ? body["checkoutToken"] : "";
