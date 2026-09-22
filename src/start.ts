@@ -11,7 +11,7 @@ const errorMiddleware = createMiddleware().server(async ({ next }) => {
       "Referrer-Policy": "strict-origin-when-cross-origin",
       "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
       "X-Frame-Options": "SAMEORIGIN",
-    });
+    } as Record<string, string>);
     return await next();
   } catch (error) {
     if (error != null && typeof error === "object" && "statusCode" in error) {
