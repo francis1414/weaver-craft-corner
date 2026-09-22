@@ -43,6 +43,13 @@
       "when": 1790100816272,
       "tag": "0005_harden_orders_and_public_submissions",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790101202144,
+      "tag": "0006_apply_secure_order_runtime_fix",
+      "breakpoints": true
     }
   ]
 }
