@@ -594,11 +594,11 @@ function LookbookPages({
   let pageNumber = 2;
   return (
     <div id="trade-lookbook-print" className="mx-auto w-[210mm] max-w-none space-y-6 print:space-y-0">
-      <article className="lookbook-page relative isolate h-[297mm] w-[210mm] overflow-hidden bg-foreground text-background shadow-editorial">
+      <article className="lookbook-page relative isolate h-[297mm] w-[210mm] overflow-hidden bg-foreground text-background shadow-editorial" style={{ backgroundColor: "#1F1D1A", color: "#F5F2EC" }}>
         <img src={src(content.coverImage)} alt="Veta Vera Studio collection" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/15 to-transparent" />
         <div className="absolute inset-x-0 top-0 flex justify-center px-14 pt-12">
-          <img src={src(content.logoImage)} alt="Veta Vera Studio" className="h-auto w-full max-w-[132mm] mix-blend-screen" />
+          <img src={src(content.logoImage)} alt="Veta Vera Studio" className="h-auto w-[130mm] object-contain mix-blend-screen" />
         </div>
         <div className="absolute inset-x-0 bottom-0 px-14 pb-14">
           <p className="label-caps text-gold">Wholesale · Interior trade · Collectors</p>
@@ -671,9 +671,9 @@ function LookbookPages({
         });
       })}
 
-      <article className="lookbook-page relative flex h-[297mm] w-[210mm] flex-col justify-between overflow-hidden bg-foreground px-14 py-14 text-background shadow-editorial">
+      <article className="lookbook-page relative flex h-[297mm] w-[210mm] flex-col justify-between overflow-hidden bg-foreground px-14 py-14 text-background shadow-editorial" style={{ backgroundColor: "#1F1D1A", color: "#F5F2EC" }}>
         <div>
-          <img src={src(content.logoImage)} alt="Veta Vera Studio" className="h-auto w-[125mm] mix-blend-screen" />
+          <img src={src(content.logoImage)} alt="Veta Vera Studio" className="h-auto w-[125mm] object-contain mix-blend-screen" />
           <p className="mt-20 text-[8pt] uppercase tracking-[0.22em] text-gold">Trade enquiries</p>
           <h2 className="mt-5 max-w-[150mm] font-serif text-[38pt] leading-tight">Bring Ghanaian craft into your collection.</h2>
           <p className="mt-8 max-w-[120mm] text-[11pt] leading-relaxed text-background/70">For wholesale orders, custom colourways, interior projects and collector commissions, speak directly with our studio.</p>
