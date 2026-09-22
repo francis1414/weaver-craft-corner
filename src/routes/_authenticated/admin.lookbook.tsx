@@ -187,7 +187,7 @@ function AdminLookbook() {
   }
 
   function resetCrop(id: string) {
-    patchProduct(id, { zoom: 100, offsetX: 50, offsetY: 50, image: undefined });
+    patchProduct(id, { zoom: 100, offsetX: 50, offsetY: 50, image: "" });
   }
 
   function moveProduct(categoryProductsList: Product[], productId: string, direction: -1 | 1) {
@@ -514,7 +514,7 @@ function AdminLookbook() {
                           <MediaUploader
                             label="Upload a lookbook photograph"
                             value={override?.image ? [override.image] : []}
-                            onChange={(images) => patchProduct(product.id, { image: images[0] ?? undefined })}
+                            onChange={(images) => patchProduct(product.id, { image: images[0] ?? "" })}
                             multiple={false}
                             accept="image/*"
                             folder="lookbook"
