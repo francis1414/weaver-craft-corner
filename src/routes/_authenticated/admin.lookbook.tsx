@@ -17,6 +17,7 @@ import { toast } from "sonner";
 
 import coverAsset from "@/assets/trade-lookbook-cover.png.asset.json";
 import logoAsset from "@/assets/trade-lookbook-logo.png.asset.json";
+import logoCreamAsset from "@/assets/trade-lookbook-logo-cream.png.asset.json";
 import weaverAsset from "@/assets/trade-lookbook-master-weaver.jpg.asset.json";
 import { Button } from "@/components/ui/button";
 import { MediaUploader } from "@/components/admin/MediaUploader";
@@ -267,7 +268,7 @@ function AdminLookbook() {
     setDownloading(true);
     try {
       setProgress("Preparing photographs…");
-      const urls = new Set<string>([content.coverImage, content.logoImage, content.weaverImage]);
+      const urls = new Set<string>([content.coverImage, content.logoImage, content.weaverImage, logoCreamAsset.url]);
       for (const category of categoryProducts) {
         for (const product of category.products) {
           if (content.excludedProductIds.includes(product.id)) continue;
@@ -591,6 +592,8 @@ function LookbookPages({
   resolved: Record<string, string>;
 }) {
   const src = (url: string) => resolved[url] ?? assetUrl(url);
+  // Dark pages need a light logo: the supplied mark is dark ink on white.
+  const darkLogo = content.logoImage === logoAsset.url ? logoCreamAsset.url : content.logoImage;
   let pageNumber = 2;
   return (
     <div id="trade-lookbook-print" className="mx-auto w-[210mm] max-w-none space-y-6 print:space-y-0">
@@ -598,7 +601,7 @@ function LookbookPages({
         <img src={src(content.coverImage)} alt="Veta Vera Studio collection" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/15 to-transparent" />
         <div className="absolute inset-x-0 top-0 flex justify-center px-14 pt-12">
-          <img src={src(content.logoImage)} alt="Veta Vera Studio" className="h-auto w-[130mm] object-contain mix-blend-screen" />
+          <img src={src(darkLogo)} alt="Veta Vera Studio" className="h-auto w-[130mm] object-contain" />
         </div>
         <div className="absolute inset-x-0 bottom-0 px-14 pb-14">
           <p className="label-caps text-gold">Wholesale · Interior trade · Collectors</p>
@@ -675,7 +678,7 @@ function LookbookPages({
         {/* Painted panel so the dark page survives image export, not only screen CSS. */}
         <div className="absolute inset-0" style={{ backgroundColor: "#1F1D1A" }} />
         <div className="relative">
-          <img src={src(content.logoImage)} alt="Veta Vera Studio" className="h-auto w-[125mm] object-contain mix-blend-screen" />
+          <img src={src(darkLogo)} alt="Veta Vera Studio" className="h-auto w-[125mm] object-contain" />
           <p className="mt-20 text-[8pt] uppercase tracking-[0.22em] text-gold">Trade enquiries</p>
           <h2 className="mt-5 max-w-[150mm] font-serif text-[38pt] leading-tight">Bring Ghanaian craft into your collection.</h2>
           <p className="mt-8 max-w-[120mm] text-[11pt] leading-relaxed text-background/70">For wholesale orders, custom colourways, interior projects and collector commissions, speak directly with our studio.</p>
