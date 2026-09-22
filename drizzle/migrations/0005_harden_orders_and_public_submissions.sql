@@ -109,8 +109,8 @@ BEGIN
   v_rate := CASE WHEN _currency = 'USD' THEN 1 ELSE coalesce((v_settings.currency_rates ->> _currency)::numeric, 1) END;
   IF v_rate <= 0 THEN RAISE EXCEPTION 'Invalid currency rate'; END IF;
 
-  v_order_number := 'VS-' || upper(substr(encode(gen_random_bytes(6), 'hex'), 1, 8));
-  v_checkout_token := encode(gen_random_bytes(32), 'hex');
+  v_order_number := 'VS-' || upper(substr(encode(extensions.gen_random_bytes(6), 'hex'), 1, 8));
+  v_checkout_token := encode(extensions.gen_random_bytes(32), 'hex');
 
   INSERT INTO public.orders (
     order_number, checkout_token, customer, items, subtotal, shipping_cost, tax, discount, total,
