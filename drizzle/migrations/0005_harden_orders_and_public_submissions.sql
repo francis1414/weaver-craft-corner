@@ -56,6 +56,15 @@ BEGIN
     RAISE EXCEPTION 'Invalid order options';
   END IF;
 
+  IF upper(trim(coalesce(_promo_code, ''))) NOT IN ('', 'BOLGA10', 'WEAVE15', 'HARVEST20') THEN
+    RAISE EXCEPTION 'Invalid promo code';
+  END IF;
+
+  IF (SELECT count(*) FROM jsonb_array_elements(_cart)) <>
+     (SELECT count(DISTINCT value->>'productId') FROM jsonb_array_elements(_cart)) THEN
+    RAISE EXCEPTION 'Duplicate cart item';
+  END IF;
+
   SELECT * INTO v_settings FROM public.store_settings WHERE id = 'default';
   IF NOT FOUND THEN RAISE EXCEPTION 'Store settings unavailable'; END IF;
 
