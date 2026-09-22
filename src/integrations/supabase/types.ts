@@ -546,6 +546,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_secure_order: {
+        Args: {
+          _cart: Json
+          _currency: string
+          _customer: Json
+          _customer_notes: string
+          _payment_method: string
+          _promo_code: string
+          _shipping_method: string
+        }
+        Returns: {
+          checkout_token: string
+          currency: string
+          discount: number
+          order_number: string
+          shipping_cost: number
+          subtotal: number
+          tax: number
+          total: number
+        }[]
+      }
       get_order_for_checkout: {
         Args: { _checkout_token: string; _order_number: string }
         Returns: {
