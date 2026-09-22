@@ -128,7 +128,7 @@ export function Header() {
             hash="enquiry"
             className="mr-1 hidden h-11 items-center border border-gold px-4 text-[11px] uppercase tracking-[0.16em] text-gold transition-colors hover:bg-gold hover:text-gold-foreground md:inline-flex"
           >
-            Buy Wholesale
+            Buy Bulk
           </Link>
 
           <IconButton label="Wishlist" count={wishlist.length} onClick={() => openDrawer("wishlist")}>
@@ -169,7 +169,7 @@ export function Header() {
                 onClick={() => setMobileOpen(false)}
                 className="mt-3 mb-3 inline-flex h-12 items-center justify-center border border-gold text-xs uppercase tracking-[0.2em] text-gold"
               >
-                Buy Wholesale
+                Buy Bulk
               </Link>
             </div>
 

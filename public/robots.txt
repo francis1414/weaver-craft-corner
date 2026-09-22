@@ -18,4 +18,4 @@ Disallow: /admin
 Disallow: /admin-auth
 Disallow: /api/
 
-Sitemap: https://weaver-craft-corner.lovable.app/sitemap.xml
+Sitemap: https://www.vetaverra.com/sitemap.xml
