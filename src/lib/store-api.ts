@@ -337,38 +337,32 @@ export async function submitReview(input: {
 }
 
 export interface OrderDraft {
-  orderNumber: string;
-  checkoutToken: string;
   customer: Order["customer"];
-  items: Order["items"];
-  subtotal: number;
-  shippingCost: number;
-  tax: number;
-  discount: number;
-  total: number;
+  cart: Array<{ productId: string; quantity: number }>;
+  shippingMethod: "standard" | "express";
   paymentMethod: string;
   currency: string;
+  promoCode: string;
   customerNotes: string;
 }
 
-export async function createOrder(draft: OrderDraft): Promise<void> {
-  const { error } = await db.from("orders").insert({
-    order_number: draft.orderNumber,
-    checkout_token: draft.checkoutToken,
-    customer: draft.customer,
-    items: draft.items,
-    subtotal: draft.subtotal,
-    shipping_cost: draft.shippingCost,
-    tax: draft.tax,
-    discount: draft.discount,
-    total: draft.total,
-    payment_method: draft.paymentMethod,
-    payment_status: "pending",
-    fulfillment_status: "unfulfilled",
-    currency: draft.currency,
-    customer_notes: draft.customerNotes,
+export async function createOrder(draft: OrderDraft): Promise<{
+  orderNumber: string;
+  checkoutToken: string;
+}> {
+  const { data, error } = await db.rpc("create_secure_order", {
+    _customer: draft.customer,
+    _cart: draft.cart,
+    _shipping_method: draft.shippingMethod,
+    _payment_method: draft.paymentMethod,
+    _promo_code: draft.promoCode,
+    _currency: draft.currency,
+    _customer_notes: draft.customerNotes,
   });
   if (error) throw error;
+  const order = data?.[0];
+  if (!order) throw new Error("The order could not be created");
+  return { orderNumber: order.order_number, checkoutToken: order.checkout_token };
 }
 
 export async function upsertProduct(values: Row & { id?: string }): Promise<void> {

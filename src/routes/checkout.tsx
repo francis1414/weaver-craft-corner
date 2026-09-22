@@ -57,12 +57,6 @@ const SHIPPING = [
   { id: "express", label: "DHL Express (3–5 days)", multiplier: 2.2 },
 ] as const;
 
-function createCheckoutToken(): string {
-  const bytes = new Uint8Array(32);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
-}
-
 function CheckoutPage() {
   const { cart, cartSubtotal, discountRate, promoCode, applyPromo, clearCart, currency } =
     useStore();
@@ -109,31 +103,18 @@ function CheckoutPage() {
       return;
     }
     setPending(true);
-    const number = `VS-${Date.now().toString().slice(-8)}`;
-    const token = createCheckoutToken();
     try {
-      await createOrder({
-        orderNumber: number,
-        checkoutToken: token,
+      const order = await createOrder({
         customer: parsed.data,
-        items: cart.map((l) => ({
-          productId: l.productId,
-          name: l.name,
-          price: l.price,
-          quantity: l.quantity,
-          image: l.image,
-        })),
-        subtotal: cartSubtotal,
-        shippingCost: totals.shipping,
-        tax: totals.tax,
-        discount: totals.discount,
-        total: totals.total,
+        cart: cart.map((line) => ({ productId: line.productId, quantity: line.quantity })),
+        shippingMethod: method,
         paymentMethod: payment,
         currency,
+        promoCode: promoCode ?? "",
         customerNotes: notes,
       });
-      setOrderNumber(number);
-      setCheckoutToken(token);
+      setOrderNumber(order.orderNumber);
+      setCheckoutToken(order.checkoutToken);
       clearCart();
       setStep(payment === "card" && paymentsConfigured() ? 5 : 4);
     } catch {

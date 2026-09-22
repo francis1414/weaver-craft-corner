@@ -98,6 +98,19 @@ export function MediaUploader({
   function addUrl() {
     const trimmed = url.trim();
     if (!trimmed) return;
+    try {
+      const parsed = new URL(trimmed);
+      const youtube = parsed.hostname === "youtube.com" || parsed.hostname.endsWith(".youtube.com") || parsed.hostname === "youtu.be";
+      if (parsed.protocol !== "https:" || (!isVideo && !/\.(avif|gif|jpe?g|png|webp)(?:$|[?#])/i.test(parsed.pathname + parsed.search))) {
+        throw new Error("Use a secure direct image link");
+      }
+      if (isVideo && !youtube && !/\.(mp4|webm|mov)(?:$|[?#])/i.test(parsed.pathname + parsed.search)) {
+        throw new Error("Use a secure YouTube or direct video link");
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Enter a valid secure media link");
+      return;
+    }
     onChange(multiple ? [...value, trimmed] : [trimmed]);
     setUrl("");
   }
