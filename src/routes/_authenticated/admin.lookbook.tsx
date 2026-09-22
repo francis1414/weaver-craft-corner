@@ -365,7 +365,7 @@ function AdminLookbook() {
         </div>
       </header>
 
-      <section className="grid gap-6 xl:grid-cols-[380px_minmax(0,1fr)] print:block">
+      <section className="grid min-w-0 gap-6 xl:grid-cols-[380px_minmax(0,1fr)] print:block">
         <div className="space-y-5 print:hidden">
           <div className="rounded-lg border border-border bg-card p-5">
             <h2 className="font-serif text-xl">Cover &amp; contact</h2>
@@ -531,7 +531,7 @@ function AdminLookbook() {
           ))}
         </div>
 
-        <div className="min-w-0 overflow-auto rounded-lg border border-border bg-stone p-4 sm:p-8 print:overflow-visible print:border-0 print:bg-transparent print:p-0">
+        <div className="min-w-0 overflow-x-auto rounded-lg border border-border bg-stone p-3 sm:p-6 print:overflow-visible print:border-0 print:bg-transparent print:p-0">
           <LookbookPages content={content} categories={categoryProducts} resolved={resolved} />
         </div>
       </section>
@@ -650,15 +650,15 @@ function LookbookPages({
                 </div>
                 <p className="max-w-[62mm] text-right text-[7.5pt] leading-relaxed text-muted-foreground">{pageIndex === 0 ? category.intro : `${category.title} · continued`}</p>
               </header>
-              <div className={`mt-8 grid min-h-0 flex-1 gap-7 ${products.length === 1 ? "grid-cols-[58%_42%]" : "grid-cols-2"}`}>
+              <div className={`mt-8 grid min-h-0 flex-1 gap-7 ${products.length === 1 ? "grid-cols-[minmax(0,58%)_minmax(0,42%)]" : "grid-cols-2"}`}>
                 {products.map((product) => {
                   const override = content.productOverrides[product.id];
                   return (
                     <section key={product.id} className={`min-h-0 ${products.length === 1 ? "contents" : "flex flex-col"}`}>
-                      <div className={`${products.length === 1 ? "h-full" : "h-[145mm]"} overflow-hidden bg-stone`}>
-                        <img src={src(lookbookImage(product, override))} alt={override?.name?.trim() || shortName(product.name)} className="h-full w-full object-cover" style={cropStyle(override)} />
+                      <div className={`${products.length === 1 ? "h-full" : "h-[145mm]"} flex min-w-0 items-center justify-center overflow-hidden bg-stone`}>
+                        <img src={src(lookbookImage(product, override))} alt={override?.name?.trim() || shortName(product.name)} className="h-full w-full object-contain" style={cropStyle(override)} />
                       </div>
-                      <div className={products.length === 1 ? "flex min-h-0 flex-col pl-2 pt-8" : "contents"}>
+                      <div className={products.length === 1 ? "flex min-h-0 min-w-0 flex-col pl-2 pt-8" : "contents"}>
                         <p className="mt-5 text-[7pt] uppercase tracking-[0.18em] text-gold">{product.sku}</p>
                         <h3 className="mt-2 font-serif text-[17pt] leading-tight">{override?.name?.trim() || shortName(product.name)}</h3>
                         <p className="mt-3 text-[8pt] leading-[1.55] text-muted-foreground">{override?.description ?? conciseDescription(product.description)}</p>
@@ -684,7 +684,7 @@ function LookbookPages({
           <p className="mt-8 max-w-[120mm] text-[11pt] leading-relaxed text-background/70">For wholesale orders, custom colourways, interior projects and collector commissions, speak directly with our studio.</p>
         </div>
         <div className="relative grid gap-5 border-t border-background/20 pt-8 text-[10pt]">
-          <p>{content.contactEmail}</p><p>{content.contactPhone}</p><p>{content.contactAddress}</p><p className="mt-4 text-[8pt] uppercase tracking-[0.18em] text-gold">vetaverastudio.com · @vetaverastudio</p>
+          <p>{content.contactEmail}</p><p>{content.contactPhone}</p><p>{content.contactAddress}</p><p className="mt-4 text-[8pt] uppercase tracking-[0.18em] text-gold">veteverra.com · @vetaverastudio</p>
         </div>
       </article>
     </div>
