@@ -6,12 +6,12 @@ import { attachSupabaseAuth } from "@/integrations/supabase/auth-attacher";
 
 const errorMiddleware = createMiddleware().server(async ({ next }) => {
   try {
-    setResponseHeaders({
-      "X-Content-Type-Options": "nosniff",
-      "Referrer-Policy": "strict-origin-when-cross-origin",
-      "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
-      "X-Frame-Options": "SAMEORIGIN",
-    } as Record<string, string>);
+    const headers = new Headers();
+    headers.set("X-Content-Type-Options", "nosniff");
+    headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    headers.set("X-Frame-Options", "SAMEORIGIN");
+    setResponseHeaders(headers);
     return await next();
   } catch (error) {
     if (error != null && typeof error === "object" && "statusCode" in error) {
