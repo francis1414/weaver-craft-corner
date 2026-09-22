@@ -200,8 +200,18 @@ export interface HomepageContent {
 }
 
 export interface LookbookProductOverride {
+  name?: string;
   description?: string;
   dimensions?: string;
+  /** Replacement photograph for this product inside the lookbook. */
+  image?: string;
+  /** Crop zoom in percent (100 = fit). */
+  zoom?: number;
+  /** Crop focus, 0-100 across each axis. */
+  offsetX?: number;
+  offsetY?: number;
+  /** Collection section this product is placed in. */
+  section?: string;
 }
 
 export interface LookbookContent {

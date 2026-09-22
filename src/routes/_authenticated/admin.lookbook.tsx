@@ -1,7 +1,18 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQueryClient } from "@tanstack/react-query";
-import { ArrowDown, ArrowUp, BookOpen, Eye, EyeOff, FileDown, Save } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Crop,
+  Download,
+  Eye,
+  EyeOff,
+  FileDown,
+  Plus,
+  RotateCcw,
+  Save,
+} from "lucide-react";
 import { toast } from "sonner";
 
 import coverAsset from "@/assets/trade-lookbook-cover.png.asset.json";
@@ -15,7 +26,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAdminLookbook, useAdminProducts, useAdminSettings } from "@/hooks/use-store-data";
 import { assetUrl } from "@/lib/asset-url";
 import { upsertSingleton } from "@/lib/store-api";
-import type { LookbookContent, Product } from "@/types";
+import type { LookbookContent, LookbookProductOverride, Product } from "@/types";
 
 export const Route = createFileRoute("/_authenticated/admin/lookbook")({
   head: () => ({
@@ -48,6 +59,8 @@ const CATEGORY_META = [
     intro: "Graphic handwoven fans that bring rhythm, colour and the warmth of Ghanaian craft to interior walls.",
   },
 ] as const;
+
+const SECTION_KEYS = CATEGORY_META.map((category) => category.key) as string[];
 
 const DEFAULT_PROFILE =
   "Veta Vera Studio is a Ghanaian craft studio working directly with master weavers and weaving cooperatives across Bolgatanga, Sumbrungu and Winkongo. We translate generations of elephant-grass knowledge into sculptural baskets, lighting and wall pieces for collectors, designers and considered interiors.\n\nEvery work is formed by hand from locally grown veta vera grass. Our trade relationships are built around fair commissions, prompt payment, medical support and long-term investment in the communities where the work begins.";
@@ -95,6 +108,25 @@ function chunks<T>(items: T[], size: number): T[][] {
   return pages;
 }
 
+/** The section a product sits in: an explicit placement, else its shop category. */
+function sectionOf(product: Product, overrides: LookbookContent["productOverrides"]) {
+  return overrides[product.id]?.section ?? product.category;
+}
+
+function lookbookImage(product: Product, override?: LookbookProductOverride) {
+  return override?.image || product.primaryImage;
+}
+
+/** Crop styling from the saved zoom / focus values. */
+function cropStyle(override?: LookbookProductOverride) {
+  const zoom = override?.zoom ?? 100;
+  return {
+    objectPosition: `${override?.offsetX ?? 50}% ${override?.offsetY ?? 50}%`,
+    transform: zoom === 100 ? undefined : `scale(${zoom / 100})`,
+    transformOrigin: `${override?.offsetX ?? 50}% ${override?.offsetY ?? 50}%`,
+  } as const;
+}
+
 function AdminLookbook() {
   const productsQuery = useAdminProducts();
   const lookbookQuery = useAdminLookbook();
@@ -103,6 +135,11 @@ function AdminLookbook() {
   const [content, setContent] = useState<LookbookContent>(DEFAULT_LOOKBOOK);
   const [saving, setSaving] = useState(false);
   const [printing, setPrinting] = useState(false);
+  const [downloading, setDownloading] = useState(false);
+  const [progress, setProgress] = useState("");
+  const [cropOpen, setCropOpen] = useState<string | null>(null);
+  const [adding, setAdding] = useState(false);
+  const [resolved, setResolved] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (lookbookQuery.data) {
@@ -126,21 +163,31 @@ function AdminLookbook() {
       CATEGORY_META.map((category) => ({
         ...category,
         products: orderedProducts(
-          activeProducts.filter((product) => product.category === category.key),
+          activeProducts.filter((product) => sectionOf(product, content.productOverrides) === category.key),
           content.productOrder,
         ),
       })),
-    [activeProducts, content.productOrder],
+    [activeProducts, content.productOrder, content.productOverrides],
   );
 
-  function updateProduct(id: string, field: "description" | "dimensions", value: string) {
+  /** Active shop products that are not placed in any lookbook section yet. */
+  const unplacedProducts = useMemo(
+    () => activeProducts.filter((product) => !SECTION_KEYS.includes(sectionOf(product, content.productOverrides))),
+    [activeProducts, content.productOverrides],
+  );
+
+  function patchProduct(id: string, patch: Partial<LookbookProductOverride>) {
     setContent((current) => ({
       ...current,
       productOverrides: {
         ...current.productOverrides,
-        [id]: { ...current.productOverrides[id], [field]: value },
+        [id]: { ...current.productOverrides[id], ...patch },
       },
     }));
+  }
+
+  function resetCrop(id: string) {
+    patchProduct(id, { zoom: 100, offsetX: 50, offsetY: 50, image: undefined });
   }
 
   function moveProduct(categoryProductsList: Product[], productId: string, direction: -1 | 1) {
@@ -191,22 +238,103 @@ function AdminLookbook() {
     }
   }
 
-  async function printLookbook() {
-    setPrinting(true);
+  async function waitForImages() {
     const images = Array.from(document.querySelectorAll<HTMLImageElement>("#trade-lookbook-print img"));
     await Promise.all(
-      images.map(
-        (image) =>
-          image.complete
-            ? Promise.resolve()
-            : new Promise<void>((resolve) => {
-                image.addEventListener("load", () => resolve(), { once: true });
-                image.addEventListener("error", () => resolve(), { once: true });
-              }),
+      images.map((image) =>
+        image.complete
+          ? Promise.resolve()
+          : new Promise<void>((resolve) => {
+              image.addEventListener("load", () => resolve(), { once: true });
+              image.addEventListener("error", () => resolve(), { once: true });
+            }),
       ),
     );
+  }
+
+  async function printLookbook() {
+    setPrinting(true);
+    await waitForImages();
     setPrinting(false);
     window.print();
+  }
+
+  /**
+   * Inline every lookbook photograph as a data URL so the page capture is not
+   * blocked by cross-origin image rules, then write one A4 page per sheet.
+   */
+  async function downloadPdf() {
+    setDownloading(true);
+    try {
+      setProgress("Preparing photographs…");
+      const urls = new Set<string>([content.coverImage, content.logoImage, content.weaverImage]);
+      for (const category of categoryProducts) {
+        for (const product of category.products) {
+          if (content.excludedProductIds.includes(product.id)) continue;
+          urls.add(lookbookImage(product, content.productOverrides[product.id]));
+        }
+      }
+
+      const entries = await Promise.all(
+        [...urls]
+          .filter((url) => url && !resolved[url] && !url.startsWith("data:"))
+          .map(async (url) => {
+            for (const candidate of [url, assetUrl(url)]) {
+              try {
+                const response = await fetch(candidate, { cache: "force-cache" });
+                if (!response.ok) continue;
+                const blob = await response.blob();
+                const dataUrl = await new Promise<string>((resolve, reject) => {
+                  const reader = new FileReader();
+                  reader.onload = () => resolve(String(reader.result));
+                  reader.onerror = () => reject(reader.error);
+                  reader.readAsDataURL(blob);
+                });
+                return [url, dataUrl] as const;
+              } catch {
+                /* try the next candidate */
+              }
+            }
+            return null;
+          }),
+      );
+
+      const nextResolved = { ...resolved };
+      for (const entry of entries) if (entry) nextResolved[entry[0]] = entry[1];
+      setResolved(nextResolved);
+      await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
+      await waitForImages();
+
+      const [{ toJpeg }, { default: JsPDF }] = await Promise.all([
+        import("html-to-image"),
+        import("jspdf"),
+      ]);
+
+      const pages = Array.from(document.querySelectorAll<HTMLElement>("#trade-lookbook-print .lookbook-page"));
+      if (!pages.length) throw new Error("There are no lookbook pages to export yet");
+
+      const pdf = new JsPDF({ unit: "mm", format: "a4", orientation: "portrait", compress: true });
+      for (let index = 0; index < pages.length; index += 1) {
+        setProgress(`Rendering page ${index + 1} of ${pages.length}…`);
+        const page = pages[index]!;
+        const image = await toJpeg(page, {
+          quality: 0.92,
+          pixelRatio: 2,
+          backgroundColor: "#ffffff",
+          width: page.offsetWidth,
+          height: page.offsetHeight,
+        });
+        if (index > 0) pdf.addPage("a4", "portrait");
+        pdf.addImage(image, "JPEG", 0, 0, 210, 297);
+      }
+      pdf.save("veta-vera-studio-trade-lookbook.pdf");
+      toast.success("Trade lookbook PDF downloaded");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "The PDF could not be created");
+    } finally {
+      setProgress("");
+      setDownloading(false);
+    }
   }
 
   if (productsQuery.isLoading || lookbookQuery.isLoading || settings.isLoading) {
@@ -220,20 +348,23 @@ function AdminLookbook() {
           <p className="label-caps text-gold">Trade catalogue</p>
           <h1 className="mt-2 font-serif text-3xl">Trade Lookbook</h1>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            Edit the presentation, arrange products, then export a clean A4 PDF without prices.
+            Edit the presentation, crop photographs, add products, then download a clean A4 PDF without prices.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={save} disabled={saving}>
             <Save /> {saving ? "Saving…" : "Save changes"}
           </Button>
-          <Button onClick={printLookbook} disabled={printing}>
-            <FileDown /> {printing ? "Loading images…" : "Print / Save PDF"}
+          <Button variant="outline" onClick={printLookbook} disabled={printing}>
+            <FileDown /> {printing ? "Loading images…" : "Print"}
+          </Button>
+          <Button onClick={downloadPdf} disabled={downloading}>
+            <Download /> {downloading ? progress || "Building PDF…" : "Download PDF"}
           </Button>
         </div>
       </header>
 
-      <section className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)] print:block">
+      <section className="grid gap-6 xl:grid-cols-[380px_minmax(0,1fr)] print:block">
         <div className="space-y-5 print:hidden">
           <div className="rounded-lg border border-border bg-card p-5">
             <h2 className="font-serif text-xl">Cover &amp; contact</h2>
@@ -259,6 +390,49 @@ function AdminLookbook() {
             />
           </div>
 
+          <div className="rounded-lg border border-border bg-card p-5">
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 className="font-serif text-xl">Add products</h2>
+              <Button variant="ghost" size="sm" onClick={() => setAdding((open) => !open)}>
+                <Plus /> {adding ? "Close" : `${unplacedProducts.length} available`}
+              </Button>
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              Place any other shop product into a lookbook collection. Products already in a collection appear below.
+            </p>
+            {adding && (
+              <div className="mt-4 space-y-3">
+                {unplacedProducts.length === 0 && (
+                  <p className="text-xs text-muted-foreground">Every active product is already in the lookbook.</p>
+                )}
+                {unplacedProducts.map((product) => (
+                  <div key={product.id} className="flex items-center gap-3 border-t border-border pt-3 first:border-t-0 first:pt-0">
+                    <img src={assetUrl(product.primaryImage)} alt="" className="h-12 w-10 shrink-0 object-cover" />
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">{shortName(product.name)}</p>
+                      <p className="text-[11px] text-muted-foreground">{product.category} · {product.sku}</p>
+                    </div>
+                    <select
+                      aria-label={`Add ${shortName(product.name)} to a collection`}
+                      className="h-9 rounded-md border border-border bg-background px-2 text-xs"
+                      defaultValue=""
+                      onChange={(event) => {
+                        if (!event.target.value) return;
+                        patchProduct(product.id, { section: event.target.value });
+                        toast.success(`${shortName(product.name)} added`);
+                      }}
+                    >
+                      <option value="">Add to…</option>
+                      {CATEGORY_META.map((category) => (
+                        <option key={category.key} value={category.key}>{category.title}</option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
           {categoryProducts.map((category) => (
             <div key={category.key} className="rounded-lg border border-border bg-card p-5">
               <div className="flex items-baseline justify-between gap-4">
@@ -269,24 +443,83 @@ function AdminLookbook() {
                 {category.products.map((product, index) => {
                   const hidden = content.excludedProductIds.includes(product.id);
                   const override = content.productOverrides[product.id];
+                  const cropping = cropOpen === product.id;
                   return (
                     <div key={product.id} className="border-t border-border pt-3 first:border-t-0 first:pt-0">
                       <div className="flex items-start gap-3">
-                        <img src={assetUrl(product.primaryImage)} alt="" className="h-14 w-12 shrink-0 object-cover" />
+                        <div className="h-14 w-12 shrink-0 overflow-hidden bg-stone">
+                          <img src={assetUrl(lookbookImage(product, override))} alt="" className="h-full w-full object-cover" style={cropStyle(override)} />
+                        </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium leading-snug">{shortName(product.name)}</p>
+                          <p className="text-sm font-medium leading-snug">{override?.name?.trim() || shortName(product.name)}</p>
                           <p className="mt-0.5 text-[11px] text-muted-foreground">{product.sku}</p>
                         </div>
                         <div className="flex shrink-0 gap-1">
                           <Button variant="ghost" size="icon" aria-label="Move up" disabled={index === 0} onClick={() => moveProduct(category.products, product.id, -1)}><ArrowUp /></Button>
                           <Button variant="ghost" size="icon" aria-label="Move down" disabled={index === category.products.length - 1} onClick={() => moveProduct(category.products, product.id, 1)}><ArrowDown /></Button>
+                          <Button variant="ghost" size="icon" aria-label={cropping ? "Close crop tools" : "Crop and adjust photograph"} onClick={() => setCropOpen(cropping ? null : product.id)}><Crop /></Button>
                           <Button variant="ghost" size="icon" aria-label={hidden ? "Include product" : "Hide product"} onClick={() => toggleProduct(product.id)}>{hidden ? <EyeOff /> : <Eye />}</Button>
                         </div>
                       </div>
                       {!hidden && (
                         <div className="mt-3 space-y-2">
-                          <Textarea rows={3} aria-label={`${product.name} lookbook description`} value={override?.description ?? conciseDescription(product.description)} onChange={(event) => updateProduct(product.id, "description", event.target.value)} />
-                          <Input aria-label={`${product.name} lookbook size`} value={override?.dimensions ?? product.dimensions} onChange={(event) => updateProduct(product.id, "dimensions", event.target.value)} />
+                          <Input aria-label={`${product.name} lookbook title`} placeholder="Lookbook title" value={override?.name ?? shortName(product.name)} onChange={(event) => patchProduct(product.id, { name: event.target.value })} />
+                          <Textarea rows={3} aria-label={`${product.name} lookbook description`} value={override?.description ?? conciseDescription(product.description)} onChange={(event) => patchProduct(product.id, { description: event.target.value })} />
+                          <Input aria-label={`${product.name} lookbook size`} value={override?.dimensions ?? product.dimensions} onChange={(event) => patchProduct(product.id, { dimensions: event.target.value })} />
+                          <div className="flex items-center justify-between gap-2">
+                            <select
+                              aria-label={`${product.name} collection`}
+                              className="h-9 flex-1 rounded-md border border-border bg-background px-2 text-xs"
+                              value={category.key}
+                              onChange={(event) => patchProduct(product.id, { section: event.target.value })}
+                            >
+                              {CATEGORY_META.map((item) => (
+                                <option key={item.key} value={item.key}>{item.title}</option>
+                              ))}
+                            </select>
+                            <Button variant="ghost" size="sm" onClick={() => patchProduct(product.id, { section: "__removed" })}>Remove</Button>
+                          </div>
+                        </div>
+                      )}
+                      {cropping && (
+                        <div className="mt-3 space-y-3 rounded-md border border-border bg-background p-3">
+                          <div className="flex items-center justify-between">
+                            <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">Crop &amp; adjust</p>
+                            <Button variant="ghost" size="sm" onClick={() => resetCrop(product.id)}><RotateCcw /> Reset</Button>
+                          </div>
+                          <div className="mx-auto h-40 w-32 overflow-hidden bg-stone">
+                            <img src={assetUrl(lookbookImage(product, override))} alt="" className="h-full w-full object-cover" style={cropStyle(override)} />
+                          </div>
+                          <Range label="Zoom" min={100} max={250} value={override?.zoom ?? 100} suffix="%" onChange={(zoom) => patchProduct(product.id, { zoom })} />
+                          <Range label="Horizontal focus" min={0} max={100} value={override?.offsetX ?? 50} suffix="%" onChange={(offsetX) => patchProduct(product.id, { offsetX })} />
+                          <Range label="Vertical focus" min={0} max={100} value={override?.offsetY ?? 50} suffix="%" onChange={(offsetY) => patchProduct(product.id, { offsetY })} />
+                          {product.images.length > 1 && (
+                            <div>
+                              <Label className="text-xs">Choose another photograph</Label>
+                              <div className="mt-2 flex flex-wrap gap-2">
+                                {product.images.map((image) => (
+                                  <button
+                                    key={image}
+                                    type="button"
+                                    aria-label="Use this photograph"
+                                    onClick={() => patchProduct(product.id, { image })}
+                                    className={`h-12 w-10 overflow-hidden border ${lookbookImage(product, override) === image ? "border-gold" : "border-border"}`}
+                                  >
+                                    <img src={assetUrl(image)} alt="" className="h-full w-full object-cover" />
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          <MediaUploader
+                            label="Upload a lookbook photograph"
+                            value={override?.image ? [override.image] : []}
+                            onChange={(images) => patchProduct(product.id, { image: images[0] ?? undefined })}
+                            multiple={false}
+                            accept="image/*"
+                            folder="lookbook"
+                            max={1}
+                          />
                         </div>
                       )}
                     </div>
@@ -298,7 +531,7 @@ function AdminLookbook() {
         </div>
 
         <div className="min-w-0 overflow-auto rounded-lg border border-border bg-stone p-4 sm:p-8 print:overflow-visible print:border-0 print:bg-transparent print:p-0">
-          <LookbookPages content={content} categories={categoryProducts} />
+          <LookbookPages content={content} categories={categoryProducts} resolved={resolved} />
         </div>
       </section>
     </div>
@@ -314,21 +547,58 @@ function Field({ label, value, onChange }: { label: string; value: string; onCha
   );
 }
 
+function Range({
+  label,
+  min,
+  max,
+  value,
+  suffix,
+  onChange,
+}: {
+  label: string;
+  min: number;
+  max: number;
+  value: number;
+  suffix?: string;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center justify-between text-xs">
+        <Label className="text-xs">{label}</Label>
+        <span className="text-muted-foreground">{value}{suffix}</span>
+      </div>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        value={value}
+        aria-label={label}
+        onChange={(event) => onChange(Number(event.target.value))}
+        className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-border accent-gold"
+      />
+    </div>
+  );
+}
+
 function LookbookPages({
   content,
   categories,
+  resolved,
 }: {
   content: LookbookContent;
   categories: Array<(typeof CATEGORY_META)[number] & { products: Product[] }>;
+  resolved: Record<string, string>;
 }) {
+  const src = (url: string) => resolved[url] ?? assetUrl(url);
   let pageNumber = 2;
   return (
     <div id="trade-lookbook-print" className="mx-auto w-[210mm] max-w-none space-y-6 print:space-y-0">
       <article className="lookbook-page relative isolate h-[297mm] w-[210mm] overflow-hidden bg-foreground text-background shadow-editorial">
-        <img src={assetUrl(content.coverImage)} alt="Veta Vera Studio collection" className="absolute inset-0 h-full w-full object-cover" />
+        <img src={src(content.coverImage)} alt="Veta Vera Studio collection" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/15 to-transparent" />
         <div className="absolute inset-x-0 top-0 flex justify-center px-14 pt-12">
-          <img src={assetUrl(content.logoImage)} alt="Veta Vera Studio" className="h-auto w-full max-w-[132mm] mix-blend-screen" />
+          <img src={src(content.logoImage)} alt="Veta Vera Studio" className="h-auto w-full max-w-[132mm] mix-blend-screen" />
         </div>
         <div className="absolute inset-x-0 bottom-0 px-14 pb-14">
           <p className="label-caps text-gold">Wholesale · Interior trade · Collectors</p>
@@ -342,7 +612,7 @@ function LookbookPages({
 
       <article className="lookbook-page grid h-[297mm] w-[210mm] grid-cols-[44%_56%] overflow-hidden bg-background text-foreground shadow-editorial">
         <div className="relative h-full overflow-hidden bg-stone">
-          <img src={assetUrl(content.weaverImage)} alt="Master weaver at work" className="h-full w-full object-cover" />
+          <img src={src(content.weaverImage)} alt="Master weaver at work" className="h-full w-full object-cover" />
           <div className="absolute bottom-0 left-0 bg-foreground px-6 py-4 text-background">
             <p className="text-[7pt] uppercase tracking-[0.2em] text-gold">Master weaver</p>
             <p className="mt-1 font-serif text-[13pt]">Bolgatanga, Ghana</p>
@@ -383,11 +653,11 @@ function LookbookPages({
                   return (
                     <section key={product.id} className={`min-h-0 ${products.length === 1 ? "contents" : "flex flex-col"}`}>
                       <div className={`${products.length === 1 ? "h-full" : "h-[145mm]"} overflow-hidden bg-stone`}>
-                        <img src={assetUrl(product.primaryImage)} alt={shortName(product.name)} className="h-full w-full object-cover" />
+                        <img src={src(lookbookImage(product, override))} alt={override?.name?.trim() || shortName(product.name)} className="h-full w-full object-cover" style={cropStyle(override)} />
                       </div>
                       <div className={products.length === 1 ? "flex min-h-0 flex-col pl-2 pt-8" : "contents"}>
                         <p className="mt-5 text-[7pt] uppercase tracking-[0.18em] text-gold">{product.sku}</p>
-                        <h3 className="mt-2 font-serif text-[17pt] leading-tight">{shortName(product.name)}</h3>
+                        <h3 className="mt-2 font-serif text-[17pt] leading-tight">{override?.name?.trim() || shortName(product.name)}</h3>
                         <p className="mt-3 text-[8pt] leading-[1.55] text-muted-foreground">{override?.description ?? conciseDescription(product.description)}</p>
                         <p className="mt-auto border-t border-border pt-3 text-[8pt] font-medium uppercase tracking-[0.12em]">Size · {(override?.dimensions ?? product.dimensions) || "Made to order"}</p>
                       </div>
@@ -403,7 +673,7 @@ function LookbookPages({
 
       <article className="lookbook-page relative flex h-[297mm] w-[210mm] flex-col justify-between overflow-hidden bg-foreground px-14 py-14 text-background shadow-editorial">
         <div>
-          <img src={assetUrl(content.logoImage)} alt="Veta Vera Studio" className="h-auto w-[125mm] mix-blend-screen" />
+          <img src={src(content.logoImage)} alt="Veta Vera Studio" className="h-auto w-[125mm] mix-blend-screen" />
           <p className="mt-20 text-[8pt] uppercase tracking-[0.22em] text-gold">Trade enquiries</p>
           <h2 className="mt-5 max-w-[150mm] font-serif text-[38pt] leading-tight">Bring Ghanaian craft into your collection.</h2>
           <p className="mt-8 max-w-[120mm] text-[11pt] leading-relaxed text-background/70">For wholesale orders, custom colourways, interior projects and collector commissions, speak directly with our studio.</p>
