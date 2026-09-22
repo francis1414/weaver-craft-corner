@@ -45,13 +45,6 @@
       "breakpoints": true
     },
     {
-      "idx": 6,
-      "version": "7",
-      "when": 1790101202144,
-      "tag": "0006_apply_secure_order_runtime_fix",
-      "breakpoints": true
-    },
-    {
       "idx": 7,
       "version": "7",
       "when": 1790101236379,
