@@ -50,7 +50,17 @@ export const createOrderCheckout = createServerFn({ method: "POST" })
       if (!/^[a-f0-9]{64}$/.test(data.checkoutToken)) {
         throw new Error("Invalid checkout token");
       }
-      if (!/^https?:\/\//.test(data.returnUrl)) throw new Error("Invalid return URL");
+      const returnUrl = new URL(data.returnUrl);
+      const approvedHosts = new Set([
+        "vetaverra.com",
+        "www.vetaverra.com",
+        "shop.vetaverastudio.com",
+        "weaver-craft-corner.lovable.app",
+        "localhost",
+      ]);
+      if ((returnUrl.protocol !== "https:" && returnUrl.hostname !== "localhost") || !approvedHosts.has(returnUrl.hostname)) {
+        throw new Error("Invalid return URL");
+      }
       return data;
     },
   )

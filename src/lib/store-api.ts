@@ -202,6 +202,7 @@ export function mapLookbook(row: Row): LookbookContent {
 /* ------------------------------------------------------------------ queries */
 
 const db = supabase as unknown as {
+  rpc: (name: string, args: Record<string, unknown>) => Promise<{ data: unknown; error: unknown }>;
   from: (table: string) => {
     select: (cols?: string) => any;
     insert: (values: unknown) => any;
@@ -360,9 +361,12 @@ export async function createOrder(draft: OrderDraft): Promise<{
     _customer_notes: draft.customerNotes,
   });
   if (error) throw error;
-  const order = data?.[0];
+  const order = Array.isArray(data) ? (data[0] as Row | undefined) : undefined;
   if (!order) throw new Error("The order could not be created");
-  return { orderNumber: order.order_number, checkoutToken: order.checkout_token };
+  const orderNumber = str(order["order_number"]);
+  const checkoutToken = str(order["checkout_token"]);
+  if (!orderNumber || !checkoutToken) throw new Error("The order could not be created");
+  return { orderNumber, checkoutToken };
 }
 
 export async function upsertProduct(values: Row & { id?: string }): Promise<void> {
