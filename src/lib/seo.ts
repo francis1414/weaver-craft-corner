@@ -1,4 +1,4 @@
-export const SITE_URL = "https://weaver-craft-corner.lovable.app";
+export const SITE_URL = "https://www.vetaverra.com";
 export const SITE_NAME = "Veta Vera Studio";
 
 export const absoluteUrl = (path: string): string =>

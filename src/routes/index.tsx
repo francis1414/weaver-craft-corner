@@ -117,8 +117,14 @@ function HomePage() {
         <h2 className="font-serif text-3xl md:text-4xl">Shop by craft</h2>
         <div
           className={cn(
-            "mt-10 grid gap-5 grid-cols-2 sm:grid-cols-3",
-            categories.length <= 2 ? "lg:grid-cols-3" : "lg:grid-cols-5",
+            "mt-10 grid gap-5 grid-cols-2",
+            categories.length <= 2
+              ? "sm:grid-cols-2"
+              : categories.length === 3
+                ? "sm:grid-cols-3"
+                : categories.length === 4
+                  ? "sm:grid-cols-4"
+                  : "sm:grid-cols-3 lg:grid-cols-5",
           )}
         >
           {categories.slice(0, 8).map((category, i) => {
@@ -174,7 +180,7 @@ function HomePage() {
             ))}
           </div>
         </div>
-        <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 xl:grid-cols-4">
           {isLoading
             ? Array.from({ length: 6 }).map((_, i) => <ProductCardSkeleton key={i} />)
             : featured.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
@@ -246,7 +252,7 @@ function HomePage() {
       {/* New arrivals */}
       <section className="mx-auto max-w-[1400px] px-4 py-20 md:px-8">
         <h2 className="font-serif text-3xl md:text-4xl">Newly added</h2>
-        <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
+        <div className="mt-10 grid grid-cols-2 gap-x-5 gap-y-10 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {arrivals.map((p, i) => (
             <ProductCard key={p.id} product={p} index={i} />
           ))}
