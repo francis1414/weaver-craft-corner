@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA extensions;
+
 CREATE OR REPLACE FUNCTION public.create_secure_order(
   _customer jsonb,
   _cart jsonb,
