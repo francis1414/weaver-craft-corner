@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ImageOff } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -39,7 +39,15 @@ export function SmartImage({
 }: SmartImageProps) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
+  const imgRef = useRef<HTMLImageElement | null>(null);
   const unavailable = failed || !src;
+
+  // Server-rendered markup can finish loading a cached image before hydration
+  // attaches onLoad, which would leave the picture stuck invisible.
+  useEffect(() => {
+    const el = imgRef.current;
+    if (el && el.complete && el.naturalWidth > 0) setLoaded(true);
+  }, [src]);
 
   return (
     <div className={cn("relative overflow-hidden bg-stone", RATIO_CLASS[ratio], className)}>
@@ -49,6 +57,7 @@ export function SmartImage({
         <MediaFallback alt={alt} message={fallbackMessage} />
       ) : (
         <img
+          ref={imgRef}
           src={assetUrl(src)}
           alt={alt}
           sizes={sizes}
