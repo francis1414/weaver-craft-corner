@@ -11,6 +11,7 @@ import { StarRating } from "@/components/StarRating";
 import { useCategories, useHomepage, useProducts, useReviews } from "@/hooks/use-store-data";
 import { cn } from "@/lib/utils";
 import { canonical, jsonLdScript, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+import villageFeature from "@/assets/village-weaver-feature.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -204,6 +205,43 @@ function HomePage() {
       </section>
 
       <StoryFilm />
+
+      {/* Village feature */}
+      <section className="mx-auto max-w-[1400px] px-4 py-20 md:px-8">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55 }}
+            className="mx-auto w-full max-w-sm lg:max-w-none"
+          >
+            <SmartImage
+              src={villageFeature.url}
+              alt="A maker steadying a large multi-coloured handwoven basket hung in a net outside in the village"
+              ratio="3/4"
+              sizes="(min-width: 1024px) 34vw, 90vw"
+            />
+          </motion.div>
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-gold">From the village</p>
+            <h2 className="mt-4 font-serif text-3xl leading-tight md:text-4xl">
+              Colour, finished in the open air
+            </h2>
+            <p className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground">
+              Red, green and ochre bands wound over a black-and-white ground, hung in the shade of
+              a tree between commissions. A bicycle leaning nearby, bricks stacked in the sun —
+              the everyday backdrop to the work we take straight from the maker to your room.
+            </p>
+            <Link
+              to="/about"
+              className="mt-8 inline-block border border-foreground px-6 py-3 text-xs uppercase tracking-[0.18em] transition-colors hover:border-gold hover:text-gold"
+            >
+              Meet the makers
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* Fair-wage promise */}
       <section className="border-y border-border bg-foreground py-16 text-background">
