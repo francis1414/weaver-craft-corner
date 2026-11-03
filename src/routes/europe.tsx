@@ -5,9 +5,9 @@ import { IMAGES } from "@/lib/mock-data";
 import { EUROPE_MARKETS, breadcrumbJsonLd, canonical, jsonLdScript, SITE_NAME, SITE_URL } from "@/lib/seo";
 import { WHATSAPP_DISPLAY, whatsappLink } from "@/lib/whatsapp";
 
-const TITLE = "Bolga Baskets Delivered to Europe — France, Germany, Switzerland, Spain, Greece, Monaco | Veta Vera Studio";
+const TITLE = "Luxury Woven Home Decor Delivered to Monaco, France, Switzerland & Luxembourg | Veta Vera Studio";
 const DESCRIPTION =
-  "Handwoven Bolga baskets and fibre art shipped from Ghana to Europe: tracked delivery to France, Germany, Switzerland, Monaco, Spain and Greece in 7–10 business days, with euro and Swiss franc pricing at checkout.";
+  "Handwoven Bolga baskets, woven pendant lights and wall fans shipped from Ghana to Monaco, France, Switzerland, Luxembourg, Germany, Spain and Greece in 7–10 business days, priced in euro or Swiss franc.";
 
 export const Route = createFileRoute("/europe")({
   head: () => ({
@@ -112,6 +112,13 @@ function EuropePage() {
           </Link>
           . For a customs pre-check on a large or multi-piece consignment, message the studio at{" "}
           {WHATSAPP_DISPLAY}.
+        </p>
+        <p className="mt-5 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+          Lire en français :{" "}
+          <Link to="/decoration-luxe" className="text-gold underline-offset-4 hover:underline">
+            décoration intérieure de luxe tissée à la main
+          </Link>
+          .
         </p>
         <p className="mt-5 max-w-3xl text-sm leading-relaxed text-muted-foreground">
           Collectors and interior designers sourcing multiples should start on the{" "}
