@@ -18,6 +18,7 @@ import { Route as BolgaBasketsRouteImport } from './routes/bolga-baskets'
 import { Route as CareRouteImport } from './routes/care'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CollectRouteImport } from './routes/collect'
+import { Route as DecorationLuxeRouteImport } from './routes/decoration-luxe'
 import { Route as EuropeRouteImport } from './routes/europe'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
@@ -85,6 +86,11 @@ const CheckoutRoute = CheckoutRouteImport.update({
 const CollectRoute = CollectRouteImport.update({
   id: '/collect',
   path: '/collect',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DecorationLuxeRoute = DecorationLuxeRouteImport.update({
+  id: '/decoration-luxe',
+  path: '/decoration-luxe',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EuropeRoute = EuropeRouteImport.update({
@@ -229,6 +235,7 @@ export interface FileRoutesByFullPath {
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRouteWithChildren
   '/collect': typeof CollectRoute
+  '/decoration-luxe': typeof DecorationLuxeRoute
   '/europe': typeof EuropeRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -263,6 +270,7 @@ export interface FileRoutesByTo {
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRouteWithChildren
   '/collect': typeof CollectRoute
+  '/decoration-luxe': typeof DecorationLuxeRoute
   '/europe': typeof EuropeRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -298,6 +306,7 @@ export interface FileRoutesById {
   '/care': typeof CareRoute
   '/checkout': typeof CheckoutRouteWithChildren
   '/collect': typeof CollectRoute
+  '/decoration-luxe': typeof DecorationLuxeRoute
   '/europe': typeof EuropeRoute
   '/shop': typeof ShopRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
@@ -334,6 +343,7 @@ export interface FileRouteTypes {
     | '/care'
     | '/checkout'
     | '/collect'
+    | '/decoration-luxe'
     | '/europe'
     | '/shop'
     | '/sitemap.xml'
@@ -368,6 +378,7 @@ export interface FileRouteTypes {
     | '/care'
     | '/checkout'
     | '/collect'
+    | '/decoration-luxe'
     | '/europe'
     | '/shop'
     | '/sitemap.xml'
@@ -402,6 +413,7 @@ export interface FileRouteTypes {
     | '/care'
     | '/checkout'
     | '/collect'
+    | '/decoration-luxe'
     | '/europe'
     | '/shop'
     | '/sitemap.xml'
@@ -438,6 +450,7 @@ export interface RootRouteChildren {
   CareRoute: typeof CareRoute
   CheckoutRoute: typeof CheckoutRouteWithChildren
   CollectRoute: typeof CollectRoute
+  DecorationLuxeRoute: typeof DecorationLuxeRoute
   EuropeRoute: typeof EuropeRoute
   ShopRoute: typeof ShopRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
@@ -513,6 +526,13 @@ declare module '@tanstack/react-router' {
       path: '/collect'
       fullPath: '/collect'
       preLoaderRoute: typeof CollectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/decoration-luxe': {
+      id: '/decoration-luxe'
+      path: '/decoration-luxe'
+      fullPath: '/decoration-luxe'
+      preLoaderRoute: typeof DecorationLuxeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/europe': {
@@ -752,6 +772,7 @@ const rootRouteChildren: RootRouteChildren = {
   CareRoute: CareRoute,
   CheckoutRoute: CheckoutRouteWithChildren,
   CollectRoute: CollectRoute,
+  DecorationLuxeRoute: DecorationLuxeRoute,
   EuropeRoute: EuropeRoute,
   ShopRoute: ShopRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
