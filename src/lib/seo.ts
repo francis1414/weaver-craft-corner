@@ -63,6 +63,14 @@ export const EUROPE_MARKETS: EuropeMarket[] = [
     body: "Discreet delivery to residences, yacht agents and design offices in Monaco, Cap-Ferrat and Saint-Tropez, with condition photographs sent before dispatch.",
   },
   {
+    name: "Luxembourg",
+    code: "LU",
+    heading: "Luxembourg — Luxembourg City, Esch-sur-Alzette and Kirchberg",
+    currency: "Priced in EUR",
+    transit: "7–10 business days",
+    body: "Tracked courier delivery to residences, embassies and offices across the Grand Duchy, with invoices in French or English for private clients and interior architects.",
+  },
+  {
     name: "Spain",
     code: "ES",
     heading: "Spain — Madrid, Barcelona, Valencia, Ibiza and Mallorca",

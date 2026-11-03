@@ -11,6 +11,7 @@ const STATIC_PATHS: { path: string; priority: string; changefreq: string }[] = [
   { path: "/bolga-art-baskets", priority: "0.9", changefreq: "weekly" },
   { path: "/collect", priority: "0.9", changefreq: "weekly" },
   { path: "/europe", priority: "0.8", changefreq: "monthly" },
+  { path: "/decoration-luxe", priority: "0.9", changefreq: "monthly" },
   { path: "/journal", priority: "0.7", changefreq: "weekly" },
   { path: "/about", priority: "0.6", changefreq: "monthly" },
   { path: "/wholesale", priority: "0.8", changefreq: "monthly" },
