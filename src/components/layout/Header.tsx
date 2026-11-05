@@ -9,6 +9,7 @@ import { useProducts } from "@/hooks/use-store-data";
 import { usePrice } from "@/hooks/use-price";
 import logo from "@/assets/vetastudio-logo.png.asset.json";
 import { assetUrl } from "@/lib/asset-url";
+import { LanguageToggle } from "./LanguageToggle";
 
 const NAV = [
   { to: "/shop", label: "Shop" },
@@ -122,6 +123,8 @@ export function Header() {
               )}
             </AnimatePresence>
           </div>
+
+          <LanguageToggle />
 
           <Link
             to="/wholesale"
