@@ -17,8 +17,17 @@ export function AnnouncementBar() {
         <div className="flex min-w-0 items-center gap-2 text-[11px] uppercase tracking-[0.16em]">
           <Truck size={13} className="shrink-0 text-gold" />
           <span className="truncate">
-            {settings.announcement ||
-              `Free worldwide shipping over $${settings.freeShippingThreshold}`}
+            {(settings.announcement || `Free worldwide shipping over $${settings.freeShippingThreshold}`)
+              .split(/(\$\s?\d[\d,.]*)/)
+              .map((part, i) =>
+                /^\$\s?\d/.test(part) ? (
+                  <span key={i} className="notranslate" translate="no">
+                    {part}
+                  </span>
+                ) : (
+                  part
+                ),
+              )}
           </span>
         </div>
         <div className="flex shrink-0 items-center gap-4 text-[11px]">
